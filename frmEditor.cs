@@ -22,8 +22,6 @@ namespace SmartQueryRunner
     public partial class FrmEditor : Form
     {
         private string psQueryFileName;
-        private int ExecuteSequence =1;
-
 
         public FrmEditor(string FileName =  "")
         {
@@ -127,10 +125,10 @@ namespace SmartQueryRunner
             {
                 SQuery = txtQuery1.SelectedText;
             }
-            if (SQuery != "") LoadQuery(SQuery);
+            if (SQuery != "") LoadQuery(SQuery, false);
         }
 
-        public async Task LoadQuery(string SQuery)
+        public async Task LoadQuery(string SQuery, bool IsLoadQueryToBox = true)
         {
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.MarqueeAnimationSpeed = 100;
@@ -139,7 +137,7 @@ namespace SmartQueryRunner
             progressBar1.Visible = true;
 
             string lsConnection =( (MDIAdvancedQuery) this.MdiParent).sConnectionString;
-            txtQuery1.Text = SQuery;
+            if(IsLoadQueryToBox) txtQuery1.Text = SQuery;
             using (DataBaseProcedure DataObj = new DataBaseProcedure(lsConnection, SQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
@@ -155,9 +153,12 @@ namespace SmartQueryRunner
                         dataGrid1.DataSource = ds.Tables["MyTable"];
                         lblRows.Text = "Total Rows :" + ds.Tables["MyTable"].Rows.Count.ToString();
                         dataGrid1.Refresh();
+                        checkShowMessages.Checked = false;
                     }
-
-                    ExecuteSequence++;
+                    else if(txtOutputText.Text.Length > 0)
+                    {
+                        checkShowMessages.Checked = true;
+                    }
 
                     //TabPage objPage = (TabPage)CloneControl(tabQuery.TabPages[1], ExecuteSequence);
                     ////TabPage objPage = new TabPage("Query" + ExecuteSequence.ToString());
@@ -166,9 +167,11 @@ namespace SmartQueryRunner
                 }
                 else
                 {
+                    txtOutputText.Text = DataObj.ErrorText;
+                    checkShowMessages.Checked = true;
                     //MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
-                    (new SmartQueryRunner.MessageText()).Show(Application.ProductName,
-                        "Error occured" + DataObj.ErrorText, this);
+                    //(new SmartQueryRunner.MessageText()).Show(Application.ProductName,
+                    //    "Error occured" + DataObj.ErrorText, this);
                 }
                 progressBar1.Visible = false;
                 progressBar1.Style = ProgressBarStyle.Continuous;

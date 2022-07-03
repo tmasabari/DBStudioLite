@@ -95,10 +95,10 @@ namespace SmartQueryRunner
             this.btnRefresh = new System.Windows.Forms.Button();
             this.tabDatabase = new System.Windows.Forms.TabControl();
             this.tabDatabases = new System.Windows.Forms.TabPage();
+            this.splitContainerDB = new System.Windows.Forms.SplitContainer();
             this.listViewDBs = new System.Windows.Forms.ListView();
-            this.tabObjects = new System.Windows.Forms.TabPage();
+            this.splitContainerSchema = new System.Windows.Forms.SplitContainer();
             this.lstTables = new System.Windows.Forms.ListView();
-            this.tabCode = new System.Windows.Forms.TabPage();
             this.lstProcedures = new System.Windows.Forms.ListView();
             this.tabSnippets = new System.Windows.Forms.TabPage();
             this.listViewSnippets = new System.Windows.Forms.ListView();
@@ -131,6 +131,9 @@ namespace SmartQueryRunner
             this.toolstripRefreshSnippets = new System.Windows.Forms.ToolStripMenuItem();
             this.toolstripExecuteSnippet = new System.Windows.Forms.ToolStripMenuItem();
             this.tabForms = new System.Windows.Forms.TabControl();
+            this.chkShowDB = new System.Windows.Forms.CheckBox();
+            this.chkShowTables = new System.Windows.Forms.CheckBox();
+            this.chkShowCode = new System.Windows.Forms.CheckBox();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -141,8 +144,14 @@ namespace SmartQueryRunner
             this.splitDatabase.SuspendLayout();
             this.tabDatabase.SuspendLayout();
             this.tabDatabases.SuspendLayout();
-            this.tabObjects.SuspendLayout();
-            this.tabCode.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerDB)).BeginInit();
+            this.splitContainerDB.Panel1.SuspendLayout();
+            this.splitContainerDB.Panel2.SuspendLayout();
+            this.splitContainerDB.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerSchema)).BeginInit();
+            this.splitContainerSchema.Panel1.SuspendLayout();
+            this.splitContainerSchema.Panel2.SuspendLayout();
+            this.splitContainerSchema.SuspendLayout();
             this.tabSnippets.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             this.contextConnection.SuspendLayout();
@@ -164,7 +173,7 @@ namespace SmartQueryRunner
             this.menuStrip.MdiWindowListItem = this.windowsMenu;
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip.Size = new System.Drawing.Size(1164, 30);
+            this.menuStrip.Size = new System.Drawing.Size(1164, 28);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "MenuStrip";
             // 
@@ -589,10 +598,10 @@ namespace SmartQueryRunner
             // 
             this.panel1.Controls.Add(this.splitDatabase);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(0, 30);
+            this.panel1.Location = new System.Drawing.Point(0, 28);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(418, 660);
+            this.panel1.Size = new System.Drawing.Size(418, 662);
             this.panel1.TabIndex = 4;
             // 
             // splitDatabase
@@ -600,6 +609,7 @@ namespace SmartQueryRunner
             this.splitDatabase.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitDatabase.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitDatabase.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitDatabase.IsSplitterFixed = true;
             this.splitDatabase.Location = new System.Drawing.Point(0, 0);
             this.splitDatabase.Margin = new System.Windows.Forms.Padding(4);
             this.splitDatabase.Name = "splitDatabase";
@@ -607,6 +617,9 @@ namespace SmartQueryRunner
             // 
             // splitDatabase.Panel1
             // 
+            this.splitDatabase.Panel1.Controls.Add(this.chkShowCode);
+            this.splitDatabase.Panel1.Controls.Add(this.chkShowTables);
+            this.splitDatabase.Panel1.Controls.Add(this.chkShowDB);
             this.splitDatabase.Panel1.Controls.Add(this.btnConnect);
             this.splitDatabase.Panel1.Controls.Add(this.btnFilter);
             this.splitDatabase.Panel1.Controls.Add(this.lblFilter);
@@ -622,8 +635,8 @@ namespace SmartQueryRunner
             // splitDatabase.Panel2
             // 
             this.splitDatabase.Panel2.Controls.Add(this.tabDatabase);
-            this.splitDatabase.Size = new System.Drawing.Size(418, 660);
-            this.splitDatabase.SplitterDistance = 112;
+            this.splitDatabase.Size = new System.Drawing.Size(418, 662);
+            this.splitDatabase.SplitterDistance = 140;
             this.splitDatabase.SplitterWidth = 5;
             this.splitDatabase.TabIndex = 15;
             // 
@@ -746,26 +759,43 @@ namespace SmartQueryRunner
             // tabDatabase
             // 
             this.tabDatabase.Controls.Add(this.tabDatabases);
-            this.tabDatabase.Controls.Add(this.tabObjects);
-            this.tabDatabase.Controls.Add(this.tabCode);
             this.tabDatabase.Controls.Add(this.tabSnippets);
             this.tabDatabase.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabDatabase.Location = new System.Drawing.Point(0, 0);
             this.tabDatabase.Margin = new System.Windows.Forms.Padding(4);
             this.tabDatabase.Name = "tabDatabase";
             this.tabDatabase.SelectedIndex = 0;
-            this.tabDatabase.Size = new System.Drawing.Size(416, 541);
+            this.tabDatabase.Size = new System.Drawing.Size(416, 515);
             this.tabDatabase.TabIndex = 10;
             this.tabDatabase.DoubleClick += new System.EventHandler(this.lstTables_DoubleClick);
             // 
             // tabDatabases
             // 
-            this.tabDatabases.Controls.Add(this.listViewDBs);
+            this.tabDatabases.Controls.Add(this.splitContainerDB);
             this.tabDatabases.Location = new System.Drawing.Point(4, 25);
             this.tabDatabases.Name = "tabDatabases";
-            this.tabDatabases.Size = new System.Drawing.Size(408, 512);
+            this.tabDatabases.Size = new System.Drawing.Size(408, 486);
             this.tabDatabases.TabIndex = 3;
             this.tabDatabases.Text = "Databases";
+            // 
+            // splitContainerDB
+            // 
+            this.splitContainerDB.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerDB.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerDB.Name = "splitContainerDB";
+            this.splitContainerDB.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerDB.Panel1
+            // 
+            this.splitContainerDB.Panel1.Controls.Add(this.listViewDBs);
+            this.splitContainerDB.Panel1MinSize = 150;
+            // 
+            // splitContainerDB.Panel2
+            // 
+            this.splitContainerDB.Panel2.Controls.Add(this.splitContainerSchema);
+            this.splitContainerDB.Size = new System.Drawing.Size(408, 486);
+            this.splitContainerDB.SplitterDistance = 191;
+            this.splitContainerDB.TabIndex = 0;
             // 
             // listViewDBs
             // 
@@ -777,22 +807,30 @@ namespace SmartQueryRunner
             this.listViewDBs.Location = new System.Drawing.Point(0, 0);
             this.listViewDBs.Margin = new System.Windows.Forms.Padding(4);
             this.listViewDBs.Name = "listViewDBs";
-            this.listViewDBs.Size = new System.Drawing.Size(408, 512);
+            this.listViewDBs.Size = new System.Drawing.Size(408, 191);
             this.listViewDBs.TabIndex = 12;
             this.listViewDBs.UseCompatibleStateImageBehavior = false;
             this.listViewDBs.View = System.Windows.Forms.View.Details;
             // 
-            // tabObjects
+            // splitContainerSchema
             // 
-            this.tabObjects.Controls.Add(this.lstTables);
-            this.tabObjects.Location = new System.Drawing.Point(4, 25);
-            this.tabObjects.Margin = new System.Windows.Forms.Padding(4);
-            this.tabObjects.Name = "tabObjects";
-            this.tabObjects.Padding = new System.Windows.Forms.Padding(4);
-            this.tabObjects.Size = new System.Drawing.Size(408, 514);
-            this.tabObjects.TabIndex = 0;
-            this.tabObjects.Text = "Tables & Views";
-            this.tabObjects.UseVisualStyleBackColor = true;
+            this.splitContainerSchema.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerSchema.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerSchema.Name = "splitContainerSchema";
+            this.splitContainerSchema.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerSchema.Panel1
+            // 
+            this.splitContainerSchema.Panel1.Controls.Add(this.lstTables);
+            this.splitContainerSchema.Panel1MinSize = 150;
+            // 
+            // splitContainerSchema.Panel2
+            // 
+            this.splitContainerSchema.Panel2.Controls.Add(this.lstProcedures);
+            this.splitContainerSchema.Panel2MinSize = 120;
+            this.splitContainerSchema.Size = new System.Drawing.Size(408, 291);
+            this.splitContainerSchema.SplitterDistance = 150;
+            this.splitContainerSchema.TabIndex = 0;
             // 
             // lstTables
             // 
@@ -801,27 +839,15 @@ namespace SmartQueryRunner
             this.lstTables.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstTables.GridLines = true;
             this.lstTables.HideSelection = false;
-            this.lstTables.Location = new System.Drawing.Point(4, 4);
+            this.lstTables.Location = new System.Drawing.Point(0, 0);
             this.lstTables.Margin = new System.Windows.Forms.Padding(4);
             this.lstTables.Name = "lstTables";
-            this.lstTables.Size = new System.Drawing.Size(400, 506);
+            this.lstTables.Size = new System.Drawing.Size(408, 150);
             this.lstTables.TabIndex = 11;
             this.lstTables.UseCompatibleStateImageBehavior = false;
             this.lstTables.View = System.Windows.Forms.View.Details;
             this.lstTables.DoubleClick += new System.EventHandler(this.lstTables_DoubleClick);
             this.lstTables.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lstTables_MouseUp);
-            // 
-            // tabCode
-            // 
-            this.tabCode.Controls.Add(this.lstProcedures);
-            this.tabCode.Location = new System.Drawing.Point(4, 25);
-            this.tabCode.Margin = new System.Windows.Forms.Padding(4);
-            this.tabCode.Name = "tabCode";
-            this.tabCode.Padding = new System.Windows.Forms.Padding(4);
-            this.tabCode.Size = new System.Drawing.Size(408, 514);
-            this.tabCode.TabIndex = 1;
-            this.tabCode.Text = "Procedures & Functions";
-            this.tabCode.UseVisualStyleBackColor = true;
             // 
             // lstProcedures
             // 
@@ -832,11 +858,11 @@ namespace SmartQueryRunner
             this.lstProcedures.FullRowSelect = true;
             this.lstProcedures.GridLines = true;
             this.lstProcedures.HideSelection = false;
-            this.lstProcedures.Location = new System.Drawing.Point(4, 4);
+            this.lstProcedures.Location = new System.Drawing.Point(0, 0);
             this.lstProcedures.Margin = new System.Windows.Forms.Padding(4);
             this.lstProcedures.Name = "lstProcedures";
             this.lstProcedures.ShowItemToolTips = true;
-            this.lstProcedures.Size = new System.Drawing.Size(400, 506);
+            this.lstProcedures.Size = new System.Drawing.Size(408, 137);
             this.lstProcedures.TabIndex = 12;
             this.lstProcedures.UseCompatibleStateImageBehavior = false;
             this.lstProcedures.View = System.Windows.Forms.View.Details;
@@ -1092,13 +1118,52 @@ namespace SmartQueryRunner
             // tabForms
             // 
             this.tabForms.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tabForms.Location = new System.Drawing.Point(418, 30);
+            this.tabForms.Location = new System.Drawing.Point(418, 28);
             this.tabForms.Name = "tabForms";
             this.tabForms.SelectedIndex = 0;
             this.tabForms.Size = new System.Drawing.Size(746, 24);
             this.tabForms.TabIndex = 6;
             this.tabForms.Visible = false;
             this.tabForms.SelectedIndexChanged += new System.EventHandler(this.tabForms_SelectedIndexChanged_1);
+            // 
+            // chkShowDB
+            // 
+            this.chkShowDB.AutoSize = true;
+            this.chkShowDB.Checked = true;
+            this.chkShowDB.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowDB.Location = new System.Drawing.Point(8, 115);
+            this.chkShowDB.Name = "chkShowDB";
+            this.chkShowDB.Size = new System.Drawing.Size(84, 20);
+            this.chkShowDB.TabIndex = 11;
+            this.chkShowDB.Text = "Show DB";
+            this.chkShowDB.UseVisualStyleBackColor = true;
+            this.chkShowDB.CheckedChanged += new System.EventHandler(this.chkShowDB_CheckedChanged);
+            // 
+            // chkShowTables
+            // 
+            this.chkShowTables.AutoSize = true;
+            this.chkShowTables.Checked = true;
+            this.chkShowTables.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowTables.Location = new System.Drawing.Point(98, 115);
+            this.chkShowTables.Name = "chkShowTables";
+            this.chkShowTables.Size = new System.Drawing.Size(148, 20);
+            this.chkShowTables.TabIndex = 12;
+            this.chkShowTables.Text = "Show Tables/Views";
+            this.chkShowTables.UseVisualStyleBackColor = true;
+            this.chkShowTables.CheckedChanged += new System.EventHandler(this.chkShowTables_CheckedChanged);
+            // 
+            // chkShowCode
+            // 
+            this.chkShowCode.AutoSize = true;
+            this.chkShowCode.Checked = true;
+            this.chkShowCode.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowCode.Location = new System.Drawing.Point(252, 115);
+            this.chkShowCode.Name = "chkShowCode";
+            this.chkShowCode.Size = new System.Drawing.Size(98, 20);
+            this.chkShowCode.TabIndex = 13;
+            this.chkShowCode.Text = "Show Code";
+            this.chkShowCode.UseVisualStyleBackColor = true;
+            this.chkShowCode.CheckedChanged += new System.EventHandler(this.chkShowCode_CheckedChanged);
             // 
             // MDIAdvancedQuery
             // 
@@ -1133,8 +1198,14 @@ namespace SmartQueryRunner
             this.splitDatabase.ResumeLayout(false);
             this.tabDatabase.ResumeLayout(false);
             this.tabDatabases.ResumeLayout(false);
-            this.tabObjects.ResumeLayout(false);
-            this.tabCode.ResumeLayout(false);
+            this.splitContainerDB.Panel1.ResumeLayout(false);
+            this.splitContainerDB.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerDB)).EndInit();
+            this.splitContainerDB.ResumeLayout(false);
+            this.splitContainerSchema.Panel1.ResumeLayout(false);
+            this.splitContainerSchema.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerSchema)).EndInit();
+            this.splitContainerSchema.ResumeLayout(false);
             this.tabSnippets.ResumeLayout(false);
             this.contextMenuStrip2.ResumeLayout(false);
             this.contextConnection.ResumeLayout(false);
@@ -1197,9 +1268,7 @@ namespace SmartQueryRunner
         private System.Windows.Forms.TextBox txtConnectionTimeout;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.TabControl tabDatabase;
-        private System.Windows.Forms.TabPage tabObjects;
         private System.Windows.Forms.ListView lstTables;
-        private System.Windows.Forms.TabPage tabCode;
         private System.Windows.Forms.ListView lstProcedures;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem TS_Procedure_Structure;
@@ -1247,6 +1316,11 @@ namespace SmartQueryRunner
         private System.Windows.Forms.ListView listViewDBs;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
+        private System.Windows.Forms.SplitContainer splitContainerDB;
+        private System.Windows.Forms.SplitContainer splitContainerSchema;
+        private System.Windows.Forms.CheckBox chkShowCode;
+        private System.Windows.Forms.CheckBox chkShowTables;
+        private System.Windows.Forms.CheckBox chkShowDB;
     }
 }
 

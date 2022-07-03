@@ -77,6 +77,11 @@ namespace SmartQueryRunner
         public MDIAdvancedQuery()
         {
             InitializeComponent();
+            splitDatabase.SplitterDistance = 140;
+            splitDatabase.FixedPanel = FixedPanel.Panel1;
+            splitContainerDB.SplitterDistance = 140;
+            //splitContainerDB.FixedPanel = FixedPanel.Panel1;
+
             objConnections.ConnectionChanged += ObjConnections_ConnectionChanged;
             object lIndex; //lState,
             (new MyRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", out lIndex);
@@ -131,9 +136,12 @@ namespace SmartQueryRunner
         private async Task RefreshDBs()
         {
             listViewDBs.Clear();
-            listViewDBs.Columns.Add("Name", 200, HorizontalAlignment.Left);
-            //listViewDBs.Columns.Add("Created", 200, HorizontalAlignment.Left);
-            string sQuery = "SELECT name,  create_date FROM sys.databases"; //database_id,
+            listViewDBs.Columns.Add("Name", 130, HorizontalAlignment.Left);
+            listViewDBs.Columns.Add("IsSystemDB", 50, HorizontalAlignment.Left);
+            listViewDBs.Columns.Add("Created", 130, HorizontalAlignment.Left);
+            //https://stackoverflow.com/questions/1819095/sql-server-how-to-tell-if-a-database-is-a-system-database
+            //if a database is named master, model, msdb or tempdb, it IS a system db; it is also a system db, if field is_distributor = 1 in the view sys.databases.
+            string sQuery = "SELECT name, CAST(case when name in ('master','model','msdb','tempdb')  then 1 else is_distributor end AS bit) AS [IsSystemObject],  create_date FROM sys.databases"; //database_id,
             using (DataBaseProcedure DataObj = new DataBaseProcedure(sMasterConnectionString, sQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
@@ -142,14 +150,7 @@ namespace SmartQueryRunner
                 {
                     if (ds.Tables["MyTable"] != null)
                     {
-                        dtDatabases = ds.Tables["MyTable"];
-                        foreach (DataRow db in dtDatabases.Rows)
-                        {
-                            ListViewItem lvItem = new ListViewItem((string)db[0]);   // Create the ListViewItem row with the first column.
-                            lvItem.SubItems.Add((string)db[0]);
-                            //lvItem.SubItems.Add(db[1].ToString());
-                            listViewDBs.Items.Add(lvItem);                                // Add the completed row.
-                        }
+                        LoadListViewFromTable(listViewDBs, ds.Tables["MyTable"]);
                     }
                 }
             }
@@ -161,14 +162,11 @@ namespace SmartQueryRunner
             dtSnippetsTable = Common.LoadJsonToTable(snippetFilePath);
 
             listViewSnippets.Clear();
-            listViewSnippets.Columns.Add("Snippet", 200, HorizontalAlignment.Left);
-            //listViewSnippets.Columns.Add("IsExecutable", 0, HorizontalAlignment.Left);
-            foreach (DataRow snippet in dtSnippetsTable.Rows)
-            {
-                ListViewItem lvItem = new ListViewItem((string)snippet[0]);   // Create the ListViewItem row with the first column.
-                lvItem.SubItems.Add((string)snippet[0]);
-                listViewSnippets.Items.Add(lvItem);                                // Add the completed row.
-            }
+            listViewSnippets.Columns.Add("Snippet", 180, HorizontalAlignment.Left);
+            listViewSnippets.Columns.Add("Query", 0, HorizontalAlignment.Left);
+            listViewSnippets.Columns.Add("IsExecutable", 50, HorizontalAlignment.Left);
+            listViewSnippets.Columns.Add("TiedDB", 80, HorizontalAlignment.Left);
+            LoadListViewFromTable(listViewSnippets, dtSnippetsTable);
         }
         private void MDIParent1_Activated(object sender, EventArgs e)
         {
@@ -328,9 +326,7 @@ namespace SmartQueryRunner
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             if (objConnections.ConnectionText == "") return;
-            RefreshLists();
-            tabDatabase.TabPages[1].Text = "Tables & Views(" + lstTables.Items.Count + ")";
-            tabDatabase.TabPages[2].Text = "Procedures & Functions(" + lstProcedures.Items.Count + ")";
+            GetMetaData(); //chkConnection.Checked
         }
 
         private void GetMetaData()
@@ -347,6 +343,9 @@ namespace SmartQueryRunner
                     MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
                 }
             }
+            //todo
+            //tabDatabase.TabPages[1].Text = "Tables & Views(" + lstTables.Items.Count + ")";
+            //tabDatabase.TabPages[2].Text = "Procedures & Functions(" + lstProcedures.Items.Count + ")";
         }
 
         private void ReaderEvent(object sender, object objReader)
@@ -844,10 +843,6 @@ namespace SmartQueryRunner
                 GetEmptyOperatingForm().SetProcedureText( sProcedureBody );
             }
         }
-        private void RefreshLists()
-        {
-            GetMetaData(); //chkConnection.Checked
-        }
 
         private void MDIParent1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -1152,6 +1147,21 @@ namespace SmartQueryRunner
                 "\n\nVersion: 4.00\nReleased : Sun April 24, 2022"
                 , "Smart DB Editor");
 
+        }
+
+        private void chkShowDB_CheckedChanged(object sender, EventArgs e)
+        {
+            splitContainerDB.Panel1Collapsed = ! chkShowDB.Checked;
+        }
+
+        private void chkShowTables_CheckedChanged(object sender, EventArgs e)
+        {
+            splitContainerSchema.Panel1Collapsed = ! chkShowTables.Checked;
+        }
+
+        private void chkShowCode_CheckedChanged(object sender, EventArgs e)
+        {
+            splitContainerSchema.Panel2Collapsed = !chkShowCode.Checked;
         }
     }
 }
