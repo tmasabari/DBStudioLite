@@ -104,6 +104,7 @@ namespace SmartQueryRunner
             this.txtQuery1.Name = "txtQuery1";
             this.txtQuery1.Size = new System.Drawing.Size(1338, 374);
             this.txtQuery1.TabIndex = 12;
+            this.txtQuery1.TextChanged += new System.EventHandler(this.txtQuery1_TextChanged);
             // 
             // txtOutputText
             // 

@@ -130,7 +130,7 @@ namespace SmartQueryRunner
 
         public async Task LoadQuery(string SQuery, bool IsLoadQueryToBox = true)
         {
-            ( (MDIAdvancedQuery)MdiParent).progressBar1.Visible = true;
+            ((MDIAdvancedQuery)MdiParent).ShowProgress();
 
             string lsConnection =( (MDIAdvancedQuery) this.MdiParent).sConnectionString;
             if(IsLoadQueryToBox) txtQuery1.Text = SQuery;
@@ -169,7 +169,7 @@ namespace SmartQueryRunner
                     //(new SmartQueryRunner.MessageText()).Show(Application.ProductName,
                     //    "Error occured" + DataObj.ErrorText, this);
                 }
-                ((MDIAdvancedQuery)MdiParent).progressBar1.Visible = false;
+                ((MDIAdvancedQuery)MdiParent).StopProgress();
             }
         }
         private object CloneObject(object o)
@@ -331,6 +331,23 @@ namespace SmartQueryRunner
         private void dataGrid1_DataError_1(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = true;
+        }
+
+        //https://github-wiki-see.page/m/jacobslusser/ScintillaNET/wiki/Displaying-Line-Numbers
+        private int maxLineNumberCharLength;
+        private void txtQuery1_TextChanged(object sender, EventArgs e)
+        {
+            // Did the number of characters in the line number display change?
+            // i.e. nnn VS nn, or nnnn VS nn, etc...
+            var maxLineNumberCharLength = txtQuery1.Lines.Count.ToString().Length;
+            if (maxLineNumberCharLength == this.maxLineNumberCharLength)
+                return;
+
+            // Calculate the width required to display the last line number
+            // and include some padding for good measure.
+            const int padding = 2;
+            txtQuery1.Margins[0].Width = txtQuery1.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
+            this.maxLineNumberCharLength = maxLineNumberCharLength;
         }
 
         //Now, let's turn to another routine that I'll need to complete the search: GetTableDetails (see Figure 4). This routine uses the SQL query shown here to retrieve the details of a particular table, including field names, datatype, and maximum length: 

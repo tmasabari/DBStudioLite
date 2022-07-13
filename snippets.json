@@ -1,5 +1,17 @@
 [
   {
+    "SnippetName": "Search a word in DB code",
+    "value": "SELECT o.name as ModuleName, s.name as SchemaName, o.type as CodeType, m.definition FROM sys.sql_modules AS m\r\nINNER JOIN sys.objects AS o ON m.object_id = o.object_id\r\nINNER JOIN sys.schemas AS s ON o.schema_id = s.schema_id\r\nWHERE m.definition like '%email%' ORDER By o.type\r\n--TR - trigger FN - scalar function, IF - table valued function, V - view, P - procedure",
+    "IsExecutable": null,
+    "DBName": null
+  },
+  {
+    "SnippetName": "Routine Definition",
+    "value": "SELECT definition FROM sys.sql_modules\r\nWHERE object_id = object_id('<YourModuleName>')",
+    "IsExecutable": "False",
+    "DBName": null
+  },
+  {
     "SnippetName": "DB CC Tables",
     "value": "DBCC SHOWCONTIG WITH TABLERESULTS, ALL_INDEXES",
     "IsExecutable": "True",
@@ -102,12 +114,6 @@
     "DBName": null
   },
   {
-    "SnippetName": "Search column in DB code",
-    "value": "SELECT CAST(ROUTINE_DEFINITION as text) FROM INFORMATION_SCHEMA.ROUTINES \r\nwhere CAST(ROUTINE_DEFINITION as text) like '%parentinvoiceid%'",
-    "IsExecutable": null,
-    "DBName": null
-  },
-  {
     "SnippetName": "List All DBs",
     "value": "SELECT * --name, database_id, create_date  \r\nFROM sys.databases;  ",
     "IsExecutable": "True",
@@ -117,12 +123,6 @@
     "SnippetName": "Grant read only permission to DB",
     "value": "CREATE USER <username> FOR LOGIN osama WITH DEFAULT_SCHEMA=[dbo]; \r\n--for read only permissions\r\nALTER ROLE [db_datareader] ADD MEMBER <username> \r\nGRANT VIEW DEFINITION TO <username> ",
     "IsExecutable": null,
-    "DBName": null
-  },
-  {
-    "SnippetName": "Routine Definition",
-    "value": "SELECT CAST(ROUTINE_DEFINITION as text) FROM INFORMATION_SCHEMA.ROUTINES \r\nwhere ROUTINE_NAME = 'dbo.<Procname>' and lower(ROUTINE_TYPE) = 'procedure'",
-    "IsExecutable": "False",
     "DBName": null
   },
   {

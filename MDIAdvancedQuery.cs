@@ -66,7 +66,7 @@ namespace SmartQueryRunner
         }
 
         private bool bFirstTime = true;
-        public frmConnections objConnections = new frmConnections();
+        public frmConnections objConnections;
         
         private string snippetFilePath = Application.StartupPath + "\\Snippets.json";
         private DataTable dtDatabases = new DataTable();
@@ -83,23 +83,46 @@ namespace SmartQueryRunner
             splitDatabase.FixedPanel = FixedPanel.Panel1;
             splitContainerDB.SplitterDistance = 140;
             //splitContainerDB.FixedPanel = FixedPanel.Panel1;
-
+            objConnections = new frmConnections();
             objConnections.ConnectionChanged += ObjConnections_ConnectionChanged;
-            object lIndex; //lState,
-            (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", out lIndex);
-            object lastSessionSelectedDBNameObj = null;
-            (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "DB", out lastSessionSelectedDBNameObj);
-            if(lastSessionSelectedDBNameObj != null) lastSessionSelectedDBName = (string) lastSessionSelectedDBNameObj;
-            //(new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "CheckState", out lState);
-            if (lIndex == null) objConnections.SelectedIndex = 0; else objConnections.SelectedIndex = int.Parse(lIndex.ToString());
-            //if (lState == null) chkConnection.Checked = true; else chkConnection.Checked = bool.Parse(lState.ToString());
         }
+        private void MDIParent1_Activated(object sender, EventArgs e)
+        {
+            if (bFirstTime)
+            {
+                ShowProgress();
+                object lIndex; //lState,
+                (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", out lIndex);
+                object lastSessionSelectedDBNameObj = null;
+                (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "DB", out lastSessionSelectedDBNameObj);
+                if (lastSessionSelectedDBNameObj != null) lastSessionSelectedDBName = (string)lastSessionSelectedDBNameObj;
+                //(new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "CheckState", out lState);
+                if (lIndex == null) objConnections.SelectedIndex = 0; else objConnections.SelectedIndex = int.Parse(lIndex.ToString());
+                //if (lState == null) chkConnection.Checked = true; else chkConnection.Checked = bool.Parse(lState.ToString());
+
+                bFirstTime = false;
+                //this is not required as setting the connection from the registry automatically triggers the refresh
+                //RefreshDBs();
+                RefreshSnippets();
+
+                FrmEditor childForm = CreateNewForm(Application.StartupPath + "\\Query.txt");
+                childForm.WindowState = FormWindowState.Maximized;
+                childForm.Show();
+
+                if (objConnections.ConnectionList.Items.Count == 0)
+                    objConnections.ShowDialog(this);
+
+                RefreshConnectionsMenu();
+            }
+        }
+
         public void ShowProgress()
         {
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.MarqueeAnimationSpeed = 100;
             progressBar1.Left = (this.ClientSize.Width - progressBar1.Width) / 2;
             progressBar1.Top = (this.ClientSize.Height - progressBar1.Height) / 2;
+            progressBar1.Visible = true;
         }
 
         public void StopProgress()
@@ -184,7 +207,15 @@ namespace SmartQueryRunner
                         }
                         else
                         {
-
+                            //set non system db as default db
+                            for (var i = 0; i < listViewDBs.Items.Count; i++)
+                            {
+                                if (listViewDBs.Items[i].SubItems[1].Text == "0")
+                                {
+                                    listViewDBs.Items[i].Selected = true;
+                                    break;
+                                }
+                            }
                         }
                         //Refresh the schema automatically
                         if (objConnections.ConnectionText == "") return;
@@ -206,25 +237,6 @@ namespace SmartQueryRunner
             listViewSnippets.Columns.Add("IsExecutable", 50, HorizontalAlignment.Left);
             listViewSnippets.Columns.Add("TiedDB", 80, HorizontalAlignment.Left);
             LoadListViewFromTable(listViewSnippets, dtSnippetsTable);
-        }
-        private void MDIParent1_Activated(object sender, EventArgs e)
-        {
-            if (bFirstTime)
-            {
-                bFirstTime = false;
-                //this is not required as setting the connection from the registry automatically triggers the refresh
-                //RefreshDBs();
-                RefreshSnippets();
-
-                FrmEditor childForm = CreateNewForm(Application.StartupPath + "\\Query.txt");
-                childForm.WindowState = FormWindowState.Maximized;
-                childForm.Show();
-
-                if (objConnections.ConnectionList.Items.Count == 0)
-                    objConnections.ShowDialog(this);
-
-                RefreshConnectionsMenu();
-            }
         }
 
         private void RefreshConnectionsMenu()
@@ -372,9 +384,8 @@ namespace SmartQueryRunner
         {
             string sQuery = "select TABLE_NAME,TABLE_SCHEMA,TABLE_TYPE from INFORMATION_SCHEMA.Tables order by table_type, table_name; "; //TABLE_SCHEMA,
             //"SELECT Name FROM sysobjects WHERE (xtype = 'V') order by Name; " + // AND (status > 0) U - tables V' - views 'S' - system tables
-            sQuery = sQuery + "SELECT ROUTINE_NAME, ROUTINE_SCHEMA, ROUTINE_TYPE ,LAST_ALTERED, CREATED ";
-            //if (Fastconnection) sQuery = sQuery + ", ROUTINE_DEFINITION";
-            sQuery = sQuery + " FROM INFORMATION_SCHEMA.ROUTINES order by ROUTINE_TYPE desc, ROUTINE_NAME; ";
+            sQuery = sQuery + "SELECT ROUTINE_NAME, ROUTINE_SCHEMA, ROUTINE_TYPE ,LAST_ALTERED, CREATED "
+                            + " FROM INFORMATION_SCHEMA.ROUTINES order by ROUTINE_TYPE desc, ROUTINE_NAME; ";
             using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
             {
                 if (DataObj.Execute(new DynamicDAL.dlgReaderOpen(ReaderEvent)) == false)
@@ -436,6 +447,8 @@ namespace SmartQueryRunner
 
                 LoadListViewFromTable(lstProcedures, dtProcedures);
             }
+
+            if (progressBar1.Visible) StopProgress();
 
         }
 
@@ -1114,8 +1127,12 @@ namespace SmartQueryRunner
 
         // If child form closed, remove tabPage
         private void ActiveMdiChild_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            ((sender as Form).Tag as TabPage).Dispose();
+{
+            var tabPage = ((sender as Form).Tag as TabPage);
+            var index = tabForms.TabPages.IndexOf(tabPage);
+            if(index > 0)
+                tabForms.SelectedIndex = index - 1;
+            tabPage.Dispose();
         }
 
         private void tabForms_SelectedIndexChanged_1(object sender, EventArgs e)
