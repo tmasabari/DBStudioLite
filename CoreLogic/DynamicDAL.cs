@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Text;
 
 
-#region Database
 
 /// <summary>
 /// Wrapper to do all database related operations
@@ -19,8 +18,9 @@ using System.Text;
 //The using statement ensures that Dispose is called even if an exception occurs while you are calling methods on the object. 
 //You can achieve the same result by putting the object inside a try block and then calling Dispose in a finally block;
 
-public class DataBaseProcedure:IDisposable 
+public class DynamicDAL:IDisposable 
 {
+    #region Database
     public SqlCommand       command;
     public SqlDataReader    reader;
 
@@ -43,7 +43,7 @@ public class DataBaseProcedure:IDisposable
             connection.Dispose();
         }
     }
-    ~DataBaseProcedure() { Dispose(); }
+    ~DynamicDAL() { Dispose(); }
 
     // <param name="paramvalue">If paramvalue not required Pass null. pass DBNull.Value to pass database null</param>
     public void AddInputParameter(string field, SqlDbType type, int size, object paramvalue)
@@ -100,13 +100,13 @@ public class DataBaseProcedure:IDisposable
     }
 
     //changed
-    public DataBaseProcedure(string sConnection, string sProcedure, bool bLogError)
+    public DynamicDAL(string sConnection, string sProcedure, bool bLogError)
         : this(sConnection, sProcedure, bLogError, CommandType.StoredProcedure)
     {
     }
 
     //new
-    public DataBaseProcedure(string sConnection, string sProcedure, bool bLogError, CommandType type)
+    public DynamicDAL(string sConnection, string sProcedure, bool bLogError, CommandType type)
     {
         sConnectionString = sConnection;
         sProcedureName = sProcedure;
@@ -263,6 +263,72 @@ public class DataBaseProcedure:IDisposable
         }
         return ScalarData;
     }
+    #endregion
+    #region Table properties
+    public static string GetColumnList(string sConnectionString, string sTableName)
+    {
+        string SQL = "SELECT STRING_AGG (COLUMN_NAME, ',') AS csv FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'" 
+            + sTableName + "'";
+        string lsConnection = sConnectionString;
+        using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQL, true, CommandType.Text))
+        {
+            object objreturn;
+            if (DataObj.ExecuteScalar(out objreturn))
+            {
+                if (!(objreturn is System.DBNull))
+                {
+                    return objreturn.ToString();
+                }
+            }
+            return String.Empty;
+        }
+    }
+
+    public static string GetIdentityColumn(string sConnectionString, string TableName)
+    {
+        string SQL;
+
+        SQL = "SELECT Name FROM sys.identity_columns WHERE object_id = OBJECT_ID(" + TableName + ")";
+        string lsConnection = sConnectionString;
+        using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQL, true, CommandType.Text))
+        {
+            object objreturn;
+            if (DataObj.ExecuteScalar(out objreturn))
+            {
+                if (!(objreturn is System.DBNull))
+                {
+                    return objreturn.ToString();
+                }
+            }
+            return String.Empty;
+        }
+    }
+    //public bool CheckColumIdentity(string TableName, string ColumnName)
+    //{
+    //    string SQL;
+
+    //    SQL = "SELECT COLUMNPROPERTY( OBJECT_ID('" + TableName + "'),'" + ColumnName + "','IsIdentity')";
+    //    string lsConnection = sConnectionString;
+    //    using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQL, true, CommandType.Text))
+    //    {
+    //        object objreturn;
+    //        if (DataObj.ExecuteScalar(out objreturn))
+    //        {
+    //            if (!(objreturn is System.DBNull))
+    //            {
+    //                if ((int)objreturn == 1)
+    //                {
+    //                    return true;
+    //                }
+    //                else
+    //                {
+    //                    return false;
+    //                }
+    //            }
+    //        }
+    //        return false;
+    //    }
+    //}
+    #endregion
 }
 
-#endregion

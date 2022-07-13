@@ -2,22 +2,26 @@
   {
     "SnippetName": "DB CC Tables",
     "value": "DBCC SHOWCONTIG WITH TABLERESULTS, ALL_INDEXES",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "Wait statistics",
     "value": "DBCC SQLPERF('WAITSTATS')",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "Log space",
     "value": "DBCC SQLPERF('LOGSPACE') ",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "DB CC",
     "value": "DBCC SHOWCONTIG",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "Lock details",
@@ -34,22 +38,26 @@
   {
     "SnippetName": "Active Users",
     "value": "exec Sp_who2 'Active'",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "Who",
     "value": "EXEC SP_WHO",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "Who2",
     "value": "EXEC SP_WHO2",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "UserActions",
     "value": "SELECT spid, uid=rtrim(loginame), dbname=db_name(dbid), Program_name=rtrim(Program_name),status=rtrim(status) \r\nFROM dbo.sysprocesses WHERE loginame = '<UserNameHERE>';",
-    "IsExecutable": "False"
+    "IsExecutable": "False",
+    "DBName": null
   },
   {
     "SnippetName": "Job History",
@@ -60,61 +68,91 @@
   {
     "SnippetName": "connections count",
     "value": "select  db_name(dbid) , count(*) 'connections count'\r\nfrom sysprocesses\r\nwhere spid != @@spid\r\ngroup by  db_name(dbid)\r\norder by count(*)",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "Execution time analysis",
     "value": "SELECT object_name(m.object_id), MAX(qs.last_execution_time)\r\nFROM sys.sql_modules m\r\nLEFT JOIN (sys.dm_exec_query_stats qs\r\nCROSS APPLY sys.dm_exec_sql_text (qs.sql_handle) st)\r\nON m.object_id = st.objectid\r\nAND st.dbid = db_id()\r\nGROUP BY object_name(m.object_id)",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "All Tables",
     "value": "select * from INFORMATION_SCHEMA.Tables order by table_type, table_name",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "Update Stats All Tables",
     "value": "--Increase the timeout This updates stats for whole db tbales \r\n DECLARE updatestats CURSOR FOR\r\n SELECT table_schema, table_name  \r\n FROM information_schema.tables\r\n        where TABLE_TYPE = 'BASE TABLE'\r\n OPEN updatestats\r\n\r\n DECLARE @tableSchema NVARCHAR(128)\r\n DECLARE @tableName NVARCHAR(128)\r\n DECLARE @Statement NVARCHAR(300)\r\n\r\n FETCH NEXT FROM updatestats INTO @tableSchema, @tableName\r\n\r\n WHILE (@@FETCH_STATUS = 0)\r\n BEGIN\r\n    SET @Statement = 'UPDATE STATISTICS '  + '[' + @tableSchema + ']' + '.' + '[' + @tableName + ']' + '  WITH FULLSCAN'\r\n    EXEC sp_executesql @Statement \r\n    FETCH NEXT FROM updatestats INTO @tableSchema, @tableName\r\n END\r\n\r\n CLOSE updatestats\r\n DEALLOCATE updatestats\r\n",
-    "IsExecutable": "False"
+    "IsExecutable": "False",
+    "DBName": null
   },
   {
     "SnippetName": "Indexes(row) fragments",
     "value": "SELECT OBJECT_SCHEMA_NAME(ips.object_id) AS schema_name,\r\n       OBJECT_NAME(ips.object_id) AS object_name,\r\n       i.name AS index_name,\r\n       i.type_desc AS index_type,\r\n       ips.avg_fragmentation_in_percent,\r\n       ips.avg_page_space_used_in_percent,\r\n       ips.page_count,\r\n       ips.alloc_unit_type_desc\r\nFROM sys.dm_db_index_physical_stats(DB_ID(), default, default, default, 'SAMPLED') AS ips\r\nINNER JOIN sys.indexes AS i \r\nON ips.object_id = i.object_id\r\n   AND\r\n   ips.index_id = i.index_id\r\nORDER BY page_count DESC;",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "column indexes fragments",
     "value": "SELECT OBJECT_SCHEMA_NAME(i.object_id) AS schema_name,\r\n       OBJECT_NAME(i.object_id) AS object_name,\r\n       i.name AS index_name,\r\n       i.type_desc AS index_type,\r\n       100.0 * (ISNULL(SUM(rgs.deleted_rows), 0)) / NULLIF(SUM(rgs.total_rows), 0) AS avg_fragmentation_in_percent\r\nFROM sys.indexes AS i\r\nINNER JOIN sys.dm_db_column_store_row_group_physical_stats AS rgs\r\nON i.object_id = rgs.object_id\r\n   AND\r\n   i.index_id = rgs.index_id\r\nWHERE rgs.state_desc = 'COMPRESSED'\r\nGROUP BY i.object_id, i.index_id, i.name, i.type_desc\r\nORDER BY schema_name, object_name, index_name, index_type;",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "Search column in DB code",
     "value": "SELECT CAST(ROUTINE_DEFINITION as text) FROM INFORMATION_SCHEMA.ROUTINES \r\nwhere CAST(ROUTINE_DEFINITION as text) like '%parentinvoiceid%'",
-    "IsExecutable": null
+    "IsExecutable": null,
+    "DBName": null
   },
   {
     "SnippetName": "List All DBs",
     "value": "SELECT * --name, database_id, create_date  \r\nFROM sys.databases;  ",
-    "IsExecutable": "True"
+    "IsExecutable": "True",
+    "DBName": null
   },
   {
     "SnippetName": "Grant read only permission to DB",
     "value": "CREATE USER <username> FOR LOGIN osama WITH DEFAULT_SCHEMA=[dbo]; \r\n--for read only permissions\r\nALTER ROLE [db_datareader] ADD MEMBER <username> \r\nGRANT VIEW DEFINITION TO <username> ",
-    "IsExecutable": null
+    "IsExecutable": null,
+    "DBName": null
   },
   {
     "SnippetName": "Routine Definition",
     "value": "SELECT CAST(ROUTINE_DEFINITION as text) FROM INFORMATION_SCHEMA.ROUTINES \r\nwhere ROUTINE_NAME = 'dbo.<Procname>' and lower(ROUTINE_TYPE) = 'procedure'",
-    "IsExecutable": "False"
+    "IsExecutable": "False",
+    "DBName": null
   },
   {
     "SnippetName": "Column Filter",
     "value": "select * from INFORMATION_SCHEMA.Columns where column_name like '%email%'",
-    "IsExecutable": "False"
+    "IsExecutable": "False",
+    "DBName": null
   },
   {
     "SnippetName": "Email updates",
     "value": "update account set email = 'xx' + email where email is not null and email not like '%avenu%'\r\nupdate AspNetUsers set email = 'xx' + email where email is not null and email not like '%avenu%'\r\nupdate AspNetUsers set username = 'xx' + username where username is not null and username not like '%avenu%'\r\nupdate aspnetuserprofile set username = 'xx' + username where username is not null and username not like '%avenu%'\r\nupdate Charge set BuyerEmail = 'xx' + BuyerEmail where BuyerEmail is not null and BuyerEmail not like '%avenu%'\r\nupdate Customer set email = 'xx' + email where email is not null and email not like '%avenu%'\r\n\r\nupdate invoice set email = 'xx' + email where email is not null and email not like '%avenu%'\r\nupdate stg_invoice set email = 'xx' + email where email is not null and email not like '%avenu%'\r\nupdate [name] set email = 'xx' + email where email is not null and email not like '%avenu%'\r\nupdate [stg_name] set email = 'xx' + email where email is not null and email not like '%avenu%'\r\n\r\nupdate tblCommonNames set email = 'xx' + email where email is not null and email not like '%avenu%'\r\n\r\nupdate appconfig set ConfigValue = 'kristie.howell@avenuinsights.com;osama.munawar@10pearls.com;Kalaiyarasi.Arokiadass@avenuinsights.com' where ConfigKey = 'MultiStepNotifications'\r\n\r\nupdate appconfig set ConfigValue = 'sandbox' \r\nwhere ConfigKey = 'Paypal_Mode'\r\nupdate appconfig set ConfigValue = 'AQp58Gzsrb3R-jS1wLORNqI_DK9an-Wp2oCTWEqqZzDeUSq_aNBJN_BvcAuM7gjMJ1Y_oA_iqe4f0WhK' \r\nwhere ConfigKey = 'Paypal_ClientID'\r\nupdate appconfig set ConfigValue = 'ENPvJxInVRavw3XZ5a3EOsEHQpBF9bhDTzyZmLl7RMFcRMzOxDng-BwX6ONNPXOVoLHTYQRUEu14WdN5' \r\nwhere ConfigKey = 'Paypal_ClientSecret'\r\n\r\n\r\n-- select top 10 * from Customer where email is not null and email like '%avenu%'\r\n--update account set email = SUBSTRING( email,3, LEN(email)) where email is not null and email  like '%avenu%'\r\n--ProductPrintType\tDefaultEmail\r\n-- Setting\tSupportEmail",
-    "IsExecutable": "False"
+    "IsExecutable": "False",
+    "DBName": null
+  },
+  {
+    "SnippetName": "select column as csv",
+    "value": "SELECT STRING_AGG (<ColumnName>, ',') AS csv \r\nFROM <TableName>\r\nGROUP BY <ColumnName>",
+    "IsExecutable": null,
+    "DBName": null
+  },
+  {
+    "SnippetName": "All Columns of the table",
+    "value": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'<Tablename>'",
+    "IsExecutable": null,
+    "DBName": null
+  },
+  {
+    "SnippetName": "Autoincrement Field",
+    "value": "SELECT Name FROM sys.identity_columns WHERE object_id = OBJECT_ID(<TableName>)",
+    "IsExecutable": null,
+    "DBName": null
   }
 ]

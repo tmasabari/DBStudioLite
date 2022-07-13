@@ -12,9 +12,10 @@ using System.Reflection;
 using System.Data.SqlClient;
 using AdvancedQuery;
 
-using XML_Reader;
+using WindowsLogic;
 using xmlDbEditor;
 using System.Threading.Tasks;
+using WinFormsLogic;
 
 //command line "H:\web\Order online\App_Data\Paypal.xml"
 namespace SmartQueryRunner
@@ -73,6 +74,7 @@ namespace SmartQueryRunner
         private DataTable dtProcedures = new DataTable();
         private DataTable dtSnippetsTable = new DataTable();
         private JsonReader snippetsEditor;
+        private string lastSessionSelectedDBName = null;
 
         public MDIAdvancedQuery()
         {
@@ -84,15 +86,32 @@ namespace SmartQueryRunner
 
             objConnections.ConnectionChanged += ObjConnections_ConnectionChanged;
             object lIndex; //lState,
-            (new MyRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", out lIndex);
-            //(new MyRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "CheckState", out lState);
+            (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", out lIndex);
+            object lastSessionSelectedDBNameObj = null;
+            (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "DB", out lastSessionSelectedDBNameObj);
+            if(lastSessionSelectedDBNameObj != null) lastSessionSelectedDBName = (string) lastSessionSelectedDBNameObj;
+            //(new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "CheckState", out lState);
             if (lIndex == null) objConnections.SelectedIndex = 0; else objConnections.SelectedIndex = int.Parse(lIndex.ToString());
             //if (lState == null) chkConnection.Checked = true; else chkConnection.Checked = bool.Parse(lState.ToString());
         }
+        public void ShowProgress()
+        {
+            progressBar1.Style = ProgressBarStyle.Marquee;
+            progressBar1.MarqueeAnimationSpeed = 100;
+            progressBar1.Left = (this.ClientSize.Width - progressBar1.Width) / 2;
+            progressBar1.Top = (this.ClientSize.Height - progressBar1.Height) / 2;
+        }
 
+        public void StopProgress()
+        {
+            progressBar1.Visible = false;
+            progressBar1.Style = ProgressBarStyle.Continuous;
+            progressBar1.MarqueeAnimationSpeed = 0;
+        }
         private void ObjConnections_ConnectionChanged(object sender, EventArgs e)
         {
             currentConnectionToolStripMenuItem.Text = "Connections [" + objConnections.ConnectionName + "]";
+            RefreshDBs();
         }
 
         private FrmEditor GetOperatingForm(bool CreateNew=true)
@@ -141,8 +160,9 @@ namespace SmartQueryRunner
             listViewDBs.Columns.Add("Created", 130, HorizontalAlignment.Left);
             //https://stackoverflow.com/questions/1819095/sql-server-how-to-tell-if-a-database-is-a-system-database
             //if a database is named master, model, msdb or tempdb, it IS a system db; it is also a system db, if field is_distributor = 1 in the view sys.databases.
-            string sQuery = "SELECT name, CAST(case when name in ('master','model','msdb','tempdb')  then 1 else is_distributor end AS bit) AS [IsSystemObject],  create_date FROM sys.databases"; //database_id,
-            using (DataBaseProcedure DataObj = new DataBaseProcedure(sMasterConnectionString, sQuery, true, CommandType.Text))
+            string sQuery = "SELECT name, CAST( IIF( name in ('master','model','msdb','tempdb') , 1 , is_distributor) AS bit) AS [IsSystemObject], " 
+                + " create_date FROM sys.databases"; //database_id,
+            using (DynamicDAL DataObj = new DynamicDAL(sMasterConnectionString, sQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
                 //txtOutputText.Text = DataObj.SQLInfoMessageBuilder.ToString();
@@ -151,6 +171,25 @@ namespace SmartQueryRunner
                     if (ds.Tables["MyTable"] != null)
                     {
                         LoadListViewFromTable(listViewDBs, ds.Tables["MyTable"]);
+                        if(!string.IsNullOrWhiteSpace(lastSessionSelectedDBName))
+                        {
+                            for (var i = 0; i<listViewDBs.Items.Count; i++) 
+                            {
+                                if (listViewDBs.Items[i].SubItems[0].Text == lastSessionSelectedDBName)
+                                {
+                                    listViewDBs.Items[i].Selected = true;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+
+                        }
+                        //Refresh the schema automatically
+                        if (objConnections.ConnectionText == "") return;
+                        GetMetaData();  
+
                     }
                 }
             }
@@ -173,8 +212,8 @@ namespace SmartQueryRunner
             if (bFirstTime)
             {
                 bFirstTime = false;
-
-                RefreshDBs();
+                //this is not required as setting the connection from the registry automatically triggers the refresh
+                //RefreshDBs();
                 RefreshSnippets();
 
                 FrmEditor childForm = CreateNewForm(Application.StartupPath + "\\Query.txt");
@@ -336,9 +375,9 @@ namespace SmartQueryRunner
             sQuery = sQuery + "SELECT ROUTINE_NAME, ROUTINE_SCHEMA, ROUTINE_TYPE ,LAST_ALTERED, CREATED ";
             //if (Fastconnection) sQuery = sQuery + ", ROUTINE_DEFINITION";
             sQuery = sQuery + " FROM INFORMATION_SCHEMA.ROUTINES order by ROUTINE_TYPE desc, ROUTINE_NAME; ";
-            using (DataBaseProcedure DataObj = new DataBaseProcedure(sConnectionString, sQuery, true, CommandType.Text))
+            using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
             {
-                if (DataObj.Execute(new DataBaseProcedure.dlgReaderOpen(ReaderEvent)) == false)
+                if (DataObj.Execute(new DynamicDAL.dlgReaderOpen(ReaderEvent)) == false)
                 {
                     MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
                 }
@@ -436,7 +475,7 @@ namespace SmartQueryRunner
             LoadStructure();
         }
 
-        private string GetSelectedTableName()
+        private string GetSelectedTableNameWithSchema()
         {
             if (lstTables.SelectedItems.Count > 0)
             {
@@ -447,9 +486,19 @@ namespace SmartQueryRunner
                 return "";
         }
 
+        private string GetSelectedTableName()
+        {
+            if (lstTables.SelectedItems.Count > 0)
+            {
+                return lstTables.SelectedItems[0].SubItems[colName].Text;
+            }
+            else
+                return "";
+        }
+
         private async Task LoadStructure()
         {
-            string sTableName = GetSelectedTableName();
+            string sTableName = GetSelectedTableNameWithSchema();
             if (sTableName != "")
             {
                 string stablenameonly = lstTables.SelectedItems[0].SubItems[colName].Text;
@@ -466,17 +515,28 @@ namespace SmartQueryRunner
             }
         }
 
-        private async Task GetTableRows(int Rows, bool isReverse = false)
+        private async Task GetTableRows(int Rows, bool isReverse = false, string columnList = null)
         {
-            string sTableName = GetSelectedTableName();
+            string sTableName = GetSelectedTableNameWithSchema();
 
             if (sTableName != "") 
             {
                 string sQuery = "";
                 if (Rows != -1) sQuery = " top " + Rows.ToString() + " ";
-                sQuery = "select " + sQuery + " * from " + sTableName;
+                sQuery = "select " + sQuery + " " + (! string.IsNullOrEmpty(columnList) ? columnList : "*") + " from " + sTableName;
                 if (isReverse) sQuery += " order by 1 desc";
                 await GetEmptyOperatingForm().LoadQuery(sQuery);
+            }
+        }
+
+        private void getColumnListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string sTableName = GetSelectedTableName();
+
+            if (sTableName != "")
+            {
+                string columnList = DynamicDAL.GetColumnList(sConnectionString, sTableName);
+                GetTableRows(10, false, columnList);
             }
         }
 
@@ -512,7 +572,7 @@ namespace SmartQueryRunner
         private void lstProcedures_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-                if (lstProcedures.SelectedItems.Count > 0) contextMenuStrip2.Show(lstTables, e.Location);
+                if (lstProcedures.SelectedItems.Count > 0) contextMenuStrip2.Show(lstProcedures, e.Location);
         }
 
         private string GetSelectedSPName()
@@ -591,7 +651,7 @@ namespace SmartQueryRunner
 
              try
              {
-                 using (DataBaseProcedure DataObj = new DataBaseProcedure(sConnectionString, Name, true,
+                 using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, Name, true,
                      CommandType.StoredProcedure))
                  {
                      DataObj.connection.Open();
@@ -710,7 +770,7 @@ namespace SmartQueryRunner
 
             try
             {
-                using (DataBaseProcedure DataObj = new DataBaseProcedure(sConnectionString, Name, true,
+                using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, Name, true,
                     CommandType.StoredProcedure))
                 {
                     string sSize = "";
@@ -763,7 +823,7 @@ namespace SmartQueryRunner
             //string sQuery = "SELECT definition FROM sys.sql_modules WHERE object_id = (OBJECT_ID(N'" + Name + "'));";
             //object objReturn;
             string sProcedure = "";
-            using (DataBaseProcedure DataObj = new DataBaseProcedure(sConnectionString, sQuery, true, CommandType.Text))
+            using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
                 //task.Wait();
@@ -846,8 +906,9 @@ namespace SmartQueryRunner
 
         private void MDIParent1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            (new MyRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", objConnections.SelectedIndex.ToString());
-            //(new MyRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "CheckState",chkConnection.Checked.ToString());
+            (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", objConnections.SelectedIndex.ToString());
+            (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "DB", GetSelectedDBName());
+            //(new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "CheckState",chkConnection.Checked.ToString());
         }
 
         public async Task<DataTable> GetTableDetails(string TableName)
@@ -864,7 +925,7 @@ namespace SmartQueryRunner
             string lsConnection = sConnectionString;
 
             SQuery = "select '" + TableName + "' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH from INFORMATION_SCHEMA.COLUMNS where table_name = '" + TableName + "' ";
-            using (DataBaseProcedure DataObj = new DataBaseProcedure(lsConnection, SQuery, true, CommandType.Text))
+            using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQuery, true, CommandType.Text))
             {
                 ds = await DataObj.Execute("RawTableInfo");
                 //task.Wait();
@@ -876,6 +937,8 @@ namespace SmartQueryRunner
                     dt.Columns.Add("DataType", Type.GetType("System.String"));
                     dt.Columns.Add("Length", Type.GetType("System.Int64"));
                     dt.Columns.Add("Identity", Type.GetType("System.Boolean"));
+
+                    var identityColumn = DynamicDAL.GetIdentityColumn(sConnectionString, TableName);
 
                     foreach (DataRow rw in ds.Tables["RawTableInfo"].Rows)
                     {
@@ -894,15 +957,7 @@ namespace SmartQueryRunner
                             {
                                 localLength = 0;
                             }
-
-                            if (localDataType.ToLower() == "int")
-                            {
-                                localIdentity = CheckColumIdentity(TableName, localColumn);
-                            }
-                            else
-                            {
-                                localIdentity = false;
-                            }
+                            localIdentity = localColumn == identityColumn;
 
                             workrow = dt.NewRow();
                             workrow["TableName"] = TableName;
@@ -919,32 +974,6 @@ namespace SmartQueryRunner
 
         }
 
-        public bool CheckColumIdentity(string TableName, string ColumnName)
-        {
-            string SQL;
-
-            SQL = "SELECT COLUMNPROPERTY( OBJECT_ID('" + TableName + "'),'" + ColumnName + "','IsIdentity')";
-            string lsConnection = sConnectionString;
-            using (DataBaseProcedure DataObj = new DataBaseProcedure(lsConnection, SQL, true, CommandType.Text))
-            {
-                object objreturn;
-                if (DataObj.ExecuteScalar(out objreturn))
-                {
-                    if (!(objreturn is System.DBNull))
-                    {
-                        if ((int)objreturn == 1)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-                }
-                return false;
-            }
-        }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1162,6 +1191,11 @@ namespace SmartQueryRunner
         private void chkShowCode_CheckedChanged(object sender, EventArgs e)
         {
             splitContainerSchema.Panel2Collapsed = !chkShowCode.Checked;
+        }
+
+        private void listViewDBs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            lastSessionSelectedDBName = GetSelectedDBName();
         }
     }
 }

@@ -88,12 +88,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common.cs" />
-    <Compile Include="DataBaseProcedure.cs">
+    <Compile Include="CoreLogic\Common.cs" />
+    <Compile Include="CoreLogic\DynamicDAL.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataSecure.cs" />
-    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="CoreLogic\DataSecure.cs" />
+    <Compile Include="CoreLogic\RichTextBoxExtensionMethods.cs" />
     <Compile Include="JsonReader.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,7 +112,7 @@
     <Compile Include="MDIAdvancedQuery.Designer.cs">
       <DependentUpon>MDIAdvancedQuery.cs</DependentUpon>
     </Compile>
-    <Compile Include="MyRegistry.cs" />
+    <Compile Include="CoreLogic\WindowsRegistry.cs" />
     <Compile Include="xmlDbEditor.cs">
       <SubType>Form</SubType>
     </Compile>

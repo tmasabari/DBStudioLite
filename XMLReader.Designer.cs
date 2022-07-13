@@ -1,4 +1,4 @@
-namespace XML_Reader
+namespace WindowsLogic
 {
     partial class XMLReader
     {

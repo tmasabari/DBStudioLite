@@ -1,9 +1,8 @@
-﻿
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 
-namespace XML_Reader
+namespace WindowsLogic
 {
-    public class MyRegistry
+    public class WindowsRegistry
     {
 
         public bool ReadValue(RegistryKey objSection, string sKey, string ValueName, out object sValue)

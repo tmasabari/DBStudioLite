@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace XML_Reader
+namespace WindowsLogic
 {
 
     public partial class XMLReader : Form
@@ -17,7 +17,7 @@ namespace XML_Reader
             InitializeComponent();
 
             object lIndex; //lState,
-            (new MyRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"XMLReport", "FileName", out lIndex);
+            (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"XMLReport", "FileName", out lIndex);
 
             openFileDialog1.FileName = (string)lIndex;
             textBox1.Text = (string)lIndex;
@@ -56,7 +56,7 @@ namespace XML_Reader
         {
             if (sFile.Length > 0)
             {
-                (new MyRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"XMLReport", "FileName", sFile);
+                (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"XMLReport", "FileName", sFile);
 
                 textBox1.Text = sFile;
                 DataSet Reports = new DataSet();

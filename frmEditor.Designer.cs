@@ -28,12 +28,11 @@ namespace SmartQueryRunner
         /// </summary>
         private void InitializeComponent()
         {
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.splitCode = new System.Windows.Forms.SplitContainer();
             this.txtQuery1 = new ScintillaNET.Scintilla();
-            this.dataGrid1 = new System.Windows.Forms.DataGridView();
             this.txtOutputText = new System.Windows.Forms.TextBox();
+            this.dataGrid1 = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.checkShowMessages = new System.Windows.Forms.CheckBox();
             this.lblRows = new System.Windows.Forms.Label();
@@ -52,17 +51,6 @@ namespace SmartQueryRunner
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.progressBar1.Location = new System.Drawing.Point(615, 302);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(164, 27);
-            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBar1.TabIndex = 23;
-            this.progressBar1.Visible = false;
             // 
             // tableLayoutPanel1
             // 
@@ -117,24 +105,6 @@ namespace SmartQueryRunner
             this.txtQuery1.Size = new System.Drawing.Size(1338, 374);
             this.txtQuery1.TabIndex = 12;
             // 
-            // dataGrid1
-            // 
-            this.dataGrid1.AllowUserToAddRows = false;
-            this.dataGrid1.AllowUserToDeleteRows = false;
-            this.dataGrid1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGrid1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dataGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGrid1.Location = new System.Drawing.Point(0, 0);
-            this.dataGrid1.Margin = new System.Windows.Forms.Padding(4);
-            this.dataGrid1.Name = "dataGrid1";
-            this.dataGrid1.ReadOnly = true;
-            this.dataGrid1.RowHeadersWidth = 62;
-            this.dataGrid1.RowTemplate.Height = 23;
-            this.dataGrid1.Size = new System.Drawing.Size(1338, 399);
-            this.dataGrid1.TabIndex = 12;
-            this.dataGrid1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGrid1_DataError_1);
-            // 
             // txtOutputText
             // 
             this.txtOutputText.AcceptsReturn = true;
@@ -153,6 +123,24 @@ namespace SmartQueryRunner
             this.txtOutputText.TabIndex = 13;
             this.txtOutputText.Visible = false;
             this.txtOutputText.WordWrap = false;
+            // 
+            // dataGrid1
+            // 
+            this.dataGrid1.AllowUserToAddRows = false;
+            this.dataGrid1.AllowUserToDeleteRows = false;
+            this.dataGrid1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGrid1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGrid1.Location = new System.Drawing.Point(0, 0);
+            this.dataGrid1.Margin = new System.Windows.Forms.Padding(4);
+            this.dataGrid1.Name = "dataGrid1";
+            this.dataGrid1.ReadOnly = true;
+            this.dataGrid1.RowHeadersWidth = 62;
+            this.dataGrid1.RowTemplate.Height = 23;
+            this.dataGrid1.Size = new System.Drawing.Size(1338, 399);
+            this.dataGrid1.TabIndex = 12;
+            this.dataGrid1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGrid1_DataError_1);
             // 
             // panel1
             // 
@@ -275,7 +263,6 @@ namespace SmartQueryRunner
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1346, 840);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -296,7 +283,6 @@ namespace SmartQueryRunner
         }
 
         #endregion
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.SplitContainer splitCode;
         public System.Windows.Forms.TextBox txtOutputText;

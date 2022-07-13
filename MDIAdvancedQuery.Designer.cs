@@ -82,6 +82,9 @@ namespace SmartQueryRunner
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitDatabase = new System.Windows.Forms.SplitContainer();
+            this.chkShowCode = new System.Windows.Forms.CheckBox();
+            this.chkShowTables = new System.Windows.Forms.CheckBox();
+            this.chkShowDB = new System.Windows.Forms.CheckBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.btnFilter = new System.Windows.Forms.Button();
             this.lblFilter = new System.Windows.Forms.Label();
@@ -118,6 +121,7 @@ namespace SmartQueryRunner
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showTop10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.getColumnListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTop1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTop100ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTop100ReverseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -131,9 +135,7 @@ namespace SmartQueryRunner
             this.toolstripRefreshSnippets = new System.Windows.Forms.ToolStripMenuItem();
             this.toolstripExecuteSnippet = new System.Windows.Forms.ToolStripMenuItem();
             this.tabForms = new System.Windows.Forms.TabControl();
-            this.chkShowDB = new System.Windows.Forms.CheckBox();
-            this.chkShowTables = new System.Windows.Forms.CheckBox();
-            this.chkShowCode = new System.Windows.Forms.CheckBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -580,10 +582,10 @@ namespace SmartQueryRunner
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 530);
+            this.statusStrip.Location = new System.Drawing.Point(0, 664);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Padding = new System.Windows.Forms.Padding(2, 0, 19, 0);
-            this.statusStrip.Size = new System.Drawing.Size(843, 27);
+            this.statusStrip.Size = new System.Drawing.Size(1164, 26);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "StatusStrip";
             this.statusStrip.Visible = false;
@@ -591,7 +593,7 @@ namespace SmartQueryRunner
             // toolStripStatusLabel
             // 
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(49, 21);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(49, 20);
             this.toolStripStatusLabel.Text = "Status";
             // 
             // panel1
@@ -639,6 +641,45 @@ namespace SmartQueryRunner
             this.splitDatabase.SplitterDistance = 140;
             this.splitDatabase.SplitterWidth = 5;
             this.splitDatabase.TabIndex = 15;
+            // 
+            // chkShowCode
+            // 
+            this.chkShowCode.AutoSize = true;
+            this.chkShowCode.Checked = true;
+            this.chkShowCode.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowCode.Location = new System.Drawing.Point(252, 115);
+            this.chkShowCode.Name = "chkShowCode";
+            this.chkShowCode.Size = new System.Drawing.Size(98, 20);
+            this.chkShowCode.TabIndex = 13;
+            this.chkShowCode.Text = "Show Code";
+            this.chkShowCode.UseVisualStyleBackColor = true;
+            this.chkShowCode.CheckedChanged += new System.EventHandler(this.chkShowCode_CheckedChanged);
+            // 
+            // chkShowTables
+            // 
+            this.chkShowTables.AutoSize = true;
+            this.chkShowTables.Checked = true;
+            this.chkShowTables.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowTables.Location = new System.Drawing.Point(98, 115);
+            this.chkShowTables.Name = "chkShowTables";
+            this.chkShowTables.Size = new System.Drawing.Size(148, 20);
+            this.chkShowTables.TabIndex = 12;
+            this.chkShowTables.Text = "Show Tables/Views";
+            this.chkShowTables.UseVisualStyleBackColor = true;
+            this.chkShowTables.CheckedChanged += new System.EventHandler(this.chkShowTables_CheckedChanged);
+            // 
+            // chkShowDB
+            // 
+            this.chkShowDB.AutoSize = true;
+            this.chkShowDB.Checked = true;
+            this.chkShowDB.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowDB.Location = new System.Drawing.Point(8, 115);
+            this.chkShowDB.Name = "chkShowDB";
+            this.chkShowDB.Size = new System.Drawing.Size(84, 20);
+            this.chkShowDB.TabIndex = 11;
+            this.chkShowDB.Text = "Show DB";
+            this.chkShowDB.UseVisualStyleBackColor = true;
+            this.chkShowDB.CheckedChanged += new System.EventHandler(this.chkShowDB_CheckedChanged);
             // 
             // btnConnect
             // 
@@ -811,6 +852,7 @@ namespace SmartQueryRunner
             this.listViewDBs.TabIndex = 12;
             this.listViewDBs.UseCompatibleStateImageBehavior = false;
             this.listViewDBs.View = System.Windows.Forms.View.Details;
+            this.listViewDBs.SelectedIndexChanged += new System.EventHandler(this.listViewDBs_SelectedIndexChanged);
             // 
             // splitContainerSchema
             // 
@@ -876,7 +918,7 @@ namespace SmartQueryRunner
             this.tabSnippets.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabSnippets.Name = "tabSnippets";
             this.tabSnippets.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabSnippets.Size = new System.Drawing.Size(408, 514);
+            this.tabSnippets.Size = new System.Drawing.Size(408, 486);
             this.tabSnippets.TabIndex = 2;
             this.tabSnippets.Text = "Snippets";
             this.tabSnippets.UseVisualStyleBackColor = true;
@@ -894,7 +936,7 @@ namespace SmartQueryRunner
             this.listViewSnippets.Margin = new System.Windows.Forms.Padding(4);
             this.listViewSnippets.Name = "listViewSnippets";
             this.listViewSnippets.ShowItemToolTips = true;
-            this.listViewSnippets.Size = new System.Drawing.Size(402, 510);
+            this.listViewSnippets.Size = new System.Drawing.Size(402, 482);
             this.listViewSnippets.TabIndex = 13;
             this.listViewSnippets.UseCompatibleStateImageBehavior = false;
             this.listViewSnippets.View = System.Windows.Forms.View.Details;
@@ -1010,6 +1052,7 @@ namespace SmartQueryRunner
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showTop10ToolStripMenuItem,
+            this.getColumnListToolStripMenuItem,
             this.showTop1ToolStripMenuItem,
             this.showTop100ToolStripMenuItem,
             this.showTop100ReverseToolStripMenuItem,
@@ -1018,19 +1061,27 @@ namespace SmartQueryRunner
             this.toolStripSeparator10,
             this.viewStructureToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(227, 178);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(265, 202);
             // 
             // showTop10ToolStripMenuItem
             // 
             this.showTop10ToolStripMenuItem.Name = "showTop10ToolStripMenuItem";
-            this.showTop10ToolStripMenuItem.Size = new System.Drawing.Size(226, 24);
-            this.showTop10ToolStripMenuItem.Text = "Show Top 10";
+            this.showTop10ToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.showTop10ToolStripMenuItem.Text = "Show Top 10 (Fast)";
+            this.showTop10ToolStripMenuItem.Visible = false;
             this.showTop10ToolStripMenuItem.Click += new System.EventHandler(this.showTop10ToolStripMenuItem_Click);
+            // 
+            // getColumnListToolStripMenuItem
+            // 
+            this.getColumnListToolStripMenuItem.Name = "getColumnListToolStripMenuItem";
+            this.getColumnListToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.getColumnListToolStripMenuItem.Text = "Show Top 10 + Columns List";
+            this.getColumnListToolStripMenuItem.Click += new System.EventHandler(this.getColumnListToolStripMenuItem_Click);
             // 
             // showTop1ToolStripMenuItem
             // 
             this.showTop1ToolStripMenuItem.Name = "showTop1ToolStripMenuItem";
-            this.showTop1ToolStripMenuItem.Size = new System.Drawing.Size(226, 24);
+            this.showTop1ToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.showTop1ToolStripMenuItem.Text = "Show Top 1";
             this.showTop1ToolStripMenuItem.Visible = false;
             this.showTop1ToolStripMenuItem.Click += new System.EventHandler(this.showTop1ToolStripMenuItem_Click);
@@ -1038,28 +1089,28 @@ namespace SmartQueryRunner
             // showTop100ToolStripMenuItem
             // 
             this.showTop100ToolStripMenuItem.Name = "showTop100ToolStripMenuItem";
-            this.showTop100ToolStripMenuItem.Size = new System.Drawing.Size(226, 24);
-            this.showTop100ToolStripMenuItem.Text = "Show Top 100";
+            this.showTop100ToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.showTop100ToolStripMenuItem.Text = "Show Top 100 (Fast)";
             this.showTop100ToolStripMenuItem.Click += new System.EventHandler(this.showTop100ToolStripMenuItem_Click_1);
             // 
             // showTop100ReverseToolStripMenuItem
             // 
             this.showTop100ReverseToolStripMenuItem.Name = "showTop100ReverseToolStripMenuItem";
-            this.showTop100ReverseToolStripMenuItem.Size = new System.Drawing.Size(226, 24);
+            this.showTop100ReverseToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.showTop100ReverseToolStripMenuItem.Text = "Show Top 100 Reverse";
             this.showTop100ReverseToolStripMenuItem.Click += new System.EventHandler(this.showTop100ReverseToolStripMenuItem_Click);
             // 
             // showAllToolStripMenuItem
             // 
             this.showAllToolStripMenuItem.Name = "showAllToolStripMenuItem";
-            this.showAllToolStripMenuItem.Size = new System.Drawing.Size(226, 24);
+            this.showAllToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.showAllToolStripMenuItem.Text = "Show All";
             this.showAllToolStripMenuItem.Click += new System.EventHandler(this.showAllToolStripMenuItem_Click_1);
             // 
             // showFieldHeadersToolStripMenuItem
             // 
             this.showFieldHeadersToolStripMenuItem.Name = "showFieldHeadersToolStripMenuItem";
-            this.showFieldHeadersToolStripMenuItem.Size = new System.Drawing.Size(226, 24);
+            this.showFieldHeadersToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.showFieldHeadersToolStripMenuItem.Text = "Show Field Headers";
             this.showFieldHeadersToolStripMenuItem.Visible = false;
             this.showFieldHeadersToolStripMenuItem.Click += new System.EventHandler(this.showFieldHeadersToolStripMenuItem_Click);
@@ -1067,12 +1118,12 @@ namespace SmartQueryRunner
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(223, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(261, 6);
             // 
             // viewStructureToolStripMenuItem
             // 
             this.viewStructureToolStripMenuItem.Name = "viewStructureToolStripMenuItem";
-            this.viewStructureToolStripMenuItem.Size = new System.Drawing.Size(226, 24);
+            this.viewStructureToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.viewStructureToolStripMenuItem.Text = "View Structure";
             this.viewStructureToolStripMenuItem.Click += new System.EventHandler(this.viewStructureToolStripMenuItem_Click_1);
             // 
@@ -1126,50 +1177,23 @@ namespace SmartQueryRunner
             this.tabForms.Visible = false;
             this.tabForms.SelectedIndexChanged += new System.EventHandler(this.tabForms_SelectedIndexChanged_1);
             // 
-            // chkShowDB
+            // progressBar1
             // 
-            this.chkShowDB.AutoSize = true;
-            this.chkShowDB.Checked = true;
-            this.chkShowDB.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowDB.Location = new System.Drawing.Point(8, 115);
-            this.chkShowDB.Name = "chkShowDB";
-            this.chkShowDB.Size = new System.Drawing.Size(84, 20);
-            this.chkShowDB.TabIndex = 11;
-            this.chkShowDB.Text = "Show DB";
-            this.chkShowDB.UseVisualStyleBackColor = true;
-            this.chkShowDB.CheckedChanged += new System.EventHandler(this.chkShowDB_CheckedChanged);
-            // 
-            // chkShowTables
-            // 
-            this.chkShowTables.AutoSize = true;
-            this.chkShowTables.Checked = true;
-            this.chkShowTables.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowTables.Location = new System.Drawing.Point(98, 115);
-            this.chkShowTables.Name = "chkShowTables";
-            this.chkShowTables.Size = new System.Drawing.Size(148, 20);
-            this.chkShowTables.TabIndex = 12;
-            this.chkShowTables.Text = "Show Tables/Views";
-            this.chkShowTables.UseVisualStyleBackColor = true;
-            this.chkShowTables.CheckedChanged += new System.EventHandler(this.chkShowTables_CheckedChanged);
-            // 
-            // chkShowCode
-            // 
-            this.chkShowCode.AutoSize = true;
-            this.chkShowCode.Checked = true;
-            this.chkShowCode.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowCode.Location = new System.Drawing.Point(252, 115);
-            this.chkShowCode.Name = "chkShowCode";
-            this.chkShowCode.Size = new System.Drawing.Size(98, 20);
-            this.chkShowCode.TabIndex = 13;
-            this.chkShowCode.Text = "Show Code";
-            this.chkShowCode.UseVisualStyleBackColor = true;
-            this.chkShowCode.CheckedChanged += new System.EventHandler(this.chkShowCode_CheckedChanged);
+            this.progressBar1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.progressBar1.Location = new System.Drawing.Point(776, 363);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(164, 27);
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBar1.TabIndex = 24;
+            this.progressBar1.Visible = false;
             // 
             // MDIAdvancedQuery
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1164, 690);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.tabForms);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.toolStrip);
@@ -1321,6 +1345,8 @@ namespace SmartQueryRunner
         private System.Windows.Forms.CheckBox chkShowCode;
         private System.Windows.Forms.CheckBox chkShowTables;
         private System.Windows.Forms.CheckBox chkShowDB;
+        private System.Windows.Forms.ToolStripMenuItem getColumnListToolStripMenuItem;
+        public System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

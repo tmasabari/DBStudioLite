@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SmartQueryRunner
+namespace WinFormsLogic
 {
 
-    // Important ! Create the ExtensionMethods class as a "public static" class
-    public static class ExtensionMethods
+    // Important ! Create the RichTextBoxExtensionMethods class as a "public static" class
+    public static class RichTextBoxExtensionMethods
     {
         public static void EnableContextMenu(this RichTextBox rtb)
         {

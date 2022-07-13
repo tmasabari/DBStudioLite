@@ -9,7 +9,7 @@ using AdvancedQuery;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
-namespace XML_Reader
+namespace WindowsLogic
 {
 
     public partial class JsonReader : Form
@@ -21,7 +21,7 @@ namespace XML_Reader
             if(initialFile == null)
             {
                 object lIndex; //lState,
-                (new MyRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"JsonFile", "FileName", out lIndex);
+                (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"JsonFile", "FileName", out lIndex);
                 initialFile = (string)lIndex;
             }
 
@@ -54,7 +54,7 @@ namespace XML_Reader
             openFileDialog1.ShowDialog();
             string sFile = openFileDialog1.FileName;
             textBox1.Text = sFile;
-            (new MyRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"JsonFile", "FileName", sFile);
+            (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"JsonFile", "FileName", sFile);
             RefreshJsonTable(sFile);
         }
 

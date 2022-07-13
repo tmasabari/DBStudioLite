@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Data.SqlClient;
 using AdvancedQuery;
 
-using XML_Reader;
+using WindowsLogic;
 using xmlDbEditor;
 using System.Threading.Tasks;
 using ScintillaNET;
@@ -130,15 +130,11 @@ namespace SmartQueryRunner
 
         public async Task LoadQuery(string SQuery, bool IsLoadQueryToBox = true)
         {
-            progressBar1.Style = ProgressBarStyle.Marquee;
-            progressBar1.MarqueeAnimationSpeed = 100;
-            progressBar1.Left = (this.ClientSize.Width - progressBar1.Width) / 2;
-            progressBar1.Top = (this.ClientSize.Height - progressBar1.Height) / 2;
-            progressBar1.Visible = true;
+            ( (MDIAdvancedQuery)MdiParent).progressBar1.Visible = true;
 
             string lsConnection =( (MDIAdvancedQuery) this.MdiParent).sConnectionString;
             if(IsLoadQueryToBox) txtQuery1.Text = SQuery;
-            using (DataBaseProcedure DataObj = new DataBaseProcedure(lsConnection, SQuery, true, CommandType.Text))
+            using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
                 txtOutputText.Text = DataObj.SQLInfoMessageBuilder.ToString();
@@ -173,9 +169,7 @@ namespace SmartQueryRunner
                     //(new SmartQueryRunner.MessageText()).Show(Application.ProductName,
                     //    "Error occured" + DataObj.ErrorText, this);
                 }
-                progressBar1.Visible = false;
-                progressBar1.Style = ProgressBarStyle.Continuous;
-                progressBar1.MarqueeAnimationSpeed = 0;
+                ((MDIAdvancedQuery)MdiParent).progressBar1.Visible = false;
             }
         }
         private object CloneObject(object o)
