@@ -9,6 +9,7 @@ using AdvancedQuery;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using SmartQueryRunner;
+using System.IO;
 
 namespace WindowsLogic
 {
@@ -44,9 +45,9 @@ namespace WindowsLogic
             set
             {
                 currentFileName = value;
-                this.Text = value;
+                this.Text =Path.GetFileName( value);
                 var tabPage = (this.Tag as TabPage);
-                if (tabPage != null) tabPage.Text = value;
+                if (tabPage != null) tabPage.Text = this.Text;
             }
         }
         public void LoadFromFile()

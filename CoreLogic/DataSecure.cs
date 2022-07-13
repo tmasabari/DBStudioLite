@@ -1,25 +1,74 @@
 ﻿using System;
+using System.Configuration;
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 
 public class DataSecure
 {
 
-    public  string  GetEncryptedData(string sData)
+    private static string key = ConfigurationManager.AppSettings.Get("Encryptionkey");
+    public static string EncryptString(string plainText)
     {
-        byte[] byteCon = new byte[sData.Length];
-        byteCon = System.Text.Encoding.Default.GetBytes(sData);
-        return Convert.ToBase64String(byteCon);
+        byte[] iv = new byte[16];
+        byte[] array;
+
+        using (Aes aes = Aes.Create())
+        {
+            aes.Key = Encoding.UTF8.GetBytes(key);
+            aes.IV = iv;
+
+            ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, encryptor, CryptoStreamMode.Write))
+                {
+                    using (StreamWriter streamWriter = new StreamWriter((Stream)cryptoStream))
+                    {
+                        streamWriter.Write(plainText);
+                    }
+
+                    array = memoryStream.ToArray();
+                }
+            }
+        }
+
+        return Convert.ToBase64String(array);
+    }
+    public static string DecryptString(string cipherText)
+    {
+        try
+        {
+            byte[] iv = new byte[16];
+            byte[] buffer = Convert.FromBase64String(cipherText);
+
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.IV = iv;
+                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                using (MemoryStream memoryStream = new MemoryStream(buffer))
+                {
+                    using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader streamReader = new StreamReader((Stream)cryptoStream))
+                        {
+                            return streamReader.ReadToEnd();
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            
+        }
+        return cipherText;
     }
 
-    public string GetDecryptedData(string sData)
-    {   string sConverted ="";
-        try {
-            byte[] byteCon = Convert.FromBase64String(sData);
-            sConverted =System.Text.Encoding.Default.GetString(byteCon);
-        }
-        catch { sConverted = sData; }  // never mind invalid sData. return original value
-        return sConverted;
-    }
-}
+} 
 
 ////Reader
 

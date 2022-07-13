@@ -47,6 +47,7 @@ namespace SmartQueryRunner
             this.currentConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.newWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cascadeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +64,6 @@ namespace SmartQueryRunner
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.newToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -78,6 +78,7 @@ namespace SmartQueryRunner
             this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitDatabase = new System.Windows.Forms.SplitContainer();
+            this.chkLoadPreviousSession = new System.Windows.Forms.CheckBox();
             this.chkShowCode = new System.Windows.Forms.CheckBox();
             this.chkShowTables = new System.Windows.Forms.CheckBox();
             this.chkShowDB = new System.Windows.Forms.CheckBox();
@@ -163,10 +164,10 @@ namespace SmartQueryRunner
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenu,
             this.currentConnectionToolStripMenuItem,
+            this.aboutToolStripMenuItem1,
             this.windowsMenu,
             this.viewMenu,
-            this.helpMenu,
-            this.aboutToolStripMenuItem1});
+            this.helpMenu});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.MdiWindowListItem = this.windowsMenu;
             this.menuStrip.Name = "menuStrip";
@@ -201,7 +202,7 @@ namespace SmartQueryRunner
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(237, 30);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -211,7 +212,7 @@ namespace SmartQueryRunner
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(237, 30);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenFile);
             // 
@@ -219,14 +220,14 @@ namespace SmartQueryRunner
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
             this.reloadToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(237, 30);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
             this.reloadToolStripMenuItem.Text = "&Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(234, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(230, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -234,7 +235,7 @@ namespace SmartQueryRunner
             this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(237, 30);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -243,14 +244,14 @@ namespace SmartQueryRunner
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(237, 30);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
             this.saveAsToolStripMenuItem.Text = "Save &As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(234, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(230, 6);
             // 
             // printToolStripMenuItem
             // 
@@ -258,7 +259,7 @@ namespace SmartQueryRunner
             this.printToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.printToolStripMenuItem.Name = "printToolStripMenuItem";
             this.printToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.printToolStripMenuItem.Size = new System.Drawing.Size(237, 30);
+            this.printToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
             this.printToolStripMenuItem.Text = "&Print";
             this.printToolStripMenuItem.Visible = false;
             // 
@@ -267,28 +268,28 @@ namespace SmartQueryRunner
             this.printPreviewToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("printPreviewToolStripMenuItem.Image")));
             this.printPreviewToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.printPreviewToolStripMenuItem.Name = "printPreviewToolStripMenuItem";
-            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(237, 30);
+            this.printPreviewToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
             this.printPreviewToolStripMenuItem.Text = "Print Pre&view";
             this.printPreviewToolStripMenuItem.Visible = false;
             // 
             // printSetupToolStripMenuItem
             // 
             this.printSetupToolStripMenuItem.Name = "printSetupToolStripMenuItem";
-            this.printSetupToolStripMenuItem.Size = new System.Drawing.Size(237, 30);
+            this.printSetupToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
             this.printSetupToolStripMenuItem.Text = "Print Setup";
             this.printSetupToolStripMenuItem.Visible = false;
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(234, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(230, 6);
             this.toolStripSeparator5.Visible = false;
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(237, 30);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(233, 26);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolsStripMenuItem_Click);
             // 
@@ -314,6 +315,13 @@ namespace SmartQueryRunner
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(143, 6);
+            // 
+            // aboutToolStripMenuItem1
+            // 
+            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(77, 24);
+            this.aboutToolStripMenuItem1.Text = "&About ...";
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
             // windowsMenu
             // 
@@ -452,13 +460,6 @@ namespace SmartQueryRunner
             this.aboutToolStripMenuItem.Text = "&About ...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
-            // aboutToolStripMenuItem1
-            // 
-            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(77, 24);
-            this.aboutToolStripMenuItem1.Text = "&About ...";
-            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
-            // 
             // toolStrip
             // 
             this.toolStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
@@ -586,6 +587,7 @@ namespace SmartQueryRunner
             // 
             // splitDatabase.Panel1
             // 
+            this.splitDatabase.Panel1.Controls.Add(this.chkLoadPreviousSession);
             this.splitDatabase.Panel1.Controls.Add(this.chkShowCode);
             this.splitDatabase.Panel1.Controls.Add(this.chkShowTables);
             this.splitDatabase.Panel1.Controls.Add(this.chkShowDB);
@@ -608,6 +610,18 @@ namespace SmartQueryRunner
             this.splitDatabase.SplitterDistance = 140;
             this.splitDatabase.SplitterWidth = 5;
             this.splitDatabase.TabIndex = 15;
+            // 
+            // chkLoadPreviousSession
+            // 
+            this.chkLoadPreviousSession.AutoSize = true;
+            this.chkLoadPreviousSession.Checked = true;
+            this.chkLoadPreviousSession.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkLoadPreviousSession.Location = new System.Drawing.Point(239, 44);
+            this.chkLoadPreviousSession.Name = "chkLoadPreviousSession";
+            this.chkLoadPreviousSession.Size = new System.Drawing.Size(168, 20);
+            this.chkLoadPreviousSession.TabIndex = 14;
+            this.chkLoadPreviousSession.Text = "Load Previous Session";
+            this.chkLoadPreviousSession.UseVisualStyleBackColor = true;
             // 
             // chkShowCode
             // 
@@ -653,7 +667,7 @@ namespace SmartQueryRunner
             this.btnConnect.Location = new System.Drawing.Point(8, 39);
             this.btnConnect.Margin = new System.Windows.Forms.Padding(4);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(117, 28);
+            this.btnConnect.Size = new System.Drawing.Size(98, 28);
             this.btnConnect.TabIndex = 10;
             this.btnConnect.Text = "Refresh &Dbs";
             this.btnConnect.UseVisualStyleBackColor = true;
@@ -755,10 +769,10 @@ namespace SmartQueryRunner
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(133, 39);
+            this.btnRefresh.Location = new System.Drawing.Point(114, 39);
             this.btnRefresh.Margin = new System.Windows.Forms.Padding(4);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(137, 28);
+            this.btnRefresh.Size = new System.Drawing.Size(118, 28);
             this.btnRefresh.TabIndex = 6;
             this.btnRefresh.Text = "&Refresh Schema";
             this.btnRefresh.UseVisualStyleBackColor = true;
@@ -941,6 +955,7 @@ namespace SmartQueryRunner
             // 
             // TS_Procedure_Code
             // 
+            this.TS_Procedure_Code.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TS_Procedure_Code.Name = "TS_Procedure_Code";
             this.TS_Procedure_Code.Size = new System.Drawing.Size(183, 24);
             this.TS_Procedure_Code.Text = "Modify";
@@ -1028,27 +1043,28 @@ namespace SmartQueryRunner
             this.toolStripSeparator10,
             this.viewStructureToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(265, 202);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(278, 202);
             // 
             // showTop10ToolStripMenuItem
             // 
             this.showTop10ToolStripMenuItem.Name = "showTop10ToolStripMenuItem";
-            this.showTop10ToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.showTop10ToolStripMenuItem.Size = new System.Drawing.Size(277, 24);
             this.showTop10ToolStripMenuItem.Text = "Show Top 10 (Fast)";
             this.showTop10ToolStripMenuItem.Visible = false;
             this.showTop10ToolStripMenuItem.Click += new System.EventHandler(this.showTop10ToolStripMenuItem_Click);
             // 
             // getColumnListToolStripMenuItem
             // 
+            this.getColumnListToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.getColumnListToolStripMenuItem.Name = "getColumnListToolStripMenuItem";
-            this.getColumnListToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.getColumnListToolStripMenuItem.Size = new System.Drawing.Size(277, 24);
             this.getColumnListToolStripMenuItem.Text = "Show Top 10 + Columns List";
             this.getColumnListToolStripMenuItem.Click += new System.EventHandler(this.getColumnListToolStripMenuItem_Click);
             // 
             // showTop1ToolStripMenuItem
             // 
             this.showTop1ToolStripMenuItem.Name = "showTop1ToolStripMenuItem";
-            this.showTop1ToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.showTop1ToolStripMenuItem.Size = new System.Drawing.Size(277, 24);
             this.showTop1ToolStripMenuItem.Text = "Show Top 1";
             this.showTop1ToolStripMenuItem.Visible = false;
             this.showTop1ToolStripMenuItem.Click += new System.EventHandler(this.showTop1ToolStripMenuItem_Click);
@@ -1056,28 +1072,28 @@ namespace SmartQueryRunner
             // showTop100ToolStripMenuItem
             // 
             this.showTop100ToolStripMenuItem.Name = "showTop100ToolStripMenuItem";
-            this.showTop100ToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.showTop100ToolStripMenuItem.Size = new System.Drawing.Size(277, 24);
             this.showTop100ToolStripMenuItem.Text = "Show Top 100 (Fast)";
             this.showTop100ToolStripMenuItem.Click += new System.EventHandler(this.showTop100ToolStripMenuItem_Click_1);
             // 
             // showTop100ReverseToolStripMenuItem
             // 
             this.showTop100ReverseToolStripMenuItem.Name = "showTop100ReverseToolStripMenuItem";
-            this.showTop100ReverseToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.showTop100ReverseToolStripMenuItem.Size = new System.Drawing.Size(277, 24);
             this.showTop100ReverseToolStripMenuItem.Text = "Show Top 100 Reverse";
             this.showTop100ReverseToolStripMenuItem.Click += new System.EventHandler(this.showTop100ReverseToolStripMenuItem_Click);
             // 
             // showAllToolStripMenuItem
             // 
             this.showAllToolStripMenuItem.Name = "showAllToolStripMenuItem";
-            this.showAllToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.showAllToolStripMenuItem.Size = new System.Drawing.Size(277, 24);
             this.showAllToolStripMenuItem.Text = "Show All";
             this.showAllToolStripMenuItem.Click += new System.EventHandler(this.showAllToolStripMenuItem_Click_1);
             // 
             // showFieldHeadersToolStripMenuItem
             // 
             this.showFieldHeadersToolStripMenuItem.Name = "showFieldHeadersToolStripMenuItem";
-            this.showFieldHeadersToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.showFieldHeadersToolStripMenuItem.Size = new System.Drawing.Size(277, 24);
             this.showFieldHeadersToolStripMenuItem.Text = "Show Field Headers";
             this.showFieldHeadersToolStripMenuItem.Visible = false;
             this.showFieldHeadersToolStripMenuItem.Click += new System.EventHandler(this.showFieldHeadersToolStripMenuItem_Click);
@@ -1085,12 +1101,12 @@ namespace SmartQueryRunner
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(274, 6);
             // 
             // viewStructureToolStripMenuItem
             // 
             this.viewStructureToolStripMenuItem.Name = "viewStructureToolStripMenuItem";
-            this.viewStructureToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.viewStructureToolStripMenuItem.Size = new System.Drawing.Size(277, 24);
             this.viewStructureToolStripMenuItem.Text = "View Structure";
             this.viewStructureToolStripMenuItem.Click += new System.EventHandler(this.viewStructureToolStripMenuItem_Click_1);
             // 
@@ -1109,7 +1125,7 @@ namespace SmartQueryRunner
             // 
             this.toolstripLoadSnippet.Name = "toolstripLoadSnippet";
             this.toolstripLoadSnippet.Size = new System.Drawing.Size(188, 24);
-            this.toolstripLoadSnippet.Text = "&Load";
+            this.toolstripLoadSnippet.Text = "&View Code";
             this.toolstripLoadSnippet.Click += new System.EventHandler(this.toolstripLoadSnippet_Click);
             // 
             // toolstripEditSnippet
@@ -1128,6 +1144,7 @@ namespace SmartQueryRunner
             // 
             // toolstripExecuteSnippet
             // 
+            this.toolstripExecuteSnippet.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolstripExecuteSnippet.Name = "toolstripExecuteSnippet";
             this.toolstripExecuteSnippet.Size = new System.Drawing.Size(188, 24);
             this.toolstripExecuteSnippet.Text = "&Execute";
@@ -1314,6 +1331,7 @@ namespace SmartQueryRunner
         private System.Windows.Forms.CheckBox chkShowDB;
         private System.Windows.Forms.ToolStripMenuItem getColumnListToolStripMenuItem;
         public System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.CheckBox chkLoadPreviousSession;
     }
 }
 

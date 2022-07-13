@@ -8,8 +8,7 @@ using System.Collections.Specialized;
 using Microsoft.VisualBasic;
 using System.Threading.Tasks;
 using System.Text;
-
-
+using SmartQueryRunner;
 
 /// <summary>
 /// Wrapper to do all database related operations
@@ -267,8 +266,7 @@ public class DynamicDAL:IDisposable
     #region Table properties
     public static string GetColumnList(string sConnectionString, string sTableName)
     {
-        string SQL = "SELECT STRING_AGG (COLUMN_NAME, ',') AS csv FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'" 
-            + sTableName + "'";
+        string SQL = DynamicDataSourceCode.GetColumnListCode(sTableName);
         string lsConnection = sConnectionString;
         using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQL, true, CommandType.Text))
         {
@@ -284,11 +282,9 @@ public class DynamicDAL:IDisposable
         }
     }
 
-    public static string GetIdentityColumn(string sConnectionString, string TableName)
+    public static string GetIdentityColumn(string sConnectionString, string sTableName)
     {
-        string SQL;
-
-        SQL = "SELECT Name FROM sys.identity_columns WHERE object_id = OBJECT_ID(" + TableName + ")";
+        string SQL = DynamicDataSourceCode.GetIdentityColumnCode(sTableName);
         string lsConnection = sConnectionString;
         using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQL, true, CommandType.Text))
         {
@@ -303,32 +299,6 @@ public class DynamicDAL:IDisposable
             return String.Empty;
         }
     }
-    //public bool CheckColumIdentity(string TableName, string ColumnName)
-    //{
-    //    string SQL;
-
-    //    SQL = "SELECT COLUMNPROPERTY( OBJECT_ID('" + TableName + "'),'" + ColumnName + "','IsIdentity')";
-    //    string lsConnection = sConnectionString;
-    //    using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQL, true, CommandType.Text))
-    //    {
-    //        object objreturn;
-    //        if (DataObj.ExecuteScalar(out objreturn))
-    //        {
-    //            if (!(objreturn is System.DBNull))
-    //            {
-    //                if ((int)objreturn == 1)
-    //                {
-    //                    return true;
-    //                }
-    //                else
-    //                {
-    //                    return false;
-    //                }
-    //            }
-    //        }
-    //        return false;
-    //    }
-    //}
     #endregion
 }
 

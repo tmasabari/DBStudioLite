@@ -68,6 +68,7 @@ namespace AdvancedQuery
                 using (StreamReader objfile = new StreamReader(sFile))
                 {
                     sData = objfile.ReadToEnd();
+                    sData = DataSecure.DecryptString(sData);
                 }
             }
             catch
@@ -79,7 +80,7 @@ namespace AdvancedQuery
         {
             using (StreamWriter objfile = new StreamWriter(sFile))
             {
-                objfile.Write(data);
+                objfile.Write(DataSecure.EncryptString(data));
             }
 
         }

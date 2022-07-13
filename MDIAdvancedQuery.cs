@@ -74,7 +74,7 @@ namespace SmartQueryRunner
         private DataTable dtSnippetsTable = new DataTable();
         private DataTableEditor snippetsEditor;
         private string lastSessionSelectedDBName = null;
-
+        private string lastSessionFilesPath = Application.StartupPath + "\\LastSession.txt";
         public MDIAdvancedQuery()
         {
             InitializeComponent();
@@ -99,19 +99,31 @@ namespace SmartQueryRunner
                 if (lIndex == null) objConnections.SelectedIndex = 0; else objConnections.SelectedIndex = int.Parse(lIndex.ToString());
                 //if (lState == null) chkConnection.Checked = true; else chkConnection.Checked = bool.Parse(lState.ToString());
 
+                object objLoadPreviousSession; //lState,
+                (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"Options", "LoadPreviousSession", out objLoadPreviousSession);
+                if(objLoadPreviousSession != null) chkLoadPreviousSession.Checked = Boolean.Parse((string)objLoadPreviousSession);
+
                 bFirstTime = false;
                 //this is not required as setting the connection from the registry automatically triggers the refresh
                 //RefreshDBs();
                 RefreshSnippets();
 
-                var childForm = CreateNewForm(Application.StartupPath + "\\Query.txt");
-                childForm.WindowState = FormWindowState.Maximized;
-                childForm.Show();
-
                 if (objConnections.ConnectionList.Items.Count == 0)
                     objConnections.ShowDialog(this);
 
                 RefreshConnectionsMenu();
+
+                if(chkLoadPreviousSession.Checked && File.Exists(lastSessionFilesPath))
+                {
+                    var filePathArry = File.ReadAllLines(lastSessionFilesPath);
+                    foreach (var filePath in filePathArry)
+                    {
+                        if (File.Exists(filePath))
+                        {
+                            OpenFile(filePath);
+                        }
+                    }
+                }
             }
         }
 
@@ -197,10 +209,7 @@ namespace SmartQueryRunner
             listViewDBs.Columns.Add("Name", 130, HorizontalAlignment.Left);
             listViewDBs.Columns.Add("IsSystemDB", 50, HorizontalAlignment.Left);
             listViewDBs.Columns.Add("Created", 130, HorizontalAlignment.Left);
-            //https://stackoverflow.com/questions/1819095/sql-server-how-to-tell-if-a-database-is-a-system-database
-            //if a database is named master, model, msdb or tempdb, it IS a system db; it is also a system db, if field is_distributor = 1 in the view sys.databases.
-            string sQuery = "SELECT name, CAST( IIF( name in ('master','model','msdb','tempdb') , 1 , is_distributor) AS bit) AS [IsSystemObject], " 
-                + " create_date FROM sys.databases"; //database_id,
+            string sQuery = DynamicDataSourceCode.GetAllDBsCode;
             using (DynamicDAL DataObj = new DynamicDAL(sMasterConnectionString, sQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
@@ -287,21 +296,31 @@ namespace SmartQueryRunner
                  + "|Json Files (*.json)|*.json" + "|XML Files (*.xml)|*.xml";
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                string FileName = openFileDialog.FileName.Trim();
-                var formType = FormTypes.SQLEditor;
-                if (FileName.ToLower().EndsWith(".xml")) formType = FormTypes.XMLEditor;
-                else if (FileName.ToLower().EndsWith(".json")) formType = FormTypes.JsonEditor;
-
-                var childForm = CreateNewForm(FileName, formType);
-                childForm.WindowState = FormWindowState.Maximized;
-                childForm.Show();
+                OpenFile(openFileDialog.FileName);
             }
+        }
+        private void OpenFile(string sFileName)
+        {
+            string FileName = sFileName.Trim();
+            var formType = FormTypes.SQLEditor;
+            if (FileName.ToLower().EndsWith(".xml")) formType = FormTypes.XMLEditor;
+            else if (FileName.ToLower().EndsWith(".json")) formType = FormTypes.JsonEditor;
+
+            var childForm = CreateNewForm(FileName, formType);
+            childForm.WindowState = FormWindowState.Maximized;
+            childForm.Show();
         }
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             IOperatingForm FormToSave = GetOperatingForm();
-            if (FormToSave != null) SaveAs(FormToSave);
+            if (FormToSave != null)
+            {
+                if (FormToSave != snippetsEditor) //do not invoke save as for snippets editor
+                    SaveAs(FormToSave);
+                else
+                    MessageBox.Show("'Save As' option is not applicable for snippets.");
+            }
         }
 
         private void SaveAs(IOperatingForm FormToSave)
@@ -325,7 +344,13 @@ namespace SmartQueryRunner
                 if (FormToSave.FileName == "")
                     SaveAs(FormToSave);
                 else
+                {
                     FormToSave.SaveToFile();
+                    if (FormToSave == snippetsEditor) //refresh snippets automatically if snippets are saved
+                    {
+                        RefreshSnippets();
+                    }
+                }
             }
         }
 
@@ -334,7 +359,7 @@ namespace SmartQueryRunner
             IOperatingForm FormToSave = GetOperatingForm();
             if (FormToSave != null)
             {
-                var confirmResult = MessageBox.Show("You will loose any unsaved data. Would you like to Continue", 
+                var confirmResult = MessageBox.Show("You will loose any unsaved data. Would you like to Continue?", 
                     "Confirm reload", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if(confirmResult == DialogResult.Yes)
                     FormToSave.LoadFromFile();
@@ -395,10 +420,7 @@ namespace SmartQueryRunner
 
         private void GetMetaData()
         {
-            string sQuery = "select TABLE_NAME,TABLE_SCHEMA,TABLE_TYPE from INFORMATION_SCHEMA.Tables order by table_type, table_name; "; //TABLE_SCHEMA,
-            //"SELECT Name FROM sysobjects WHERE (xtype = 'V') order by Name; " + // AND (status > 0) U - tables V' - views 'S' - system tables
-            sQuery = sQuery + "SELECT ROUTINE_NAME, ROUTINE_SCHEMA, ROUTINE_TYPE ,LAST_ALTERED, CREATED "
-                            + " FROM INFORMATION_SCHEMA.ROUTINES order by ROUTINE_TYPE desc, ROUTINE_NAME; ";
+            string sQuery = DynamicDataSourceCode.GetAllSchemaCode + ";" + DynamicDataSourceCode.GetAllDBModulesCode;
             using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
             {
                 if (DataObj.Execute(new DynamicDAL.dlgReaderOpen(ReaderEvent)) == false)
@@ -494,7 +516,8 @@ namespace SmartQueryRunner
 
         private void lstTables_DoubleClick(object sender, EventArgs e)
         {
-            LoadStructure();
+            getColumnListToolStripMenuItem_Click(sender, e);
+            //LoadStructure();
         }
         private void viewStructureToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
@@ -528,12 +551,12 @@ namespace SmartQueryRunner
             if (sTableName != "")
             {
                 string stablenameonly = lstTables.SelectedItems[0].SubItems[colName].Text;
-                if (lstTables.SelectedItems[0].SubItems[colType].Text.ToUpper() == "BASE TABLE")
+                if (lstTables.SelectedItems[0].SubItems[colType].Text.ToUpper() == DynamicDataSourceCode.BaseTableType)
                     GetEmptyOperatingForm().SetDataGrid(await GetTableDetails(stablenameonly));
                 else
                 {
                     GetEmptyOperatingForm().SetProcedureText(
-                        await GetProcedureDefinition(
+                        await DynamicDataSourceCode.GetProcedureDefinition(sConnectionString,
                             sTableName,
                             lstTables.SelectedItems[0].SubItems[colType].Text)
                         );
@@ -544,13 +567,9 @@ namespace SmartQueryRunner
         private async Task GetTableRows(int Rows, bool isReverse = false, string columnList = null)
         {
             string sTableName = GetSelectedTableNameWithSchema();
-
             if (sTableName != "") 
             {
-                string sQuery = "";
-                if (Rows != -1) sQuery = " top " + Rows.ToString() + " ";
-                sQuery = "select " + sQuery + " " + (! string.IsNullOrEmpty(columnList) ? columnList : "*") + " from " + sTableName;
-                if (isReverse) sQuery += " order by 1 desc";
+                string sQuery = DynamicDataSourceCode.GetTableRowsCode(sTableName, Rows, isReverse, columnList);
                 await GetEmptyOperatingForm().LoadQuery(sQuery);
             }
         }
@@ -621,7 +640,7 @@ namespace SmartQueryRunner
             string sSPName = GetSelectedSPName();
             if (sSPName != "")
                 GetEmptyOperatingForm().SetProcedureText(
-                    GetProcedureRun(sSPName) //lstProcedures.SelectedItems[0].Text)
+                    DynamicDataSourceCode.GetProcedureRun(sConnectionString, sSPName) //lstProcedures.SelectedItems[0].Text)
                    );
         }
 
@@ -629,11 +648,8 @@ namespace SmartQueryRunner
         {
             string sSPName = GetSelectedSPName();
             if (sSPName != "")
-                GetEmptyOperatingForm().SetProcedureText(
-                    "IF OBJECT_ID('" + sSPName + "') IS NOT NULL" +
-                     Environment.NewLine + "  DROP " +
-                     lstProcedures.SelectedItems[0].SubItems[colType].Text + " [" + sSPName + "]"
-                 );
+                GetEmptyOperatingForm().SetProcedureText(DynamicDataSourceCode.GetDropCode(sSPName,
+                    lstProcedures.SelectedItems[0].SubItems[colType].Text));
         }
 
 
@@ -641,244 +657,29 @@ namespace SmartQueryRunner
          {
             string sSPName = GetSelectedSPName();
             if (sSPName != "")
-                GetEmptyOperatingForm().SetProcedureText(GetProcedureCSharpCode(sSPName, 1));
+                GetEmptyOperatingForm().SetProcedureText(CodeGeneration.GetProcedureCSharpCode(sConnectionString, sSPName, 1));
          }
          private void getCReaderToolStripMenuItem_Click(object sender, EventArgs e)
          {
              string sSPName = GetSelectedSPName();
              if (sSPName != "")
-                 GetEmptyOperatingForm().SetProcedureText(GetProcedureCSharpCode(sSPName, 2));
+                 GetEmptyOperatingForm().SetProcedureText(CodeGeneration.GetProcedureCSharpCode(sConnectionString, sSPName, 2));
          }
 
          private void getCSimpleToolStripMenuItem_Click(object sender, EventArgs e)
          {
              string sSPName = GetSelectedSPName();
              if (sSPName != "")
-                 GetEmptyOperatingForm().SetProcedureText(GetProcedureCSharpCode(sSPName, 3));
+                 GetEmptyOperatingForm().SetProcedureText(CodeGeneration.GetProcedureCSharpCode(sConnectionString, sSPName, 3));
          }
 
          private void getCScalarToolStripMenuItem_Click(object sender, EventArgs e)
          {
              string sSPName = GetSelectedSPName();
              if (sSPName != "")
-                 GetEmptyOperatingForm().SetProcedureText(GetProcedureCSharpCode(sSPName, 4));
+                 GetEmptyOperatingForm().SetProcedureText(CodeGeneration.GetProcedureCSharpCode(sConnectionString, sSPName, 4));
          }
-
-         private string GetProcedureCSharpCode(string Name, int Type)
-         {
-             string sCSharp = "", sParameterFunction = "", sValue = "";
-             SqlParameter parameter = null;
-
-             sCSharp = "string sConnectionString = ConfigurationManager.ConnectionStrings[\"MainConnection\"].ConnectionString;" + Environment.NewLine +
-                 "using (CommonDatabase<SqlConnection, SqlCommand, SqlDataAdapter> DataObj =" + Environment.NewLine +
-                 "    new CommonDatabase<SqlConnection, SqlCommand, SqlDataAdapter>" + Environment.NewLine +
-                 "    (sConnectionString, \"" + Name + "\"))" + Environment.NewLine +
-                 "{" + Environment.NewLine;
-
-             try
-             {
-                 using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, Name, true,
-                     CommandType.StoredProcedure))
-                 {
-                     DataObj.connection.Open();
-                     SqlCommand obj = DataObj.command;
-                     SqlCommandBuilder.DeriveParameters(obj);
-                     for (int i = 0; i < obj.Parameters.Count; i++)
-                     {
-                         parameter = obj.Parameters[i];
-                         sValue = "";
-
-                         if (parameter.Direction == ParameterDirection.Input)
-                         {
-                             sParameterFunction = "AddInputParameter";
-                             sValue = ", value" + i.ToString();
-                         }
-                         else if (parameter.Direction == ParameterDirection.Output
-                                         || parameter.Direction == ParameterDirection.InputOutput)
-                             sParameterFunction = "AddOutputParameter";
-                         else if (parameter.Direction == ParameterDirection.ReturnValue)
-                             sParameterFunction = "AddReturnParameter";
-
-                         if (parameter.Size > 0)
-                             sCSharp += String.Format("   DataObj." + sParameterFunction + "(\"{0}\", SqlDbType.{1}, {2} {3});" + Environment.NewLine,
-                                 parameter.ParameterName, parameter.SqlDbType.ToString("F"), parameter.Size.ToString(), sValue);
-                         else
-                             sCSharp += String.Format("   DataObj." + sParameterFunction + "(\"{0}\", SqlDbType.{1} {2});" + Environment.NewLine,
-                                 parameter.ParameterName, parameter.SqlDbType.ToString("F"), sValue); //parameter.DbType.GetType().FullName
-
-                     }
-                 }
-             }
-             catch (Exception e)
-             {
-                 MessageBox.Show("Error occured" + e.ToString(), Application.ProductName, MessageBoxButtons.OK);
-             }
-
-             sCSharp += "   DataSet DataobjSet = new DataSet();" + Environment.NewLine +
-                         "   if (DataObj.Execute(\"DataobjTable\", out DataobjSet))" + Environment.NewLine +
-                         "   {" + Environment.NewLine +
-                         "      DataTable table = DataobjSet.Tables[\"DataobjTable\"];" + Environment.NewLine +
-                         "      int iProcedureReturn = (int)DataObj[\"@RETURN_VALUE\"];" + Environment.NewLine +
-                         "   }" + Environment.NewLine +
-                         "}" + Environment.NewLine;
-
-             return sCSharp + Environment.NewLine + Environment.NewLine; // +sProcedure;
-         }
-         //string sProcedure = ""
-
-        //else
-         //    sParameterFunction = "AddIOParameter";
-
-         //sProcedure += "Name:" + parameter.ParameterName;
-         //sProcedure += Environment.NewLine + " Type:" + parameter.SqlDbType.ToString("F");
-         //sProcedure += Environment.NewLine + " Size:" + parameter.Size.ToString();
-         //sProcedure += Environment.NewLine + " Direction: " + parameter.Direction.ToString() +
-         //    Environment.NewLine +
-         //    Environment.NewLine;
-
-
-         //"else" + Environment.NewLine +
-         //"{" + Environment.NewLine +
-         //"    (new ErrorLog()).LogError(new Exception(DataObj.ErrorText));" + Environment.NewLine +
-         //"}" + Environment.NewLine + 
-
-         private string GetExecutionType(int type)
-         {
-             string sCSharp="";
-
-             switch (type)
-             {
-                 case 1: //Dataset
-                     sCSharp = "   DataSet DataobjSet = new DataSet();" + Environment.NewLine +
-                               "   if (DataObj.Execute(\"DataobjTable\", out DataobjSet))" + Environment.NewLine +
-                               "   {" + Environment.NewLine +
-                               "      DataTable table = DataobjSet.Tables[\"DataobjTable\"];" + Environment.NewLine +
-                               "      int iProcedureReturn = (int)DataObj[\"@RETURN_VALUE\"];" + Environment.NewLine +
-                               "   }" + Environment.NewLine;
-                     break;
-                 
-                 case 2: //Reader
-                     sCSharp = "   DataSet DataobjSet = new DataSet();" + Environment.NewLine +
-                               "   if (DataObj.Execute(\"DataobjTable\", out DataobjSet))" + Environment.NewLine +
-                               "   {" + Environment.NewLine +
-                               "      DataTable table = DataobjSet.Tables[\"DataobjTable\"];" + Environment.NewLine +
-                               "      int iProcedureReturn = (int)DataObj[\"@RETURN_VALUE\"];" + Environment.NewLine +
-                               "   }" + Environment.NewLine;
-                     break;
-                 
-                 case 3: //simple
-                     sCSharp = "   if (DataObj.Execute())" + Environment.NewLine +
-                               "   {" + Environment.NewLine +
-                               "   }" + Environment.NewLine;
-                     break;
-                 
-                 case 4: //Scalar
-                     sCSharp = "   Object DataobjSet = null;" + Environment.NewLine +
-                               "   if (DataObj.Execute(out DataobjSet))" + Environment.NewLine +
-                               "   {" + Environment.NewLine +
-                               "   }" + Environment.NewLine;
-                     break;
-             }
-
-             sCSharp += "}" + Environment.NewLine;
-             return sCSharp;
-         }
-         //"else" + Environment.NewLine +
-         //"{" + Environment.NewLine +
-         //"    (new ErrorLog()).LogError(new Exception(DataObj.ErrorText));" + Environment.NewLine +
-         //"}" + Environment.NewLine + 
-
-
-        private string GetProcedureRun(string Name)
-        {
-            string sProcedure = Environment.NewLine + "EXECUTE " + Name + " (";
-            SqlParameter parameter = null;
-
-            try
-            {
-                using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, Name, true,
-                    CommandType.StoredProcedure))
-                {
-                    string sSize = "";
-                    string sValue = "";
-
-                    DataObj.connection.Open();
-                    SqlCommand obj = DataObj.command;
-                    SqlCommandBuilder.DeriveParameters(obj);
-                    for (int i = 1; i < obj.Parameters.Count; i++)
-                    {
-                        parameter = obj.Parameters[i];
-
-                        if (parameter.Size > 0) 
-                                sSize = "(" + parameter.Size.ToString() + ") ";
-                        else
-                                sSize = "";
-                        if (parameter.Value != null)
-                            sValue = " = " + parameter.Value.ToString() + " ";
-                        else
-                            sValue = "";
-
-                        if (parameter.Direction == ParameterDirection.Input)
-                            sProcedure += Environment.NewLine +
-                                ", " + parameter.ParameterName + " " + parameter.SqlDbType.ToString("F")
-                                + sSize + sValue;
-                        else if (parameter.Direction == ParameterDirection.Output
-                                    || parameter.Direction == ParameterDirection.InputOutput )
-                            sProcedure += Environment.NewLine +
-                                ", " + parameter.ParameterName + " " + parameter.SqlDbType.ToString("F")
-                                + sSize + " OUTPUT" + sValue;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("Error occured" + e.ToString(), Application.ProductName, MessageBoxButtons.OK);
-            }
-
-            //remove start brace and comma and dont use end brace + ")"
-            return sProcedure.Replace("(" + Environment.NewLine + ",", Environment.NewLine)
-                + Environment.NewLine ;
-        }
-
-        private async Task<string> GetProcedureDefinition(string Name, string sType)
-        {
-            //string tablename = Name.Substring(Name.LastIndexOf(".")+1);
-            //string sQuery = "SELECT ROUTINE_DEFINITION FROM INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = '" + tablename + "' and ROUTINE_TYPE = '" + sType + "'";
-            string sQuery = "EXEC sp_helptext N'" + Name + "';";
-            //string sQuery = "SELECT OBJECT_DEFINITION (OBJECT_ID(N'" + Name + "'));";
-            //string sQuery = "SELECT definition FROM sys.sql_modules WHERE object_id = (OBJECT_ID(N'" + Name + "'));";
-            //object objReturn;
-            string sProcedure = "";
-            using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
-            {
-                var ds = await DataObj.Execute("MyTable");
-                //task.Wait();
-                //var ds = task.Result;
-                if (ds != null )
-                {
-                    for (int i = 0; i < ds.Tables["MyTable"].Rows.Count; i++)
-                    {
-                        sProcedure = sProcedure + (string)ds.Tables["MyTable"].Rows[i].ItemArray[0]; // +Environment.NewLine;
-                    }
-                    //.Text = "Total lines :" + ds.Tables["MyTable"].Rows.Count.ToString();
-                }
-                else
-                {
-                    MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
-                }
-                //if (DataObj.ExecuteScalar(out objReturn) == false)
-                //    MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
-                //else
-                //    sProcedure = (string) objReturn;
-            }
-            return sProcedure;
-        }
-
-        //private void btnConnections_MouseUp(object sender, MouseEventArgs e)
-        //{
-        //    if (e.Button != MouseButtons.Right)
-        //    else
-        //}
+         
         private void connectionsToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             ToolStripMenuItem childmenu1;
@@ -919,12 +720,14 @@ namespace SmartQueryRunner
             string sSPName = GetSelectedSPName();
             if (sSPName != "")
             {
-                string sProcedureBody = await GetProcedureDefinition(sSPName, lstProcedures.SelectedItems[0].SubItems[colType].Text);
+                string sProcedureBody = await DynamicDataSourceCode.GetProcedureDefinition(sConnectionString, sSPName, lstProcedures.SelectedItems[0].SubItems[colType].Text);
                 //if (sProcedureBody.Substring(0,6).ToUpper() == "CREATE")
                 //    sProcedureBody = "ALTER" + sProcedureBody.Substring(6);
-                sProcedureBody = sProcedureBody.Replace("CREATE PROCEDURE", "ALTER PROCEDURE");
-                sProcedureBody = sProcedureBody.Replace("CREATE FUNCTION", "ALTER FUNCTION");
-                sProcedureBody = sProcedureBody.Replace("CREATE VIEW", "ALTER VIEW");
+
+                //do not do this it may create a problem in dynamic query
+                //sProcedureBody = sProcedureBody.Replace("CREATE PROCEDURE", "ALTER PROCEDURE");
+                //sProcedureBody = sProcedureBody.Replace("CREATE FUNCTION", "ALTER FUNCTION");
+                //sProcedureBody = sProcedureBody.Replace("CREATE VIEW", "ALTER VIEW");
 
                 GetEmptyOperatingForm().SetProcedureText( sProcedureBody );
             }
@@ -932,9 +735,28 @@ namespace SmartQueryRunner
 
         private void MDIParent1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", objConnections.SelectedIndex.ToString());
-            (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "DB", GetSelectedDBName());
-            //(new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "CheckState",chkConnection.Checked.ToString());
+            try
+            {
+                var sb = new StringBuilder();
+                //var sessions = new List<SessionVM>();
+                foreach (TabPage tabPage in tabForms.TabPages)
+                {
+                    var operatingForm = tabPage.Tag as IOperatingForm;
+                    if (operatingForm != null && operatingForm != snippetsEditor)
+                        //sessions.Add(new SessionVM { FilePath = tabPage.Text, Contents = "" });
+                        sb.AppendLine(operatingForm.FileName);
+                }
+                File.WriteAllText(lastSessionFilesPath, sb.ToString());
+
+                (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"Options", "LoadPreviousSession", chkLoadPreviousSession.Checked.ToString());
+                (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", objConnections.SelectedIndex.ToString());
+                (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "DB", GetSelectedDBName());
+                //(new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "CheckState",chkConnection.Checked.ToString());
+            }
+            catch (Exception ex)
+            {
+                ShowMessageText.Show("Unexpected error occurred " + Environment.NewLine + ex.ToString(), "Close Error");
+            }
         }
 
         public async Task<DataTable> GetTableDetails(string TableName)
@@ -950,7 +772,7 @@ namespace SmartQueryRunner
             DataRow workrow;
             string lsConnection = sConnectionString;
 
-            SQuery = "select '" + TableName + "' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH from INFORMATION_SCHEMA.COLUMNS where table_name = '" + TableName + "' ";
+            SQuery = DynamicDataSourceCode.GetColumnsCode( TableName );
             using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQuery, true, CommandType.Text))
             {
                 ds = await DataObj.Execute("RawTableInfo");
@@ -1178,9 +1000,9 @@ namespace SmartQueryRunner
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Created by,\nSabarinathan Arthanari\ntmasabari@gmail.com" +
-                "\n\nVersion: 3.00\nReleased : Sat June 20, 2009" +
-                "\n\nVersion: 4.00\nReleased : Sun April 24, 2022"
-                , "Smart DB Editor");
+                "\n\nVersion: 3.0.0\nReleased : Sat June 20, 2009" +
+                "\n\nVersion: 4.1.0\nReleased : Thu July 14, 2022"
+                , "Smart Query - For Advanced Developers");
 
         }
 
