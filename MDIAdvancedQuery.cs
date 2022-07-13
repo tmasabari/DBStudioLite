@@ -13,9 +13,8 @@ using System.Data.SqlClient;
 using AdvancedQuery;
 
 using WindowsLogic;
-using xmlDbEditor;
 using System.Threading.Tasks;
-using WinFormsLogic;
+//using WinFormsLogic;
 
 //command line "H:\web\Order online\App_Data\Paypal.xml"
 namespace SmartQueryRunner
@@ -73,7 +72,7 @@ namespace SmartQueryRunner
         private DataTable dtTablesViews = new DataTable();
         private DataTable dtProcedures = new DataTable();
         private DataTable dtSnippetsTable = new DataTable();
-        private JsonReader snippetsEditor;
+        private DataTableEditor snippetsEditor;
         private string lastSessionSelectedDBName = null;
 
         public MDIAdvancedQuery()
@@ -105,7 +104,7 @@ namespace SmartQueryRunner
                 //RefreshDBs();
                 RefreshSnippets();
 
-                FrmEditor childForm = CreateNewForm(Application.StartupPath + "\\Query.txt");
+                var childForm = CreateNewForm(Application.StartupPath + "\\Query.txt");
                 childForm.WindowState = FormWindowState.Maximized;
                 childForm.Show();
 
@@ -137,17 +136,18 @@ namespace SmartQueryRunner
             RefreshDBs();
         }
 
-        private FrmEditor GetOperatingForm(bool CreateNew=true)
+        private IOperatingForm GetOperatingForm()  //bool CreateNew=true
         {
-            if (this.ActiveMdiChild is FrmEditor)
-                return ((FrmEditor)this.ActiveMdiChild);
-            else
-            {
-                if (CreateNew)
-                    return CreateNewForm("");
-                else
-                    return null;
-            }
+            if (this.ActiveMdiChild is IOperatingForm)
+                return ((IOperatingForm)this.ActiveMdiChild);
+            return null;
+            //else
+            //{
+            //    if (CreateNew)
+            //        return CreateNewForm("");
+            //    else
+            //        return null;
+            //}
         }
         private FrmEditor GetEmptyOperatingForm()
         {
@@ -157,13 +157,29 @@ namespace SmartQueryRunner
             //    if (objChild.isFormEmpty)
             //        return ((FrmMain)this.ActiveMdiChild);
             //}
-            return CreateNewForm("");
+            return (FrmEditor) CreateNewForm("");
         }
 
-        private FrmEditor CreateNewForm(string sFileName)
+        private Form CreateNewForm(string sFileName, FormTypes formType = FormTypes.SQLEditor, int fillColumn = -1)
         {
             // Create a new instance of the child form.
-            FrmEditor childForm = new FrmEditor(sFileName);
+            IOperatingForm childOperatingForm = null;
+            switch (formType)
+            {
+                case FormTypes.SQLEditor:
+                    childOperatingForm = new FrmEditor();
+                    break;
+                case FormTypes.JsonEditor:
+                case FormTypes.XMLEditor:
+                    childOperatingForm = new DataTableEditor(formType);
+                    break;
+                default:
+                    throw new ApplicationException("Invalid form type");
+            }
+            childOperatingForm.FillColumn = fillColumn;
+            childOperatingForm.FileName = sFileName;
+            childOperatingForm.LoadFromFile();
+            Form childForm = (Form)childOperatingForm;
             childForm.Show();
             // Make it a child of this MDI form before showing it.
             if (string.IsNullOrWhiteSpace( sFileName)) childForm.Text = "Untitled " + QueryWindowNumber.ToString();
@@ -267,11 +283,16 @@ namespace SmartQueryRunner
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             //openFileDialog.InitialDirectory = Application.StartupPath;
-            openFileDialog.Filter = "All Files (*.*)|*.*|SQL Files (*.sql)|*.sql";
+            openFileDialog.Filter = "All Files (*.*)|*.*" + "|SQL Files (*.sql)|*.sql"
+                 + "|Json Files (*.json)|*.json" + "|XML Files (*.xml)|*.xml";
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                string FileName = openFileDialog.FileName;
-                FrmEditor childForm = CreateNewForm(FileName);
+                string FileName = openFileDialog.FileName.Trim();
+                var formType = FormTypes.SQLEditor;
+                if (FileName.ToLower().EndsWith(".xml")) formType = FormTypes.XMLEditor;
+                else if (FileName.ToLower().EndsWith(".json")) formType = FormTypes.JsonEditor;
+
+                var childForm = CreateNewForm(FileName, formType);
                 childForm.WindowState = FormWindowState.Maximized;
                 childForm.Show();
             }
@@ -279,11 +300,11 @@ namespace SmartQueryRunner
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FrmEditor FormToSave = GetOperatingForm(false);
+            IOperatingForm FormToSave = GetOperatingForm();
             if (FormToSave != null) SaveAs(FormToSave);
         }
 
-        private void SaveAs(FrmEditor FormToSave)
+        private void SaveAs(IOperatingForm FormToSave)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             //saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -292,16 +313,16 @@ namespace SmartQueryRunner
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 string FileName = saveFileDialog.FileName;
-                FormToSave.QueryFileName = FileName;
+                FormToSave.FileName = FileName;
                 FormToSave.SaveToFile();
             }
         }
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FrmEditor FormToSave = GetOperatingForm(false);
+            IOperatingForm FormToSave = GetOperatingForm();
             if (FormToSave != null)
             {
-                if (FormToSave.QueryFileName == "")
+                if (FormToSave.FileName == "")
                     SaveAs(FormToSave);
                 else
                     FormToSave.SaveToFile();
@@ -310,8 +331,14 @@ namespace SmartQueryRunner
 
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FrmEditor FormToSave = GetOperatingForm(false);
-            if (FormToSave != null) FormToSave.LoadFromFile();
+            IOperatingForm FormToSave = GetOperatingForm();
+            if (FormToSave != null)
+            {
+                var confirmResult = MessageBox.Show("You will loose any unsaved data. Would you like to Continue", 
+                    "Confirm reload", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if(confirmResult == DialogResult.Yes)
+                    FormToSave.LoadFromFile();
+            }
         }
 
 
@@ -320,20 +347,6 @@ namespace SmartQueryRunner
             Application.Exit();
         }
 
-        private void CutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // TODO: Use System.Windows.Forms.Clipboard to insert the selected text or images into the clipboard
-        }
-
-        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // TODO: Use System.Windows.Forms.Clipboard to insert the selected text or images into the clipboard
-        }
-
-        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // TODO: Use System.Windows.Forms.Clipboard.GetText() or System.Windows.Forms.GetData to retrieve information from the clipboard.
-        }
 
         private void ToolBarToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1047,8 +1060,7 @@ namespace SmartQueryRunner
         {
             if (snippetsEditor == null || snippetsEditor.IsDisposed)
             {
-                snippetsEditor = new JsonReader();
-                snippetsEditor.RefreshJsonTable(snippetFilePath, 1);
+                snippetsEditor = (DataTableEditor) CreateNewForm(snippetFilePath, FormTypes.JsonEditor,1);
             }
             snippetsEditor.Show();
         }
@@ -1143,34 +1155,11 @@ namespace SmartQueryRunner
 
         #endregion
 
-        private void sQLEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FrmEditor childForm = CreateNewForm("");
+            var childForm = CreateNewForm("");
             childForm.WindowState = FormWindowState.Maximized;
             childForm.Show();
-        }
-
-        private void jsonTableEditorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            var objJsonReader = new JsonReader();
-            objJsonReader.MdiParent = this;
-            objJsonReader.WindowState = FormWindowState.Maximized;
-            objJsonReader.Show();
-
-        }
-
-        private void xMLTableEditorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            XMLReader objXML = new XMLReader();
-            objXML.MdiParent = this;
-            objXML.WindowState = FormWindowState.Maximized;
-            objXML.Show();
-        }
-
-        private void xMLDBManagerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            xmlEditor objXML = new xmlEditor();
-            objXML.Show();
         }
 
         private void txtFilter_KeyUp(object sender, KeyEventArgs e)
@@ -1214,5 +1203,57 @@ namespace SmartQueryRunner
         {
             lastSessionSelectedDBName = GetSelectedDBName();
         }
+
     }
 }
+//this.newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+//            this.sQLEditorToolStripMenuItem,
+//            this.jsonTableEditorToolStripMenuItem1,
+//            this.xMLTableEditorToolStripMenuItem1});
+
+//this.sQLEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+//this.jsonTableEditorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+//this.xMLTableEditorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+//// 
+//// sQLEditorToolStripMenuItem
+//// 
+//this.sQLEditorToolStripMenuItem.Name = "sQLEditorToolStripMenuItem";
+//this.sQLEditorToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+//this.sQLEditorToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+//this.sQLEditorToolStripMenuItem.Text = "SQL Editor";
+//this.sQLEditorToolStripMenuItem.Click += new System.EventHandler(this.sQLEditorToolStripMenuItem_Click);
+//// 
+//// jsonTableEditorToolStripMenuItem1
+//// 
+//this.jsonTableEditorToolStripMenuItem1.Name = "jsonTableEditorToolStripMenuItem1";
+//this.jsonTableEditorToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+//this.jsonTableEditorToolStripMenuItem1.Text = "Json Table Editor";
+//this.jsonTableEditorToolStripMenuItem1.Click += new System.EventHandler(this.jsonTableEditorToolStripMenuItem1_Click);
+//// 
+//// xMLTableEditorToolStripMenuItem1
+//// 
+//this.xMLTableEditorToolStripMenuItem1.Name = "xMLTableEditorToolStripMenuItem1";
+//this.xMLTableEditorToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
+//this.xMLTableEditorToolStripMenuItem1.Text = "XML Table Editor";
+//this.xMLTableEditorToolStripMenuItem1.Click += new System.EventHandler(this.xMLTableEditorToolStripMenuItem1_Click);
+
+//private void sQLEditorToolStripMenuItem_Click(object sender, EventArgs e)
+//{
+//}
+
+//private void jsonTableEditorToolStripMenuItem1_Click(object sender, EventArgs e)
+//{
+//    var objJsonReader = new JsonReader();
+//    objJsonReader.MdiParent = this;
+//    objJsonReader.WindowState = FormWindowState.Maximized;
+//    objJsonReader.Show();
+
+//}
+
+//private void xMLTableEditorToolStripMenuItem1_Click(object sender, EventArgs e)
+//{
+//    XMLReader objXML = new XMLReader();
+//    objXML.MdiParent = this;
+//    objXML.WindowState = FormWindowState.Maximized;
+//    objXML.Show();
+//}

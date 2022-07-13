@@ -13,22 +13,17 @@ using System.Data.SqlClient;
 using AdvancedQuery;
 
 using WindowsLogic;
-using xmlDbEditor;
 using System.Threading.Tasks;
 using ScintillaNET;
 
 namespace SmartQueryRunner
 {
-    public partial class FrmEditor : Form
+    public partial class FrmEditor : Form, IOperatingForm
     {
-        private string psQueryFileName;
 
-        public FrmEditor(string FileName =  "")
+        public FrmEditor()
         {
             InitializeComponent();
-            QueryFileName = FileName; 
-            LoadFromFile();
-
             ConfigureMSSQLSyntax();
             // Enable Context Menu !
             //txtQuery1.EnableContextMenu();
@@ -86,15 +81,34 @@ namespace SmartQueryRunner
             }
         }
 
-        public string QueryFileName
+        #region IOperatingFormImplementation
+        private string currentFileName;
+        public int FillColumn { get; set; } = -1;
+        public string FileName
         {
-            get { return psQueryFileName; }
+            get { return currentFileName; }
             set 
             {
-                psQueryFileName = value;
+                currentFileName = value;
                 this.Text = value;
+                var tabPage = (this.Tag as TabPage);
+                if(tabPage !=null) tabPage.Text = value;
             }
         }
+        public void LoadFromFile()
+        {
+            if (FileName != "")
+            {
+                string sFileContents = Common.ReadFile(FileName);
+                txtQuery1.Text = sFileContents;
+            }
+        }
+
+        public void SaveToFile()
+        {
+            if (FileName != "") Common.WriteFile(FileName, txtQuery1.Text);
+        }
+        #endregion
 
         //Execute Procedure
 
@@ -227,19 +241,7 @@ namespace SmartQueryRunner
          LoadFromFile();
      }
 
-     public void LoadFromFile()
-     {
-         if (QueryFileName != "")
-         {
-             string sFileContents = Common.ReadFile(QueryFileName);
-             txtQuery1.Text = sFileContents;
-         }
-     }
-
-     public void SaveToFile()
-     {
-         if (QueryFileName != "") Common.WriteFile(QueryFileName, txtQuery1.Text);
-     }
+ 
 
 
 

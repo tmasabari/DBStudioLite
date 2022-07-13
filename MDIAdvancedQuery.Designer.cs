@@ -33,10 +33,6 @@ namespace SmartQueryRunner
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sQLEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.jsonTableEditorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.xMLTableEditorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.xMLDBManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -201,45 +197,13 @@ namespace SmartQueryRunner
             // 
             // newToolStripMenuItem
             // 
-            this.newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sQLEditorToolStripMenuItem,
-            this.jsonTableEditorToolStripMenuItem1,
-            this.xMLTableEditorToolStripMenuItem1,
-            this.xMLDBManagerToolStripMenuItem});
             this.newToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripMenuItem.Image")));
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Black;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.newToolStripMenuItem.Size = new System.Drawing.Size(237, 30);
             this.newToolStripMenuItem.Text = "&New";
-            // 
-            // sQLEditorToolStripMenuItem
-            // 
-            this.sQLEditorToolStripMenuItem.Name = "sQLEditorToolStripMenuItem";
-            this.sQLEditorToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.sQLEditorToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.sQLEditorToolStripMenuItem.Text = "SQL Editor";
-            this.sQLEditorToolStripMenuItem.Click += new System.EventHandler(this.sQLEditorToolStripMenuItem_Click);
-            // 
-            // jsonTableEditorToolStripMenuItem1
-            // 
-            this.jsonTableEditorToolStripMenuItem1.Name = "jsonTableEditorToolStripMenuItem1";
-            this.jsonTableEditorToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
-            this.jsonTableEditorToolStripMenuItem1.Text = "Json Table Editor";
-            this.jsonTableEditorToolStripMenuItem1.Click += new System.EventHandler(this.jsonTableEditorToolStripMenuItem1_Click);
-            // 
-            // xMLTableEditorToolStripMenuItem1
-            // 
-            this.xMLTableEditorToolStripMenuItem1.Name = "xMLTableEditorToolStripMenuItem1";
-            this.xMLTableEditorToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
-            this.xMLTableEditorToolStripMenuItem1.Text = "XML Table Editor";
-            this.xMLTableEditorToolStripMenuItem1.Click += new System.EventHandler(this.xMLTableEditorToolStripMenuItem1_Click);
-            // 
-            // xMLDBManagerToolStripMenuItem
-            // 
-            this.xMLDBManagerToolStripMenuItem.Name = "xMLDBManagerToolStripMenuItem";
-            this.xMLDBManagerToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.xMLDBManagerToolStripMenuItem.Text = "XML DB Manager";
-            this.xMLDBManagerToolStripMenuItem.Click += new System.EventHandler(this.xMLDBManagerToolStripMenuItem_Click);
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
@@ -1335,10 +1299,10 @@ namespace SmartQueryRunner
         private System.Windows.Forms.TextBox txtFilter;
         private System.Windows.Forms.TabControl tabForms;
         private System.Windows.Forms.ToolStripMenuItem showTop100ReverseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sQLEditorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem jsonTableEditorToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem xMLTableEditorToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem xMLDBManagerToolStripMenuItem;
+        //private System.Windows.Forms.ToolStripMenuItem sQLEditorToolStripMenuItem;
+        //private System.Windows.Forms.ToolStripMenuItem jsonTableEditorToolStripMenuItem1;
+        //private System.Windows.Forms.ToolStripMenuItem xMLTableEditorToolStripMenuItem1;
+        //private System.Windows.Forms.ToolStripMenuItem xMLDBManagerToolStripMenuItem;
         private System.Windows.Forms.TabPage tabDatabases;
         private System.Windows.Forms.ListView listViewDBs;
         private System.Windows.Forms.Button btnConnect;

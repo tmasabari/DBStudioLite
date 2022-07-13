@@ -93,12 +93,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CoreLogic\DataSecure.cs" />
-    <Compile Include="CoreLogic\RichTextBoxExtensionMethods.cs" />
-    <Compile Include="JsonReader.cs">
+    <Compile Include="CoreLogic\JsonDAL.cs" />
+    <Compile Include="CoreLogic\XMLDAL.cs" />
+    <Compile Include="IOperatingForm.cs" />
+    <Compile Include="DataTableEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="JsonReader.Designer.cs">
-      <DependentUpon>JsonReader.cs</DependentUpon>
+    <Compile Include="DataTableEditor.Designer.cs">
+      <DependentUpon>DataTableEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="MessageText.cs">
       <SubType>Form</SubType>
@@ -113,15 +115,6 @@
       <DependentUpon>MDIAdvancedQuery.cs</DependentUpon>
     </Compile>
     <Compile Include="CoreLogic\WindowsRegistry.cs" />
-    <Compile Include="xmlDbEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="XMLReader.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="XMLReader.Designer.cs">
-      <DependentUpon>XMLReader.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmConnections.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -141,8 +134,8 @@
       <DependentUpon>FrmGraph.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <EmbeddedResource Include="JsonReader.resx">
-      <DependentUpon>JsonReader.cs</DependentUpon>
+    <EmbeddedResource Include="DataTableEditor.resx">
+      <DependentUpon>DataTableEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MessageText.resx">
       <SubType>Designer</SubType>
@@ -151,14 +144,6 @@
     <EmbeddedResource Include="MDIAdvancedQuery.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MDIAdvancedQuery.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="xmlDbEditor.resx">
-      <DependentUpon>xmlDbEditor.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="XMLReader.resx">
-      <DependentUpon>XMLReader.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="frmConnections.resx">
       <DependentUpon>frmConnections.cs</DependentUpon>
