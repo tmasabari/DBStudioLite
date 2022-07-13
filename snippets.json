@@ -2,7 +2,7 @@
   {
     "SnippetName": "Search a word in DB code",
     "value": "SELECT o.name as ModuleName, s.name as SchemaName, o.type as CodeType, m.definition FROM sys.sql_modules AS m\r\nINNER JOIN sys.objects AS o ON m.object_id = o.object_id\r\nINNER JOIN sys.schemas AS s ON o.schema_id = s.schema_id\r\nWHERE m.definition like '%email%' ORDER By o.type\r\n--TR - trigger FN - scalar function, IF - table valued function, V - view, P - procedure",
-    "IsExecutable": null,
+    "IsExecutable": "False",
     "DBName": null
   },
   {
@@ -122,7 +122,7 @@
   {
     "SnippetName": "Grant read only permission to DB",
     "value": "CREATE USER <username> FOR LOGIN osama WITH DEFAULT_SCHEMA=[dbo]; \r\n--for read only permissions\r\nALTER ROLE [db_datareader] ADD MEMBER <username> \r\nGRANT VIEW DEFINITION TO <username> ",
-    "IsExecutable": null,
+    "IsExecutable": "False",
     "DBName": null
   },
   {
@@ -140,19 +140,19 @@
   {
     "SnippetName": "select column as csv",
     "value": "SELECT STRING_AGG (<ColumnName>, ',') AS csv \r\nFROM <TableName>\r\nGROUP BY <ColumnName>",
-    "IsExecutable": null,
+    "IsExecutable": "False",
     "DBName": null
   },
   {
     "SnippetName": "All Columns of the table",
     "value": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'<Tablename>'",
-    "IsExecutable": null,
+    "IsExecutable": "False",
     "DBName": null
   },
   {
     "SnippetName": "Autoincrement Field",
     "value": "SELECT Name FROM sys.identity_columns WHERE object_id = OBJECT_ID(<TableName>)",
-    "IsExecutable": null,
+    "IsExecutable": "False",
     "DBName": null
   }
 ]

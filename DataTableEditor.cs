@@ -78,7 +78,7 @@ namespace WindowsLogic
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unexpected error occurred " + Environment.NewLine + ex.ToString());
+                ShowMessageText.Show("Unexpected error occurred " + Environment.NewLine + ex.ToString(), "Load Error");
             }
         }
 
@@ -99,7 +99,7 @@ namespace WindowsLogic
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unexpected error occurred " + Environment.NewLine + ex.ToString());
+                ShowMessageText.Show("Unexpected error occurred " + Environment.NewLine + ex.ToString(), "Save Error");
             }
         }
         #endregion

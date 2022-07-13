@@ -102,11 +102,11 @@
     <Compile Include="DataTableEditor.Designer.cs">
       <DependentUpon>DataTableEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="MessageText.cs">
+    <Compile Include="ShowMessageText.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MessageText.Designer.cs">
-      <DependentUpon>MessageText.cs</DependentUpon>
+    <Compile Include="ShowMessageText.Designer.cs">
+      <DependentUpon>ShowMessageText.cs</DependentUpon>
     </Compile>
     <Compile Include="MDIAdvancedQuery.cs">
       <SubType>Form</SubType>
@@ -137,9 +137,9 @@
     <EmbeddedResource Include="DataTableEditor.resx">
       <DependentUpon>DataTableEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MessageText.resx">
+    <EmbeddedResource Include="ShowMessageText.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>MessageText.cs</DependentUpon>
+      <DependentUpon>ShowMessageText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MDIAdvancedQuery.resx">
       <SubType>Designer</SubType>
@@ -192,6 +192,28 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="snippets.json" />
+    <None Include="TestFiles\PostMarriageCertificateTemplateBack.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\PreMarriageCertificateTemplateFront.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestFiles\Sample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestFiles\cd_catalog.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\plant_catalog.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\simple.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

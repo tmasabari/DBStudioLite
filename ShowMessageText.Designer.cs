@@ -1,6 +1,6 @@
 namespace SmartQueryRunner
 {
-    partial class MessageText
+    partial class ShowMessageText
     {
         /// <summary>
         /// Required designer variable.
@@ -35,20 +35,23 @@ namespace SmartQueryRunner
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Location = new System.Drawing.Point(0, 0);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(521, 264);
+            this.textBox1.Size = new System.Drawing.Size(695, 325);
             this.textBox1.TabIndex = 0;
             // 
-            // MessageText
+            // ShowMessageText
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(521, 264);
+            this.ClientSize = new System.Drawing.Size(695, 325);
             this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "MessageText";
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Name = "ShowMessageText";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Error Text";
             this.ResumeLayout(false);
