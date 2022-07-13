@@ -616,7 +616,7 @@ namespace SmartQueryRunner
             this.chkLoadPreviousSession.AutoSize = true;
             this.chkLoadPreviousSession.Checked = true;
             this.chkLoadPreviousSession.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkLoadPreviousSession.Location = new System.Drawing.Point(239, 44);
+            this.chkLoadPreviousSession.Location = new System.Drawing.Point(252, 44);
             this.chkLoadPreviousSession.Name = "chkLoadPreviousSession";
             this.chkLoadPreviousSession.Size = new System.Drawing.Size(168, 20);
             this.chkLoadPreviousSession.TabIndex = 14;
@@ -643,9 +643,9 @@ namespace SmartQueryRunner
             this.chkShowTables.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkShowTables.Location = new System.Drawing.Point(98, 115);
             this.chkShowTables.Name = "chkShowTables";
-            this.chkShowTables.Size = new System.Drawing.Size(148, 20);
+            this.chkShowTables.Size = new System.Drawing.Size(144, 20);
             this.chkShowTables.TabIndex = 12;
-            this.chkShowTables.Text = "Show Tables/Views";
+            this.chkShowTables.Text = "Show Tables&Views";
             this.chkShowTables.UseVisualStyleBackColor = true;
             this.chkShowTables.CheckedChanged += new System.EventHandler(this.chkShowTables_CheckedChanged);
             // 
@@ -664,7 +664,7 @@ namespace SmartQueryRunner
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(8, 39);
+            this.btnConnect.Location = new System.Drawing.Point(4, 39);
             this.btnConnect.Margin = new System.Windows.Forms.Padding(4);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(98, 28);
@@ -687,7 +687,7 @@ namespace SmartQueryRunner
             // lblFilter
             // 
             this.lblFilter.AutoSize = true;
-            this.lblFilter.Location = new System.Drawing.Point(12, 81);
+            this.lblFilter.Location = new System.Drawing.Point(5, 81);
             this.lblFilter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFilter.Name = "lblFilter";
             this.lblFilter.Size = new System.Drawing.Size(36, 16);
@@ -772,7 +772,7 @@ namespace SmartQueryRunner
             this.btnRefresh.Location = new System.Drawing.Point(114, 39);
             this.btnRefresh.Margin = new System.Windows.Forms.Padding(4);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(118, 28);
+            this.btnRefresh.Size = new System.Drawing.Size(132, 28);
             this.btnRefresh.TabIndex = 6;
             this.btnRefresh.Text = "&Refresh Schema";
             this.btnRefresh.UseVisualStyleBackColor = true;

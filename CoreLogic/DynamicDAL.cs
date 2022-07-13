@@ -291,7 +291,7 @@ public class DynamicDAL:IDisposable
             object objreturn;
             if (DataObj.ExecuteScalar(out objreturn))
             {
-                if (!(objreturn is System.DBNull))
+                if (objreturn != null && !(objreturn is System.DBNull))
                 {
                     return objreturn.ToString();
                 }
