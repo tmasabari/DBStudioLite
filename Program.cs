@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 
 using AdvancedQuery;
-using SmartQueryRunner;
+using AdvancedQueryOrganizer;
 
-namespace SmartQueryRunner
+namespace AdvancedQueryOrganizer
 {
     static class Program
     {

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using AdvancedQuery;
 using Microsoft.Win32;
 using Newtonsoft.Json;
-using SmartQueryRunner;
+using AdvancedQueryOrganizer;
 using System.IO;
 
 namespace WindowsLogic

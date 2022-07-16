@@ -1,4 +1,4 @@
-namespace SmartQueryRunner
+namespace AdvancedQueryOrganizer
 {
     partial class FrmEditor
     {

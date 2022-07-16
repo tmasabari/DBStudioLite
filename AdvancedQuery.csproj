@@ -8,8 +8,8 @@
     <ProjectGuid>{E59D304F-867F-4A04-88DD-C2AF5BFA6985}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SmartQueryRunner</RootNamespace>
-    <AssemblyName>SmartQueryRunner</AssemblyName>
+    <RootNamespace>AdvancedQueryOrganizer</RootNamespace>
+    <AssemblyName>AdvancedQueryOrganizer</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -18,14 +18,14 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <ManifestCertificateThumbprint>423788E479F10A3F76C7573F24BFC5FA0EE0A066</ManifestCertificateThumbprint>
     <ManifestKeyFile>AdvancedQuery_TemporaryKey.pfx</ManifestKeyFile>
-    <GenerateManifests>false</GenerateManifests>
+    <GenerateManifests>true</GenerateManifests>
     <TargetZone>LocalIntranet</TargetZone>
     <SignManifests>false</SignManifests>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <StartupObject>
     </StartupObject>
     <TargetFrameworkProfile />
-    <PublishUrl>I:\c#\AdvancedQuery\AdvancedQuery\publish\</PublishUrl>
+    <PublishUrl>C:\AdvancedQueryOrganizer\Publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -35,9 +35,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>4.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -48,7 +49,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\SmartQueryRunner.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\AdvancedQueryOrganizer.xml</DocumentationFile>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
@@ -61,10 +62,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\SmartQueryRunner.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\AdvancedQueryOrganizer.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Json.Net, Version=1.0.33.1, Culture=neutral, processorArchitecture=MSIL">
@@ -84,6 +88,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -162,6 +167,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -185,13 +195,14 @@
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
+      <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="snippets.json" />
     <None Include="TestFiles\PostMarriageCertificateTemplateBack.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

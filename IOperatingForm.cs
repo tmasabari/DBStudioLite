@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartQueryRunner
+namespace AdvancedQueryOrganizer
 {
     public enum FormTypes { SQLEditor, JsonEditor, XMLEditor}
 

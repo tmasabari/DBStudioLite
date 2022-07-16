@@ -16,7 +16,7 @@ using WindowsLogic;
 using System.Threading.Tasks;
 using ScintillaNET;
 
-namespace SmartQueryRunner
+namespace AdvancedQueryOrganizer
 {
     public partial class FrmEditor : Form, IOperatingForm
     {
@@ -180,7 +180,7 @@ namespace SmartQueryRunner
                     txtOutputText.Text = DataObj.ErrorText;
                     checkShowMessages.Checked = true;
                     //MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
-                    //(new SmartQueryRunner.MessageText()).Show(Application.ProductName,
+                    //(new AdvancedQueryOrganizer.MessageText()).Show(Application.ProductName,
                     //    "Error occured" + DataObj.ErrorText, this);
                 }
                 ((MDIAdvancedQuery)MdiParent).StopProgress();

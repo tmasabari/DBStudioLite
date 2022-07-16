@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
-namespace SmartQueryRunner
+namespace AdvancedQueryOrganizer
 {
     public static class DynamicDataSourceCode
     {

@@ -8,7 +8,7 @@ using System.Collections.Specialized;
 using Microsoft.VisualBasic;
 using System.Threading.Tasks;
 using System.Text;
-using SmartQueryRunner;
+using AdvancedQueryOrganizer;
 
 /// <summary>
 /// Wrapper to do all database related operations

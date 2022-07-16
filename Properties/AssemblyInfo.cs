@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Smart Query - For Advanced Developers")]
-[assembly: AssemblyDescription("Simple application provides faster access to the DB")]
+[assembly: AssemblyTitle("Advanced Query Organizer")]
+[assembly: AssemblyDescription("Provides faster access to the DB and Organizes frequently used queries")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("AptTec.Com")]
-[assembly: AssemblyProduct("Smart Query - For Advanced Developers")]
+[assembly: AssemblyProduct("Advanced Query Organizer")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

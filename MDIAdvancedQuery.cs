@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 //using WinFormsLogic;
 
 //command line "H:\web\Order online\App_Data\Paypal.xml"
-namespace SmartQueryRunner
+namespace AdvancedQueryOrganizer
 {
     public partial class MDIAdvancedQuery : Form
     {
@@ -468,7 +468,7 @@ namespace SmartQueryRunner
                 // Add the columns to the ListView.
 
                 lstProcedures.Clear();
-                lstProcedures.Columns.Add("Procedure Name", 200, HorizontalAlignment.Left);
+                lstProcedures.Columns.Add("Module Name", 200, HorizontalAlignment.Left);
                 lstProcedures.Columns.Add("Schema", 50, HorizontalAlignment.Left);
                 lstProcedures.Columns.Add("Type", 80, HorizontalAlignment.Left);
                 lstProcedures.Columns.Add("Modified", 100, HorizontalAlignment.Left);
@@ -581,7 +581,7 @@ namespace SmartQueryRunner
             if (sTableName != "")
             {
                 string columnList = DynamicDAL.GetColumnList(sConnectionString, sTableName);
-                GetTableRows(10, false, columnList);
+                GetTableRows(100, false, columnList);
             }
         }
 
@@ -1002,7 +1002,7 @@ namespace SmartQueryRunner
             MessageBox.Show("Created by,\nSabarinathan Arthanari\ntmasabari@gmail.com" +
                 "\n\nVersion: 3.0.0\nReleased : Sat June 20, 2009" +
                 "\n\nVersion: 4.1.0\nReleased : Thu July 14, 2022"
-                , "Smart Query - For Advanced Developers");
+                , "Advanced Query Organizer");
 
         }
 
