@@ -15,6 +15,8 @@ using AdvancedQuery;
 using WindowsLogic;
 using System.Threading.Tasks;
 using ScintillaNET;
+using ScintillaNET_FindReplaceDialog;
+using ScintillaNET_FindReplaceDialog.FindAllResults;
 
 namespace AdvancedQueryOrganizer
 {
@@ -25,59 +27,150 @@ namespace AdvancedQueryOrganizer
         {
             InitializeComponent();
             ConfigureMSSQLSyntax();
+            ConfigureFindReplace();
+            checkShowFullScreen.Checked = true;
             // Enable Context Menu !
-            //txtQuery1.EnableContextMenu();
+            //txtQuery.EnableContextMenu();
         }
+
+        #region FindReplaceCustomization
+
+        private FindReplace MyFindReplace= new FindReplace();
+        private void ConfigureFindReplace()
+        {
+            findAllResultsPanel1.Scintilla = txtQuery;
+            MyFindReplace.Scintilla = txtQuery;
+            MyFindReplace.FindAllResults += MyFindReplace_FindAllResults;
+            MyFindReplace.KeyPressed += MyFindReplace_KeyPressed;
+            
+            incrementalSearcher1.FindReplace = MyFindReplace;
+        }
+        private void MyFindReplace_KeyPressed(object sender, KeyEventArgs e)
+        {
+            txtQuery_KeyDown(sender, e);
+        }
+
+        private void MyFindReplace_FindAllResults(object sender, FindResultsEventArgs FindAllResults)
+        {
+            // Pass on find results
+            findAllResultsPanel1.UpdateFindAllResults(FindAllResults.FindReplace, FindAllResults.FindAllResults);
+            focusFindResults();
+        }
+
+        private void GotoButton_Click(object sender, EventArgs e)
+        {
+            // Use the FindReplace Scintilla as this will change based on focus
+            GoTo MyGoTo = new GoTo(MyFindReplace.Scintilla);
+            MyGoTo.ShowGoToDialog();
+        }
+        /// <summary>
+        /// Enter event tied to each Scintilla that will share a FindReplace dialog.
+        /// Tie each Scintilla to this event.
+        /// </summary>
+        /// <param name="sender">The Scintilla receiving focus</param>
+        /// <param name="e"></param>
+        private void txtQuery_Enter(object sender, EventArgs e)
+        {
+            MyFindReplace.Scintilla = (Scintilla)sender;
+        }
+
+        /// <summary>
+        /// Key down event for each Scintilla. Tie each Scintilla to this event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void txtQuery_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.F)
+            {
+                MyFindReplace.ShowFind();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Shift && e.KeyCode == Keys.F3)
+            {
+                MyFindReplace.Window.FindPrevious();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.F3)
+            {
+                MyFindReplace.Window.FindNext();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Control && e.KeyCode == Keys.H)
+            {
+                MyFindReplace.ShowReplace();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Control && e.KeyCode == Keys.I)
+            {
+                MyFindReplace.ShowIncrementalSearch();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Control && e.KeyCode == Keys.G)
+            {
+                GoTo MyGoTo = new GoTo((Scintilla)sender);
+                MyGoTo.ShowGoToDialog();
+                e.SuppressKeyPress = true;
+            }
+        }
+        #endregion
+
 
         /// <summary>
         /// https://github.com/jacobslusser/ScintillaNET
         /// https://github.com/jacobslusser/ScintillaNET/wiki/User-Submitted-Recipes
         /// https://gist.github.com/jcouture100/f5d58df816445a1d74df10883618eab4
+        /// https://www.scintilla.org/ScintillaDoc.html#LineWrapping
         /// </summary>
         private void ConfigureMSSQLSyntax()
         {
+            txtQuery.WrapMode = WrapMode.Word;
+            txtQuery.WrapIndentMode = WrapIndentMode.Indent;
+            txtQuery.WrapVisualFlags = WrapVisualFlags.End;
+            txtQuery.WrapVisualFlagLocation = WrapVisualFlagLocation.Default;
+
             // Reset the styles
-            txtQuery1.StyleResetDefault();
-            txtQuery1.Styles[Style.Default].Font = "Courier New";
-            txtQuery1.Styles[Style.Default].Size = 10;
-            txtQuery1.StyleClearAll();
+            txtQuery.StyleResetDefault();
+            txtQuery.Styles[Style.Default].Font = "Courier New";
+            txtQuery.Styles[Style.Default].Size = 10;
+            txtQuery.StyleClearAll();
 
             // Set the SQL Lexer
-            txtQuery1.Lexer = Lexer.Sql;
+            txtQuery.Lexer = Lexer.Sql;
 
             // Show line numbers
-            txtQuery1.Margins[0].Width = 20;
+            txtQuery.Margins[0].Width = 20;
 
             // Set the Styles
-            txtQuery1.Styles[Style.LineNumber].ForeColor = Color.FromArgb(255, 128, 128, 128);  //Dark Gray
-            txtQuery1.Styles[Style.LineNumber].BackColor = Color.FromArgb(255, 228, 228, 228);  //Light Gray
-            txtQuery1.Styles[Style.Sql.Comment].ForeColor = Color.Green;
-            txtQuery1.Styles[Style.Sql.CommentLine].ForeColor = Color.Green;
-            txtQuery1.Styles[Style.Sql.CommentLineDoc].ForeColor = Color.Green;
-            txtQuery1.Styles[Style.Sql.Number].ForeColor = Color.Maroon;
-            txtQuery1.Styles[Style.Sql.Word].ForeColor = Color.Blue;
-            txtQuery1.Styles[Style.Sql.Word2].ForeColor = Color.Fuchsia;
-            txtQuery1.Styles[Style.Sql.User1].ForeColor = Color.Gray;
-            txtQuery1.Styles[Style.Sql.User2].ForeColor = Color.FromArgb(255, 00, 128, 192);    //Medium Blue-Green
-            txtQuery1.Styles[Style.Sql.String].ForeColor = Color.Red;
-            txtQuery1.Styles[Style.Sql.Character].ForeColor = Color.Red;
-            txtQuery1.Styles[Style.Sql.Operator].ForeColor = Color.Black;
+            txtQuery.Styles[Style.LineNumber].ForeColor = Color.FromArgb(255, 128, 128, 128);  //Dark Gray
+            txtQuery.Styles[Style.LineNumber].BackColor = Color.FromArgb(255, 228, 228, 228);  //Light Gray
+            txtQuery.Styles[Style.Sql.Comment].ForeColor = Color.Green;
+            txtQuery.Styles[Style.Sql.CommentLine].ForeColor = Color.Green;
+            txtQuery.Styles[Style.Sql.CommentLineDoc].ForeColor = Color.Green;
+            txtQuery.Styles[Style.Sql.Number].ForeColor = Color.Maroon;
+            txtQuery.Styles[Style.Sql.Word].ForeColor = Color.Blue;
+            txtQuery.Styles[Style.Sql.Word2].ForeColor = Color.Fuchsia;
+            txtQuery.Styles[Style.Sql.User1].ForeColor = Color.Gray;
+            txtQuery.Styles[Style.Sql.User2].ForeColor = Color.FromArgb(255, 00, 128, 192);    //Medium Blue-Green
+            txtQuery.Styles[Style.Sql.String].ForeColor = Color.Red;
+            txtQuery.Styles[Style.Sql.Character].ForeColor = Color.Red;
+            txtQuery.Styles[Style.Sql.Operator].ForeColor = Color.Black;
 
             // Set keyword lists
             // Word = 0
-            txtQuery1.SetKeywords(0, @"add alter as authorization backup begin bigint binary bit break browse bulk by cascade case catch check checkpoint close clustered column commit compute constraint containstable continue create current cursor cursor database date datetime datetime2 datetimeoffset dbcc deallocate decimal declare default delete deny desc disk distinct distributed double drop dump else end errlvl escape except exec execute exit external fetch file fillfactor float for foreign freetext freetexttable from full function goto grant group having hierarchyid holdlock identity identity_insert identitycol if image index insert int intersect into key kill lineno load merge money national nchar nocheck nocount nolock nonclustered ntext numeric nvarchar of off offsets on open opendatasource openquery openrowset openxml option order over percent plan precision primary print proc procedure public raiserror read readtext real reconfigure references replication restore restrict return revert revoke rollback rowcount rowguidcol rule save schema securityaudit select set setuser shutdown smalldatetime smallint smallmoney sql_variant statistics table table tablesample text textsize then time timestamp tinyint to top tran transaction trigger truncate try union unique uniqueidentifier update updatetext use user values varbinary varchar varying view waitfor when where while with writetext xml go ");
+            txtQuery.SetKeywords(0, @"add alter as authorization backup begin bigint binary bit break browse bulk by cascade case catch check checkpoint close clustered column commit compute constraint containstable continue create current cursor cursor database date datetime datetime2 datetimeoffset dbcc deallocate decimal declare default delete deny desc disk distinct distributed double drop dump else end errlvl escape except exec execute exit external fetch file fillfactor float for foreign freetext freetexttable from full function goto grant group having hierarchyid holdlock identity identity_insert identitycol if image index insert int intersect into key kill lineno load merge money national nchar nocheck nocount nolock nonclustered ntext numeric nvarchar of off offsets on open opendatasource openquery openrowset openxml option order over percent plan precision primary print proc procedure public raiserror read readtext real reconfigure references replication restore restrict return revert revoke rollback rowcount rowguidcol rule save schema securityaudit select set setuser shutdown smalldatetime smallint smallmoney sql_variant statistics table table tablesample text textsize then time timestamp tinyint to top tran transaction trigger truncate try union unique uniqueidentifier update updatetext use user values varbinary varchar varying view waitfor when where while with writetext xml go ");
             // Word2 = 1
-            txtQuery1.SetKeywords(1, @"ascii cast char charindex ceiling coalesce collate contains convert current_date current_time current_timestamp current_user floor isnull max min nullif object_id session_user substring system_user tsequal ");
+            txtQuery.SetKeywords(1, @"ascii cast char charindex ceiling coalesce collate contains convert current_date current_time current_timestamp current_user floor isnull max min nullif object_id session_user substring system_user tsequal ");
             // User1 = 4
-            txtQuery1.SetKeywords(4, @"all and any between cross exists in inner is join left like not null or outer pivot right some unpivot ( ) * ");
+            txtQuery.SetKeywords(4, @"all and any between cross exists in inner is join left like not null or outer pivot right some unpivot ( ) * ");
             // User2 = 5
-            txtQuery1.SetKeywords(5, @"sys objects sysobjects ");
+            txtQuery.SetKeywords(5, @"sys objects sysobjects ");
         }
         public bool isFormEmpty
         {
             get
             {
-                return string.IsNullOrWhiteSpace(txtQuery1.Text) && dataGrid1.DataSource == null;
+                return string.IsNullOrWhiteSpace(txtQuery.Text) && dataGrid1.DataSource == null;
             }
         }
 
@@ -100,13 +193,13 @@ namespace AdvancedQueryOrganizer
             if (FileName != "")
             {
                 string sFileContents = Common.ReadFile(FileName);
-                txtQuery1.Text = sFileContents;
+                txtQuery.Text = sFileContents;
             }
         }
 
         public void SaveToFile()
         {
-            if (FileName != "") Common.WriteFile(FileName, txtQuery1.Text);
+            if (FileName != "") Common.WriteFile(FileName, txtQuery.Text);
         }
         #endregion
 
@@ -114,30 +207,30 @@ namespace AdvancedQueryOrganizer
 
         private void btnExecuteAll_Click(object sender, EventArgs e)
         {
-            if (txtQuery1.Text != "") LoadQuery(txtQuery1.Text);
+            if (txtQuery.Text != "") LoadQuery(txtQuery.Text);
         }
 
         private void butExecute_Click(object sender, EventArgs e)
         {
             //tabQuery.TabPages[1].Hide();
             string SQuery = "";
-            if (txtQuery1.SelectedText == "")
+            if (txtQuery.SelectedText == "")
             {
-                if(txtQuery1.Text != "")
+                if(txtQuery.Text != "")
                 {
                     //Start of line
-                    int Pos2 = txtQuery1.Text.LastIndexOf("\n", txtQuery1.SelectionStart);
+                    int Pos2 = txtQuery.Text.LastIndexOf("\n", txtQuery.SelectionStart);
                     if (Pos2 == -1) Pos2 = 0; else Pos2++;
                     //end of line
-                    int Pos1 = txtQuery1.Text.IndexOf("\r", txtQuery1.SelectionStart);
-                    if (Pos1 == -1) Pos1 = txtQuery1.Text.Length - 1; else Pos1--;
+                    int Pos1 = txtQuery.Text.IndexOf("\r", txtQuery.SelectionStart);
+                    if (Pos1 == -1) Pos1 = txtQuery.Text.Length - 1; else Pos1--;
                     
-                    SQuery = txtQuery1.Text.Substring(Pos2, Pos1 - Pos2 + 1);
+                    SQuery = txtQuery.Text.Substring(Pos2, Pos1 - Pos2 + 1);
                 }
             }
             else
             {
-                SQuery = txtQuery1.SelectedText;
+                SQuery = txtQuery.SelectedText;
             }
             if (SQuery != "") LoadQuery(SQuery, false);
         }
@@ -147,7 +240,7 @@ namespace AdvancedQueryOrganizer
             ((MDIAdvancedQuery)MdiParent).ShowProgress();
 
             string lsConnection =( (MDIAdvancedQuery) this.MdiParent).sConnectionString;
-            if(IsLoadQueryToBox) txtQuery1.Text = SQuery;
+            if(IsLoadQueryToBox) txtQuery.Text = SQuery;
             using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
@@ -163,11 +256,11 @@ namespace AdvancedQueryOrganizer
                         dataGrid1.DataSource = ds.Tables["MyTable"];
                         lblRows.Text = "Total Rows :" + ds.Tables["MyTable"].Rows.Count.ToString();
                         dataGrid1.Refresh();
-                        checkShowMessages.Checked = false;
+                        focusDataResults();
                     }
                     else if(txtOutputText.Text.Length > 0)
                     {
-                        checkShowMessages.Checked = true;
+                        focusMessages();
                     }
 
                     //TabPage objPage = (TabPage)CloneControl(tabQuery.TabPages[1], ExecuteSequence);
@@ -178,7 +271,7 @@ namespace AdvancedQueryOrganizer
                 else
                 {
                     txtOutputText.Text = DataObj.ErrorText;
-                    checkShowMessages.Checked = true;
+                    focusMessages();
                     //MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
                     //(new AdvancedQueryOrganizer.MessageText()).Show(Application.ProductName,
                     //    "Error occured" + DataObj.ErrorText, this);
@@ -186,6 +279,25 @@ namespace AdvancedQueryOrganizer
                 ((MDIAdvancedQuery)MdiParent).StopProgress();
             }
         }
+        private void focusMessages()
+        {
+            checkShowFullScreen.Checked = false;
+            tabstripResults.SelectedTab = tabMessages;
+            dataGrid1.Focus();
+        }
+        private void focusDataResults()
+        {
+            checkShowFullScreen.Checked = false;
+            tabstripResults.SelectedTab = tabResults;
+            txtOutputText.Focus();
+        }
+        private void focusFindResults()
+        {
+            checkShowFullScreen.Checked = false;
+            tabstripResults.SelectedTab = tabFindResults;
+            findAllResultsPanel1.Focus();
+        }
+
         private object CloneObject(object o)
         {
             Type t = o.GetType();
@@ -292,42 +404,42 @@ namespace AdvancedQueryOrganizer
         {
             //txtDefinition.Text = sText;
             //tabQuery.SelectedIndex = 2;
-            txtQuery1.Text = sText;
+            txtQuery.Text = sText;
             //tabQuery.SelectedIndex = 0;
         }
 
         private void btnSelectAll_Click(object sender, EventArgs e)
         {
-            txtQuery1.SelectAll();
+            txtQuery.SelectAll();
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            if (txtQuery1.Text != "") Clipboard.SetText(txtQuery1.Text);
+            if (txtQuery.Text != "") Clipboard.SetText(txtQuery.Text);
         }
 
         private void Paste_Click(object sender, EventArgs e)
         {
             if (Clipboard.ContainsText())
             {
-                txtQuery1.SelectAll();   //support undo
-                txtQuery1.Paste();
+                txtQuery.SelectAll();   //support undo
+                txtQuery.Paste();
             }
-            //txtQuery1.Text =Clipboard.GetText();
+            //txtQuery.Text =Clipboard.GetText();
             //txtQuery.Text = txtQuery.Text.Insert(txtQuery.SelectionStart, Clipboard.GetText());
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            txtQuery1.SelectAll();   //support undo
-            txtQuery1.Focus();
+            txtQuery.SelectAll();   //support undo
+            txtQuery.Focus();
             SendKeys.Send("{DEL}");
         }
 
         private void checkShowMessages_CheckedChanged(object sender, EventArgs e)
         {
-            txtOutputText.Visible = checkShowMessages.Checked;
-            checkShowMessages.Text = checkShowMessages.Checked ? "Show Data" : "Show Messages";
+            splitCode.Panel2Collapsed = checkShowFullScreen.Checked;
+            checkShowFullScreen.Text = checkShowFullScreen.Checked ? "&Show Results" : "&Show Full Screen";
         }
 
         private void dataGrid1_DataError_1(object sender, DataGridViewDataErrorEventArgs e)
@@ -341,15 +453,16 @@ namespace AdvancedQueryOrganizer
         {
             // Did the number of characters in the line number display change?
             // i.e. nnn VS nn, or nnnn VS nn, etc...
-            var maxLineNumberCharLength = txtQuery1.Lines.Count.ToString().Length;
+            var maxLineNumberCharLength = txtQuery.Lines.Count.ToString().Length;
             if (maxLineNumberCharLength == this.maxLineNumberCharLength)
                 return;
 
             // Calculate the width required to display the last line number
             // and include some padding for good measure.
             const int padding = 2;
-            txtQuery1.Margins[0].Width = txtQuery1.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
+            txtQuery.Margins[0].Width = txtQuery.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
             this.maxLineNumberCharLength = maxLineNumberCharLength;
         }
+
     }
 }
