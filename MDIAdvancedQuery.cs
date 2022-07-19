@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,14 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 
 using System.IO;
-using System.Reflection;
-
-using System.Data.SqlClient;
 using AdvancedQuery;
 
 using WindowsLogic;
 using System.Threading.Tasks;
-//using WinFormsLogic;
+using System.Collections;
 
 //command line "H:\web\Order online\App_Data\Paypal.xml"
 namespace AdvancedQueryOrganizer
@@ -505,7 +503,7 @@ namespace AdvancedQueryOrganizer
         private void lstTables_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-                if (lstTables.SelectedItems.Count > 0) contextMenuStrip1.Show(lstTables, e.Location);
+                if (lstTables.SelectedItems.Count > 0) contextTablesViews.Show(lstTables, e.Location);
         }
 
         private void lstConnections_MouseUp(object sender, MouseEventArgs e)
@@ -617,7 +615,7 @@ namespace AdvancedQueryOrganizer
         private void lstProcedures_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-                if (lstProcedures.SelectedItems.Count > 0) contextMenuStrip2.Show(lstProcedures, e.Location);
+                if (lstProcedures.SelectedItems.Count > 0) contextCode.Show(lstProcedures, e.Location);
         }
 
         private string GetSelectedSPName()
@@ -630,18 +628,36 @@ namespace AdvancedQueryOrganizer
             else
                 return "";
         }
+
+        private string GetSelectedCodeType()
+        {
+            if (lstProcedures.SelectedItems.Count > 0)
+            {
+                return lstProcedures.SelectedItems[0].SubItems[colType].Text;
+            }
+            else
+                return "";
+        }
+
         private void TS_Procedure_Code_Click_1(object sender, EventArgs e)
         {
             getSelectedProcedureCode();
         }
 
-            private void TS_Procedure_Run_Click_1(object sender, EventArgs e)
+        private void TS_Procedure_Run_Click_1(object sender, EventArgs e)
         {
-            string sSPName = GetSelectedSPName();
-            if (sSPName != "")
-                GetEmptyOperatingForm().SetProcedureText(
-                    DynamicDataSourceCode.GetProcedureRun(sConnectionString, sSPName) //lstProcedures.SelectedItems[0].Text)
-                   );
+            string codeType = GetSelectedCodeType();
+            if (string.IsNullOrWhiteSpace(codeType)) return;
+
+            //Executable code 
+            if (DynamicDataSourceCode.executableType.Contains(codeType))
+            {
+                string sSPName = GetSelectedSPName();
+                if (sSPName != "")
+                    GetEmptyOperatingForm().SetProcedureText(
+                        DynamicDataSourceCode.GetProcedureRun(sConnectionString, sSPName) 
+                       );
+            }
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)

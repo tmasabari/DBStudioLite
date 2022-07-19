@@ -11,9 +11,13 @@ using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace AdvancedQueryOrganizer
 {
+    //http://www.stormrage.com/SQLStuff/sp_GetDDL_Latest.txt
     public static class DynamicDataSourceCode
     {
         public static readonly string BaseTableType = "BASE TABLE";
+        public static readonly string[] executableType = { "P", "AF", "IF",  "FN", "TF" };
+
+
         //https://stackoverflow.com/questions/1819095/sql-server-how-to-tell-if-a-database-is-a-system-database
         //if a database is named master, model, msdb or tempdb, it IS a system db; it is also a system db, if field is_distributor = 1 in the view sys.databases.
         public static readonly string GetAllDBsCode = 
@@ -21,9 +25,16 @@ namespace AdvancedQueryOrganizer
             + " create_date FROM sys.databases"; //database_id,
         public static readonly string GetAllSchemaCode =
             "SELECT TABLE_NAME,TABLE_SCHEMA,TABLE_TYPE from INFORMATION_SCHEMA.Tables order by table_type, table_name; ";
-        //"SELECT Name FROM sysobjects WHERE (xtype = 'V') order by Name; " + // AND (status > 0) U - tables V' - views 'S' - system tables
-        public static readonly string GetAllDBModulesCode = "SELECT ROUTINE_NAME, ROUTINE_SCHEMA, ROUTINE_TYPE ,LAST_ALTERED, CREATED "
-                            + " FROM INFORMATION_SCHEMA.ROUTINES order by ROUTINE_TYPE desc, ROUTINE_NAME; ";
+        //"SELECT Name FROM sysobjects WHERE (xtype = 'V') order by Name; " + // AND (status > 0)
+        //U - tables V' - views 'S' - system tables
+        //TR - trigger FN - scalar function, IF - table valued function, V - view, P - procedure 
+        //[type_desc]     IN('SQL_STORED_PROCEDURE','VIEW','SQL_TRIGGER','AGGREGATE_FUNCTION','SQL_INLINE_TABLE_VALUED_FUNCTION','SQL_TABLE_VALUED_FUNCTION','SQL_SCALAR_FUNCTION','SYNONYMN')
+        //IN('P','V','TR','AF','IF','FN','TF','SN')
+
+        public static readonly string GetAllDBModulesCode 
+            = "SELECT o.name as ModuleName, s.name as SchemaName, o.type as Type, modify_date as Modified,create_date as Created "
+            + " FROM sys.sql_modules AS m INNER JOIN sys.objects AS o ON m.object_id = o.object_id" 
+            + " INNER JOIN sys.schemas AS s ON o.schema_id = s.schema_id ORDER By o.type; ";
         public static string GetDropCode( string sObjectName, string objectType)
         {
             var SQuery = "IF OBJECT_ID('" + sObjectName + "') IS NOT NULL" + Environment.NewLine

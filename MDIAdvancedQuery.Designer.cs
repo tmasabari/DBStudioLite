@@ -102,7 +102,7 @@ namespace AdvancedQueryOrganizer
             this.lstProcedures = new System.Windows.Forms.ListView();
             this.tabSnippets = new System.Windows.Forms.TabPage();
             this.listViewSnippets = new System.Windows.Forms.ListView();
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextCode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.TS_Procedure_Run = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TS_Procedure_Code = new System.Windows.Forms.ToolStripMenuItem();
@@ -111,12 +111,11 @@ namespace AdvancedQueryOrganizer
             this.TS_Procedure_Structure = new System.Windows.Forms.ToolStripMenuItem();
             this.getCSimpleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getCScalarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextConnections = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextConnection = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextTablesViews = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showTop10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getColumnListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTop1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -152,9 +151,9 @@ namespace AdvancedQueryOrganizer
             this.splitContainerSchema.Panel2.SuspendLayout();
             this.splitContainerSchema.SuspendLayout();
             this.tabSnippets.SuspendLayout();
-            this.contextMenuStrip2.SuspendLayout();
+            this.contextCode.SuspendLayout();
             this.contextConnection.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
+            this.contextTablesViews.SuspendLayout();
             this.ctxMenuStripSnippets.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -924,10 +923,10 @@ namespace AdvancedQueryOrganizer
             this.listViewSnippets.DoubleClick += new System.EventHandler(this.listViewSnippets_DoubleClick);
             this.listViewSnippets.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listViewSnippets_MouseUp);
             // 
-            // contextMenuStrip2
+            // contextCode
             // 
-            this.contextMenuStrip2.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextCode.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.contextCode.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TS_Procedure_Run,
             this.deleteToolStripMenuItem,
             this.TS_Procedure_Code,
@@ -936,20 +935,20 @@ namespace AdvancedQueryOrganizer
             this.TS_Procedure_Structure,
             this.getCSimpleToolStripMenuItem,
             this.getCScalarToolStripMenuItem});
-            this.contextMenuStrip2.Name = "contextMenuStrip1";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(184, 178);
+            this.contextCode.Name = "contextMenuStrip1";
+            this.contextCode.Size = new System.Drawing.Size(211, 206);
             // 
             // TS_Procedure_Run
             // 
             this.TS_Procedure_Run.Name = "TS_Procedure_Run";
-            this.TS_Procedure_Run.Size = new System.Drawing.Size(183, 24);
+            this.TS_Procedure_Run.Size = new System.Drawing.Size(210, 24);
             this.TS_Procedure_Run.Text = "Execute";
             this.TS_Procedure_Run.Click += new System.EventHandler(this.TS_Procedure_Run_Click_1);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.deleteToolStripMenuItem.Text = "Get DROP Code";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
@@ -957,49 +956,47 @@ namespace AdvancedQueryOrganizer
             // 
             this.TS_Procedure_Code.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TS_Procedure_Code.Name = "TS_Procedure_Code";
-            this.TS_Procedure_Code.Size = new System.Drawing.Size(183, 24);
+            this.TS_Procedure_Code.Size = new System.Drawing.Size(210, 24);
             this.TS_Procedure_Code.Text = "Modify";
             this.TS_Procedure_Code.Click += new System.EventHandler(this.TS_Procedure_Code_Click_1);
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(180, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(207, 6);
+            this.toolStripSeparator9.Visible = false;
             // 
             // getCReaderToolStripMenuItem
             // 
             this.getCReaderToolStripMenuItem.Name = "getCReaderToolStripMenuItem";
-            this.getCReaderToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
+            this.getCReaderToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.getCReaderToolStripMenuItem.Text = "Get C# Reader";
+            this.getCReaderToolStripMenuItem.Visible = false;
             this.getCReaderToolStripMenuItem.Click += new System.EventHandler(this.getCReaderToolStripMenuItem_Click);
             // 
             // TS_Procedure_Structure
             // 
             this.TS_Procedure_Structure.Name = "TS_Procedure_Structure";
-            this.TS_Procedure_Structure.Size = new System.Drawing.Size(183, 24);
+            this.TS_Procedure_Structure.Size = new System.Drawing.Size(210, 24);
             this.TS_Procedure_Structure.Text = "Get C# Dataset";
+            this.TS_Procedure_Structure.Visible = false;
             this.TS_Procedure_Structure.Click += new System.EventHandler(this.TS_Procedure_Structure_Click);
             // 
             // getCSimpleToolStripMenuItem
             // 
             this.getCSimpleToolStripMenuItem.Name = "getCSimpleToolStripMenuItem";
-            this.getCSimpleToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
+            this.getCSimpleToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.getCSimpleToolStripMenuItem.Text = "Get C# Simple";
+            this.getCSimpleToolStripMenuItem.Visible = false;
             this.getCSimpleToolStripMenuItem.Click += new System.EventHandler(this.getCSimpleToolStripMenuItem_Click);
             // 
             // getCScalarToolStripMenuItem
             // 
             this.getCScalarToolStripMenuItem.Name = "getCScalarToolStripMenuItem";
-            this.getCScalarToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
+            this.getCScalarToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.getCScalarToolStripMenuItem.Text = "Get C# Scalar";
+            this.getCScalarToolStripMenuItem.Visible = false;
             this.getCScalarToolStripMenuItem.Click += new System.EventHandler(this.getCScalarToolStripMenuItem_Click);
-            // 
-            // contextConnections
-            // 
-            this.contextConnections.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.contextConnections.Name = "contextConnection";
-            this.contextConnections.Size = new System.Drawing.Size(61, 4);
-            this.contextConnections.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextConnections_ItemClicked);
             // 
             // contextConnection
             // 
@@ -1029,10 +1026,10 @@ namespace AdvancedQueryOrganizer
             this.removeToolStripMenuItem.Size = new System.Drawing.Size(213, 24);
             this.removeToolStripMenuItem.Text = "Remove";
             // 
-            // contextMenuStrip1
+            // contextTablesViews
             // 
-            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextTablesViews.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.contextTablesViews.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showTop10ToolStripMenuItem,
             this.getColumnListToolStripMenuItem,
             this.showTop1ToolStripMenuItem,
@@ -1042,8 +1039,8 @@ namespace AdvancedQueryOrganizer
             this.showFieldHeadersToolStripMenuItem,
             this.toolStripSeparator10,
             this.viewStructureToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(287, 202);
+            this.contextTablesViews.Name = "contextMenuStrip1";
+            this.contextTablesViews.Size = new System.Drawing.Size(287, 202);
             // 
             // showTop10ToolStripMenuItem
             // 
@@ -1215,9 +1212,9 @@ namespace AdvancedQueryOrganizer
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerSchema)).EndInit();
             this.splitContainerSchema.ResumeLayout(false);
             this.tabSnippets.ResumeLayout(false);
-            this.contextMenuStrip2.ResumeLayout(false);
+            this.contextCode.ResumeLayout(false);
             this.contextConnection.ResumeLayout(false);
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.contextTablesViews.ResumeLayout(false);
             this.ctxMenuStripSnippets.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1278,13 +1275,12 @@ namespace AdvancedQueryOrganizer
         private System.Windows.Forms.TabControl tabDatabase;
         private System.Windows.Forms.ListView lstTables;
         private System.Windows.Forms.ListView lstProcedures;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ContextMenuStrip contextCode;
         private System.Windows.Forms.ToolStripMenuItem TS_Procedure_Structure;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem TS_Procedure_Code;
         private System.Windows.Forms.ToolStripMenuItem TS_Procedure_Run;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip contextConnections;
         private System.Windows.Forms.ContextMenuStrip contextConnection;
         private System.Windows.Forms.ToolStripMenuItem editConnectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addConnectionToolStripMenuItem;
@@ -1292,7 +1288,7 @@ namespace AdvancedQueryOrganizer
         private System.Windows.Forms.ToolStripMenuItem currentConnectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manageToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip contextTablesViews;
         private System.Windows.Forms.ToolStripMenuItem viewStructureToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripMenuItem showTop100ToolStripMenuItem;

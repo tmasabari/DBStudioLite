@@ -30,37 +30,36 @@ namespace AdvancedQueryOrganizer
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.splitCode = new System.Windows.Forms.SplitContainer();
+            this.incrementalSearcher1 = new ScintillaNET_FindReplaceDialog.IncrementalSearcher();
             this.txtQuery = new ScintillaNET.Scintilla();
-            this.txtOutputText = new System.Windows.Forms.TextBox();
+            this.tabstripResults = new System.Windows.Forms.TabControl();
+            this.tabResults = new System.Windows.Forms.TabPage();
             this.dataGrid1 = new System.Windows.Forms.DataGridView();
+            this.tabMessages = new System.Windows.Forms.TabPage();
+            this.txtOutputText = new System.Windows.Forms.TextBox();
+            this.tabFindResults = new System.Windows.Forms.TabPage();
+            this.findAllResultsPanel1 = new ScintillaNET_FindReplaceDialog.FindAllResults.FindAllResultsPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.checkShowFullScreen = new System.Windows.Forms.CheckBox();
             this.lblRows = new System.Windows.Forms.Label();
-            this.butGraph = new System.Windows.Forms.Button();
             this.butExcel = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.Paste = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.btnExecuteAll = new System.Windows.Forms.Button();
             this.butExecute = new System.Windows.Forms.Button();
-            this.findAllResultsPanel1 = new ScintillaNET_FindReplaceDialog.FindAllResults.FindAllResultsPanel();
             this.findReplace1 = new ScintillaNET_FindReplaceDialog.FindReplace();
-            this.incrementalSearcher1 = new ScintillaNET_FindReplaceDialog.IncrementalSearcher();
-            this.tabstripResults = new System.Windows.Forms.TabControl();
-            this.tabResults = new System.Windows.Forms.TabPage();
-            this.tabMessages = new System.Windows.Forms.TabPage();
-            this.tabFindResults = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitCode)).BeginInit();
             this.splitCode.Panel1.SuspendLayout();
             this.splitCode.Panel2.SuspendLayout();
             this.splitCode.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
-            this.panel1.SuspendLayout();
             this.tabstripResults.SuspendLayout();
             this.tabResults.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
             this.tabMessages.SuspendLayout();
             this.tabFindResults.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -74,8 +73,8 @@ namespace AdvancedQueryOrganizer
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 6.535142F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 93.46486F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 4.761905F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 95.2381F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -90,7 +89,7 @@ namespace AdvancedQueryOrganizer
             // splitCode
             // 
             this.splitCode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitCode.Location = new System.Drawing.Point(4, 58);
+            this.splitCode.Location = new System.Drawing.Point(4, 44);
             this.splitCode.Margin = new System.Windows.Forms.Padding(4);
             this.splitCode.Name = "splitCode";
             this.splitCode.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -103,21 +102,89 @@ namespace AdvancedQueryOrganizer
             // splitCode.Panel2
             // 
             this.splitCode.Panel2.Controls.Add(this.tabstripResults);
-            this.splitCode.Size = new System.Drawing.Size(1338, 778);
-            this.splitCode.SplitterDistance = 374;
+            this.splitCode.Size = new System.Drawing.Size(1338, 792);
+            this.splitCode.SplitterDistance = 380;
             this.splitCode.SplitterWidth = 5;
             this.splitCode.TabIndex = 19;
+            // 
+            // incrementalSearcher1
+            // 
+            this.incrementalSearcher1.AutoPosition = true;
+            this.incrementalSearcher1.AutoSize = true;
+            this.incrementalSearcher1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.incrementalSearcher1.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.incrementalSearcher1.FindReplace = null;
+            this.incrementalSearcher1.Location = new System.Drawing.Point(511, 0);
+            this.incrementalSearcher1.Margin = new System.Windows.Forms.Padding(0);
+            this.incrementalSearcher1.Name = "incrementalSearcher1";
+            this.incrementalSearcher1.Scintilla = null;
+            this.incrementalSearcher1.Size = new System.Drawing.Size(312, 23);
+            this.incrementalSearcher1.TabIndex = 8;
+            this.incrementalSearcher1.ToolItem = false;
+            this.incrementalSearcher1.Visible = false;
             // 
             // txtQuery
             // 
             this.txtQuery.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtQuery.Location = new System.Drawing.Point(0, 0);
             this.txtQuery.Name = "txtQuery";
-            this.txtQuery.Size = new System.Drawing.Size(1338, 374);
+            this.txtQuery.Size = new System.Drawing.Size(1338, 380);
             this.txtQuery.TabIndex = 0;
             this.txtQuery.TextChanged += new System.EventHandler(this.txtQuery1_TextChanged);
             this.txtQuery.Enter += new System.EventHandler(this.txtQuery_Enter);
             this.txtQuery.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtQuery_KeyDown);
+            // 
+            // tabstripResults
+            // 
+            this.tabstripResults.Controls.Add(this.tabResults);
+            this.tabstripResults.Controls.Add(this.tabMessages);
+            this.tabstripResults.Controls.Add(this.tabFindResults);
+            this.tabstripResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabstripResults.Location = new System.Drawing.Point(0, 0);
+            this.tabstripResults.Name = "tabstripResults";
+            this.tabstripResults.SelectedIndex = 0;
+            this.tabstripResults.Size = new System.Drawing.Size(1338, 407);
+            this.tabstripResults.TabIndex = 9;
+            // 
+            // tabResults
+            // 
+            this.tabResults.Controls.Add(this.dataGrid1);
+            this.tabResults.Location = new System.Drawing.Point(4, 25);
+            this.tabResults.Name = "tabResults";
+            this.tabResults.Padding = new System.Windows.Forms.Padding(3);
+            this.tabResults.Size = new System.Drawing.Size(1330, 378);
+            this.tabResults.TabIndex = 0;
+            this.tabResults.Text = "Data Results";
+            this.tabResults.UseVisualStyleBackColor = true;
+            // 
+            // dataGrid1
+            // 
+            this.dataGrid1.AllowUserToAddRows = false;
+            this.dataGrid1.AllowUserToDeleteRows = false;
+            this.dataGrid1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGrid1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGrid1.Location = new System.Drawing.Point(3, 3);
+            this.dataGrid1.Margin = new System.Windows.Forms.Padding(4);
+            this.dataGrid1.Name = "dataGrid1";
+            this.dataGrid1.ReadOnly = true;
+            this.dataGrid1.RowHeadersWidth = 62;
+            this.dataGrid1.RowTemplate.Height = 23;
+            this.dataGrid1.Size = new System.Drawing.Size(1324, 372);
+            this.dataGrid1.TabIndex = 10;
+            this.dataGrid1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGrid1_DataError_1);
+            // 
+            // tabMessages
+            // 
+            this.tabMessages.Controls.Add(this.txtOutputText);
+            this.tabMessages.Location = new System.Drawing.Point(4, 25);
+            this.tabMessages.Name = "tabMessages";
+            this.tabMessages.Padding = new System.Windows.Forms.Padding(3);
+            this.tabMessages.Size = new System.Drawing.Size(1330, 370);
+            this.tabMessages.TabIndex = 1;
+            this.tabMessages.Text = "Messages";
+            this.tabMessages.UseVisualStyleBackColor = true;
             // 
             // txtOutputText
             // 
@@ -137,29 +204,30 @@ namespace AdvancedQueryOrganizer
             this.txtOutputText.TabIndex = 11;
             this.txtOutputText.WordWrap = false;
             // 
-            // dataGrid1
+            // tabFindResults
             // 
-            this.dataGrid1.AllowUserToAddRows = false;
-            this.dataGrid1.AllowUserToDeleteRows = false;
-            this.dataGrid1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGrid1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dataGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGrid1.Location = new System.Drawing.Point(3, 3);
-            this.dataGrid1.Margin = new System.Windows.Forms.Padding(4);
-            this.dataGrid1.Name = "dataGrid1";
-            this.dataGrid1.ReadOnly = true;
-            this.dataGrid1.RowHeadersWidth = 62;
-            this.dataGrid1.RowTemplate.Height = 23;
-            this.dataGrid1.Size = new System.Drawing.Size(1324, 364);
-            this.dataGrid1.TabIndex = 10;
-            this.dataGrid1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGrid1_DataError_1);
+            this.tabFindResults.Controls.Add(this.findAllResultsPanel1);
+            this.tabFindResults.Location = new System.Drawing.Point(4, 25);
+            this.tabFindResults.Name = "tabFindResults";
+            this.tabFindResults.Size = new System.Drawing.Size(1330, 370);
+            this.tabFindResults.TabIndex = 2;
+            this.tabFindResults.Text = "Find Results";
+            this.tabFindResults.UseVisualStyleBackColor = true;
+            // 
+            // findAllResultsPanel1
+            // 
+            this.findAllResultsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.findAllResultsPanel1.Location = new System.Drawing.Point(0, 0);
+            this.findAllResultsPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.findAllResultsPanel1.Name = "findAllResultsPanel1";
+            this.findAllResultsPanel1.Scintilla = this.txtQuery;
+            this.findAllResultsPanel1.Size = new System.Drawing.Size(1330, 370);
+            this.findAllResultsPanel1.TabIndex = 12;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.checkShowFullScreen);
             this.panel1.Controls.Add(this.lblRows);
-            this.panel1.Controls.Add(this.butGraph);
+            this.panel1.Controls.Add(this.checkShowFullScreen);
             this.panel1.Controls.Add(this.butExcel);
             this.panel1.Controls.Add(this.btnClear);
             this.panel1.Controls.Add(this.Paste);
@@ -169,7 +237,7 @@ namespace AdvancedQueryOrganizer
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1340, 48);
+            this.panel1.Size = new System.Drawing.Size(1340, 34);
             this.panel1.TabIndex = 0;
             // 
             // checkShowFullScreen
@@ -187,23 +255,13 @@ namespace AdvancedQueryOrganizer
             // lblRows
             // 
             this.lblRows.AutoSize = true;
-            this.lblRows.Location = new System.Drawing.Point(858, 10);
+            this.lblRows.Location = new System.Drawing.Point(848, 11);
             this.lblRows.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblRows.Name = "lblRows";
             this.lblRows.Size = new System.Drawing.Size(69, 16);
             this.lblRows.TabIndex = 21;
             this.lblRows.Text = "Total rows";
-            // 
-            // butGraph
-            // 
-            this.butGraph.Location = new System.Drawing.Point(974, 6);
-            this.butGraph.Margin = new System.Windows.Forms.Padding(4);
-            this.butGraph.Name = "butGraph";
-            this.butGraph.Size = new System.Drawing.Size(105, 27);
-            this.butGraph.TabIndex = 22;
-            this.butGraph.Text = "Graph";
-            this.butGraph.UseVisualStyleBackColor = true;
-            this.butGraph.Visible = false;
+            this.lblRows.Visible = false;
             // 
             // butExcel
             // 
@@ -271,82 +329,12 @@ namespace AdvancedQueryOrganizer
             this.butExecute.UseVisualStyleBackColor = true;
             this.butExecute.Click += new System.EventHandler(this.butExecute_Click);
             // 
-            // findAllResultsPanel1
-            // 
-            this.findAllResultsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.findAllResultsPanel1.Location = new System.Drawing.Point(0, 0);
-            this.findAllResultsPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.findAllResultsPanel1.Name = "findAllResultsPanel1";
-            this.findAllResultsPanel1.Scintilla = this.txtQuery;
-            this.findAllResultsPanel1.Size = new System.Drawing.Size(1330, 370);
-            this.findAllResultsPanel1.TabIndex = 12;
-            // 
             // findReplace1
             // 
             this.findReplace1._lastReplaceHighlight = false;
             this.findReplace1._lastReplaceLastLine = 0;
             this.findReplace1._lastReplaceMark = false;
             this.findReplace1.Scintilla = this.txtQuery;
-            // 
-            // incrementalSearcher1
-            // 
-            this.incrementalSearcher1.AutoPosition = true;
-            this.incrementalSearcher1.AutoSize = true;
-            this.incrementalSearcher1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.incrementalSearcher1.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.incrementalSearcher1.FindReplace = null;
-            this.incrementalSearcher1.Location = new System.Drawing.Point(511, 0);
-            this.incrementalSearcher1.Margin = new System.Windows.Forms.Padding(0);
-            this.incrementalSearcher1.Name = "incrementalSearcher1";
-            this.incrementalSearcher1.Scintilla = null;
-            this.incrementalSearcher1.Size = new System.Drawing.Size(312, 23);
-            this.incrementalSearcher1.TabIndex = 8;
-            this.incrementalSearcher1.ToolItem = false;
-            this.incrementalSearcher1.Visible = false;
-            // 
-            // tabstripResults
-            // 
-            this.tabstripResults.Controls.Add(this.tabResults);
-            this.tabstripResults.Controls.Add(this.tabMessages);
-            this.tabstripResults.Controls.Add(this.tabFindResults);
-            this.tabstripResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabstripResults.Location = new System.Drawing.Point(0, 0);
-            this.tabstripResults.Name = "tabstripResults";
-            this.tabstripResults.SelectedIndex = 0;
-            this.tabstripResults.Size = new System.Drawing.Size(1338, 399);
-            this.tabstripResults.TabIndex = 9;
-            // 
-            // tabResults
-            // 
-            this.tabResults.Controls.Add(this.dataGrid1);
-            this.tabResults.Location = new System.Drawing.Point(4, 25);
-            this.tabResults.Name = "tabResults";
-            this.tabResults.Padding = new System.Windows.Forms.Padding(3);
-            this.tabResults.Size = new System.Drawing.Size(1330, 370);
-            this.tabResults.TabIndex = 0;
-            this.tabResults.Text = "Data Results";
-            this.tabResults.UseVisualStyleBackColor = true;
-            // 
-            // tabMessages
-            // 
-            this.tabMessages.Controls.Add(this.txtOutputText);
-            this.tabMessages.Location = new System.Drawing.Point(4, 25);
-            this.tabMessages.Name = "tabMessages";
-            this.tabMessages.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMessages.Size = new System.Drawing.Size(1330, 370);
-            this.tabMessages.TabIndex = 1;
-            this.tabMessages.Text = "Messages";
-            this.tabMessages.UseVisualStyleBackColor = true;
-            // 
-            // tabFindResults
-            // 
-            this.tabFindResults.Controls.Add(this.findAllResultsPanel1);
-            this.tabFindResults.Location = new System.Drawing.Point(4, 25);
-            this.tabFindResults.Name = "tabFindResults";
-            this.tabFindResults.Size = new System.Drawing.Size(1330, 370);
-            this.tabFindResults.TabIndex = 2;
-            this.tabFindResults.Text = "Find Results";
-            this.tabFindResults.UseVisualStyleBackColor = true;
             // 
             // FrmEditor
             // 
@@ -365,14 +353,14 @@ namespace AdvancedQueryOrganizer
             this.splitCode.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitCode)).EndInit();
             this.splitCode.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.tabstripResults.ResumeLayout(false);
             this.tabResults.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
             this.tabMessages.ResumeLayout(false);
             this.tabMessages.PerformLayout();
             this.tabFindResults.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -384,7 +372,6 @@ namespace AdvancedQueryOrganizer
         public System.Windows.Forms.DataGridView dataGrid1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblRows;
-        private System.Windows.Forms.Button butGraph;
         public System.Windows.Forms.Button butExcel;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button Paste;

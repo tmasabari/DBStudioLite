@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using ScintillaNET;
 using ScintillaNET_FindReplaceDialog;
 using ScintillaNET_FindReplaceDialog.FindAllResults;
+using AdvancedQueryOrganizer.ClosedXML;
 
 namespace AdvancedQueryOrganizer
 {
@@ -238,6 +239,7 @@ namespace AdvancedQueryOrganizer
         public async Task LoadQuery(string SQuery, bool IsLoadQueryToBox = true)
         {
             ((MDIAdvancedQuery)MdiParent).ShowProgress();
+            lblRows.Visible = false;
 
             string lsConnection =( (MDIAdvancedQuery) this.MdiParent).sConnectionString;
             if(IsLoadQueryToBox) txtQuery.Text = SQuery;
@@ -254,9 +256,8 @@ namespace AdvancedQueryOrganizer
                     if (ds.Tables["MyTable"] != null)
                     {
                         dataGrid1.DataSource = ds.Tables["MyTable"];
-                        lblRows.Text = "Total Rows :" + ds.Tables["MyTable"].Rows.Count.ToString();
                         dataGrid1.Refresh();
-                        focusDataResults();
+                        focusDataResults(ds.Tables["MyTable"].Rows.Count);
                     }
                     else if(txtOutputText.Text.Length > 0)
                     {
@@ -285,8 +286,13 @@ namespace AdvancedQueryOrganizer
             tabstripResults.SelectedTab = tabMessages;
             dataGrid1.Focus();
         }
-        private void focusDataResults()
+        private void focusDataResults(int rowCount)
         {
+            if(rowCount == 0)
+                lblRows.Text = "There are no rows returned.";
+            else
+                lblRows.Text = "Total Rows :" + rowCount.ToString();
+            lblRows.Visible = true;
             checkShowFullScreen.Checked = false;
             tabstripResults.SelectedTab = tabResults;
             txtOutputText.Focus();
@@ -359,19 +365,16 @@ namespace AdvancedQueryOrganizer
 
         private void butExcel_Click(object sender, EventArgs e)
         {
-            try
+            DataTable data = (DataTable)dataGrid1.DataSource;
+            if (data != null)
             {
-                DataTable s = (DataTable)dataGrid1.DataSource;
-                if (s != null)
-                {
-                    string sFile = Application.StartupPath + @"\excel.xml";
-                    s.WriteXml(sFile);
-                    s.WriteXmlSchema(Application.StartupPath + @"\excel.xsd");
-                    Common.OpenWithDefaultProgram(sFile);
-                    //System.Diagnostics.Process.Start("excel.exe", "\"" + sFile + "\"");
-                }
+                var fileName = ExportToExcel.Export(data);
+                //string sFile = Application.StartupPath + @"\excel.xml";
+                //s.WriteXml(sFile);
+                //s.WriteXmlSchema(Application.StartupPath + @"\excel.xsd");
+                Common.OpenWithDefaultProgram(fileName);
+                //System.Diagnostics.Process.Start("excel.exe", "\"" + sFile + "\"");
             }
-            catch { }
         }
 
         private void butGraph_Click(object sender, EventArgs e)
@@ -463,6 +466,5 @@ namespace AdvancedQueryOrganizer
             txtQuery.Margins[0].Width = txtQuery.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
             this.maxLineNumberCharLength = maxLineNumberCharLength;
         }
-
     }
 }
