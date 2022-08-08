@@ -8,17 +8,19 @@
 - The developers can save the repeatedly used code snippets within the tool and use a single click to execute multiple commands at the same time.
 - DBStudioLite uses the ScintillaNet library to provide the code formatting and editing features. It supports rich ‘Find and Replace’ options and incremental search (shortcut Ctrl + I) options.
 - DBStudioLite uses ClosedXML and OpenXml frameworks to provide export to excel features. So MS Office license is not required for export functionality. Users can use any Xlsx viewer/editor.
+
 ## Further improvements/Work in progress
 - DBStudioLite can be automated to generate the data access layer code from the templates.
 - DBStudioLite can be expanded to support different databases like Oracle, MySQL, MongoDB, Redis, etc.
 - Check the project page for other ongoing feature implementations.
+
 ## Dependencies
 - This tool runs using .NET 4.8 runtime engine. If the runtime is not installed, it will be automatically downloaded during the DBStudioLite installation.
+
 ## Installation
-- The binary package can be downloaded from [Releases](https://github.com/tmasabari/DBStudioLite/releases)
-  
-  ![Download](Documents/Download.png)
-- This is a click-once Windows application. It automatically installs the necessary dependencies.
+- The binary package can be downloaded from [ClickOnce Installer](https://raw.githubusercontent.com/tmasabari/DBStudioLite/Pages/docs/installer/setup.exe)
+- It automatically installs the necessary dependencies.
+- The application will auto-update itself whenever there is a new version released.
 - After the installation, please add a connection string using Manage Menu.
 
 The syntax of the connection string is data source=SERVERNAME\INSTANCENAME;user id=UserAccountID;password=PASSWORD
