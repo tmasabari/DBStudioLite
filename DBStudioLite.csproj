@@ -28,14 +28,16 @@
     <PublishUrl>C:\DBStudioLite\Publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
+    <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://raw.githubusercontent.com/tmasabari/DBStudioLite/gh-pages/</InstallUrl>
+    <InstallUrl>https://raw.githubusercontent.com/tmasabari/DBStudioLite/Pages/docs/installer/</InstallUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/tmasabari/DBStudioLite/Pages/docs/installer/</UpdateUrl>
+    <MinimumRequiredVersion>4.2.0.1</MinimumRequiredVersion>
     <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>4.2.0.1</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
