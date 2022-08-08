@@ -1,37 +1,35 @@
-## Welcome to GitHub Pages
+# DBStudioLite
 
-You can use the [editor on GitHub](https://github.com/tmasabari/DBStudioLite/edit/Pages/docs/index.md) to maintain and preview the content for your website in Markdown files.
+## Introduction
+- DBStudioLite is the open source lightweight (< 5 MB if you have .NET runtime already) database management and query organizer tool. 
+- This tool currently supports managing SQL Server databases, JSON, and XML files. 
+- DBStudioLite populates the schema objects faster and provides easy to use UI to filter the objects.
+- The developers can switch between multiple databases and can run the commands against different databases easily. This is especially useful when the developers manage databases in different environments and multi-tenant databases where the schema of these databases would be similar.
+- The developers can save the repeatedly used code snippets within the tool and use a single click to execute multiple commands at the same time.
+- DBStudioLite uses the ScintillaNet library to provide the code formatting and editing features. It supports rich ‘Find and Replace’ options and incremental search (shortcut Ctrl + I) options.
+- DBStudioLite uses ClosedXML and OpenXml frameworks to provide export to excel features. So MS Office license is not required for export functionality. Users can use any Xlsx viewer/editor.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Databases connectivity
+![Databases connectivity](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.001.png)
+## Switch Connections
+![Switch Connections](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/SwitchConnections.png)
 
-### Markdown
+![Connection properties](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.002.png)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+![Databases](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.003.png)
 
-```markdown
-Syntax highlighted code block
+![Tables and views](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.004.png)
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/tmasabari/DBStudioLite/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+![Code modules](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.005.png)
+## SQL Editor
+![SQL Editor](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.006.png)
+## JSON Editor
+![JSON Editor](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.007.png)
+## XML Editor
+![XML Editor](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.008.png)
+## Built-in Snippets List
+![Snippets List](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/SnippetsList.png)
+## Snippets Editor
+![Snippets Editor](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/SnippetsEditor.png)
+## About Me
+![About Me](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/AboutMe.png)
