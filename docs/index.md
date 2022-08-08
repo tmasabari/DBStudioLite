@@ -10,26 +10,26 @@
 - DBStudioLite uses ClosedXML and OpenXml frameworks to provide export to excel features. So MS Office license is not required for export functionality. Users can use any Xlsx viewer/editor.
 
 ## Databases connectivity
-![Databases connectivity](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.001.png)
+![Databases connectivity](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.001.png)
 ## Switch Connections
-![Switch Connections](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/SwitchConnections.png)
+![Switch Connections](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/SwitchConnections.png)
 
-![Connection properties](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.002.png)
+![Connection properties](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.002.png)
 
-![Databases](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.003.png)
+![Databases](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.003.png)
 
-![Tables and views](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.004.png)
+![Tables and views](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.004.png)
 
-![Code modules](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.005.png)
+![Code modules](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.005.png)
 ## SQL Editor
-![SQL Editor](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.006.png)
+![SQL Editor](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.006.png)
 ## JSON Editor
-![JSON Editor](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.007.png)
+![JSON Editor](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.007.png)
 ## XML Editor
-![XML Editor](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.008.png)
+![XML Editor](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/Aspose.Words.532e7040-f552-43df-a7a6-02b8d8ca361d.008.png)
 ## Built-in Snippets List
-![Snippets List](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/SnippetsList.png)
+![Snippets List](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/SnippetsList.png)
 ## Snippets Editor
-![Snippets Editor](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/SnippetsEditor.png)
+![Snippets Editor](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/SnippetsEditor.png)
 ## About Me
-![About Me](https://github.com/tmasabari/DBStudioLite/blob/main/Documents/AboutMe.png)
+![About Me](https://raw.githubusercontent.com/tmasabari/DBStudioLite/main/Documents/AboutMe.png)
