@@ -1,0 +1,6 @@
+*.manifest binary
+*.application binary
+*.deploy binary
+*  -text
+# git was screwing with the line endings of the ClickOnce deployment files, which apparently causes some hash mismatch and, consequently, a failed installation.
+# so ignoring the line endings for the above files is important
