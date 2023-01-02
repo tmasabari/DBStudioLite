@@ -186,6 +186,7 @@ namespace DBStudioLite
                 string sFileContents = Common.ReadFile(FileName);
                 txtQuery.Text = sFileContents;
             }
+            txtQuery.Focus();
         }
 
         public void SaveToFile()
@@ -274,7 +275,7 @@ namespace DBStudioLite
                 }
                 else
                 {
-                    txtOutputText.Text = DataObj.ErrorText.Length > 0 ? DataObj.ErrorText : emptyMessage;
+                    txtOutputText.Text += DataObj.ErrorText.Length > 0 ? DataObj.ErrorText : emptyMessage;
                     focusMessages();
                 }
                 StopProgress();
@@ -362,9 +363,6 @@ namespace DBStudioLite
         }
 
 
-
-
-
         private void butExcel_Click(object sender, EventArgs e)
         {
             ExportToExcel.Export(dataGrid1);
@@ -378,12 +376,6 @@ namespace DBStudioLite
         private void dataGrid1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = true;
-        }
-
-
-        private void lstTables_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
 

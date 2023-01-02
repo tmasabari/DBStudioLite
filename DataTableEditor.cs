@@ -61,7 +61,7 @@ namespace DBStudioLite
 
                     textBox1.Text = sFile;
                     if (FormType == FormTypes.JsonEditor)
-                        dataGridView1.DataSource = Common.LoadJsonToTable(sFile);
+                        dataGridView1.DataSource = Common.LoadJsonToTable<DataTable>(sFile);
                     else
                         dataGridView1.DataSource = XMLDAL.GetFirstTableFromXMLFile(sFile);
 

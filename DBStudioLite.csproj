@@ -130,6 +130,12 @@
     <Compile Include="frmAboutMe.Designer.cs">
       <DependentUpon>frmAboutMe.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmOptions.Designer.cs">
+      <DependentUpon>FrmOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="IOperatingForm.cs" />
     <Compile Include="DataTableEditor.cs">
       <SubType>Form</SubType>
@@ -137,6 +143,8 @@
     <Compile Include="DataTableEditor.Designer.cs">
       <DependentUpon>DataTableEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\IBaseData.cs" />
+    <Compile Include="Model\Snippets.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShowMessageText.cs">
       <SubType>Form</SubType>
@@ -175,6 +183,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmAboutMe.resx">
       <DependentUpon>frmAboutMe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmOptions.resx">
+      <DependentUpon>FrmOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ShowMessageText.resx">
       <SubType>Designer</SubType>

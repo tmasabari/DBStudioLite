@@ -1,3 +1,4 @@
+using DBStudioLite.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Specialized;
@@ -75,14 +76,17 @@ namespace DBStudioLite
         }
 
 
-        public static DataTable LoadJsonToTable(string fileName)
+        public static DataTable LoadJsonToTable<T>(string fileName)
         {
             var jsonString = File.Exists(fileName) ? System.IO.File.ReadAllText(fileName) : "";
             if (!string.IsNullOrWhiteSpace(jsonString))
             {
                 //https://stackoverflow.com/questions/11981282/convert-json-to-datatable
-                DataTable dt = (DataTable)JsonConvert.DeserializeObject(jsonString, (typeof(DataTable)));
-                return dt;
+                var data = (T)JsonConvert.DeserializeObject(jsonString, (typeof(T)));
+                if (data is IBaseData)
+                    return (data as IBaseData).SnippetsData;
+                else if (data is DataTable )
+                    return data as DataTable;
             }
             return new DataTable();
         }
