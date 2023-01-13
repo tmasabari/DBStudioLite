@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Windows.Forms;
 
-namespace DBStudioLite.ClosedXML
+namespace CoreLogic.ClosedXML
 {
     /// <summary>
     /// https://github.com/ClosedXML/ClosedXML
@@ -44,24 +43,7 @@ namespace DBStudioLite.ClosedXML
         //        workbook.SaveAs("HelloWorld.xlsx");
         //    }
 
-        public static void Export(DataGridView dataGridView)
-        {
-            DataTable data = (DataTable)dataGridView.DataSource;
-            if (data == null) return;
 
-            //var exportColumns = new List<ExportColumn>();
-            //foreach (DataGridViewColumn col in dataGridView.Columns)
-            //{
-            //    exportColumns.Add(new ExportColumn() { Width = col.Width });
-            //}
-            var fileName = ExportToExcel.Export(data);
-            Common.OpenWithDefaultProgram(fileName);
-
-            //string sFile = Application.StartupPath + @"\excel.xml";
-            //s.WriteXml(sFile);
-            //s.WriteXmlSchema(Application.StartupPath + @"\excel.xsd");
-            //System.Diagnostics.Process.Start("excel.exe", "\"" + sFile + "\"");
-        }
 
     }
 

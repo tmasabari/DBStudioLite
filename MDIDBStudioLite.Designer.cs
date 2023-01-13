@@ -601,10 +601,10 @@ namespace DBStudioLite
             // 
             // btnFilter
             // 
-            this.btnFilter.Location = new System.Drawing.Point(400, 9);
+            this.btnFilter.Location = new System.Drawing.Point(400, 8);
             this.btnFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnFilter.Name = "btnFilter";
-            this.btnFilter.Size = new System.Drawing.Size(62, 26);
+            this.btnFilter.Size = new System.Drawing.Size(62, 30);
             this.btnFilter.TabIndex = 9;
             this.btnFilter.Text = "&Filter";
             this.btnFilter.UseVisualStyleBackColor = true;
@@ -1229,7 +1229,7 @@ namespace DBStudioLite
         //private System.Windows.Forms.ToolStripMenuItem xMLTableEditorToolStripMenuItem1;
         //private System.Windows.Forms.ToolStripMenuItem xMLDBManagerToolStripMenuItem;
         private System.Windows.Forms.TabPage tabDatabases;
-        private System.Windows.Forms.ListView listViewDBs;
+        public System.Windows.Forms.ListView listViewDBs;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
         private System.Windows.Forms.SplitContainer splitContainerDB;
         private System.Windows.Forms.SplitContainer splitContainerSchema;

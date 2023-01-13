@@ -1,7 +1,7 @@
+using CoreLogic;
 using DBStudioLite.Model;
 using DBStudioLite.WindowsLogic;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace DBStudioLite
         {
             get
             {
-                return " ;Application Name=DBStudioLite;Min Pool Size=1;Max Pool Size=" + frmOptions.txtPool.Text 
+                return " ;Application Name=DBStudioLite;Min Pool Size=1;Max Pool Size=" + frmOptions.txtPool.Text
                     + ";Connection Timeout=" + frmOptions.txtConnectionTimeout.Text + ";" +
                     "Persist Security Info=False; MultipleActiveResultSets=True;Packet Size=" + frmOptions.txtPockets.Text + ";";
             }
@@ -34,8 +34,12 @@ namespace DBStudioLite
         {
             get
             {
-                return ";initial catalog=" + GetSelectedDBName();
+                return GetDBParameter(GetSelectedDBName());
             }
+        }
+        private string GetDBParameter(string dBName)
+        {
+            return ";initial catalog=" + dBName;
         }
         private string DBParameterMaster
         {
@@ -50,6 +54,11 @@ namespace DBStudioLite
             {
                 return objConnections.ConnectionText + sStandardConnectionParams + DBParameter;
             }
+        }
+
+        public string GetConnectionString(string dBName)
+        {
+            return objConnections.ConnectionText + sStandardConnectionParams + GetDBParameter(dBName); ;
         }
 
         public string sMasterConnectionString
@@ -245,6 +254,7 @@ namespace DBStudioLite
                     {
                         if (ds.Tables["MyTable"] != null)
                         {
+                            bool selected = false;
                             LoadListViewFromTable(listViewDBs, ds.Tables["MyTable"]);
                             if (!string.IsNullOrWhiteSpace(lastSessionSelectedDBName))
                             {
@@ -252,17 +262,18 @@ namespace DBStudioLite
                                 {
                                     if (listViewDBs.Items[i].SubItems[0].Text == lastSessionSelectedDBName)
                                     {
+                                        selected = true;
                                         listViewDBs.Items[i].Selected = true;
                                         break;
                                     }
                                 }
                             }
-                            else
+                            if (!selected)
                             {
                                 //set non system db as default db
                                 for (var i = 0; i < listViewDBs.Items.Count; i++)
                                 {
-                                    if (listViewDBs.Items[i].SubItems[1].Text == "0")
+                                    if (listViewDBs.Items[i].SubItems[1].Text != "True")
                                     {
                                         listViewDBs.Items[i].Selected = true;
                                         break;
@@ -462,7 +473,7 @@ namespace DBStudioLite
 
         private void ReaderEvent(object sender, object objReader)
         {
-            System.Data.SqlClient.SqlDataReader Reader = (System.Data.SqlClient.SqlDataReader)objReader;
+            var Reader = (IDataReader)objReader;
             dtTablesViews = new DataTable();
             dtTablesViews.Load(Reader);
             //Reader.NextResult(); Load automatically moves to next result set
@@ -629,10 +640,7 @@ namespace DBStudioLite
 
                 else
                 {
-                    GetEmptyOperatingForm().SetProcedureText(
-                        await DynamicDataSourceCode.GetProcedureDefinition(sConnectionString,
-                            sTableName)
-                        );
+                    await GetEmptyOperatingFormSetProcedureDefinition(sTableName);
                 }
             }
         }
@@ -708,13 +716,51 @@ namespace DBStudioLite
             {
                 string sSPName = GetSelectedSPName();
                 if (sSPName != "")
-                    GetEmptyOperatingForm().SetProcedureText(
-                        DynamicDataSourceCode.GetProcedureRun(sConnectionString, sSPName, codeType)
-                       );
+                {
+                    GetEmptyOperatingFormSetProcedureRunText(sSPName, codeType);
+                }
             }
             else
             {
                 getSelectedProcedureCode();
+            }
+        }
+
+        private void GetEmptyOperatingFormSetProcedureRunText(string sSPName, string codeType)
+        {
+            var error = string.Empty;
+            var code = DynamicDataSourceCode.GetProcedureRun(sConnectionString, sSPName, codeType, out error);
+            if (!string.IsNullOrWhiteSpace(error))
+                MessageBox.Show("Error occured" + error, Application.ProductName,
+                    MessageBoxButtons.OK);
+            else
+            {
+                GetEmptyOperatingForm().SetProcedureText(code);
+            }
+        }
+        private void GetEmptyOperatingFormSetProcedureCSharpCode(string sSPName, int type)
+        {
+            var error = string.Empty;
+            var code = CodeGeneration.GetProcedureCSharpCode(sConnectionString, sSPName, type, out error);
+            //always set the code before refactoring as well. this is fixed
+            if (!string.IsNullOrWhiteSpace(error))
+                MessageBox.Show("Error occured" + error, Application.ProductName,
+                    MessageBoxButtons.OK);
+            else
+            {
+                GetEmptyOperatingForm().SetProcedureText(code);
+            }
+        }
+        private async Task GetEmptyOperatingFormSetProcedureDefinition(string sTableName)
+        {
+            var error = string.Empty;
+            var codeTuple = await DynamicDataSourceCode.GetProcedureDefinition(sConnectionString, sTableName);
+            if (!string.IsNullOrWhiteSpace(error))
+                MessageBox.Show("Error occured" + error, Application.ProductName,
+                    MessageBoxButtons.OK);
+            else
+            {
+                GetEmptyOperatingForm().SetProcedureText(codeTuple.Item1);
             }
         }
 
@@ -729,27 +775,27 @@ namespace DBStudioLite
         {
             string sSPName = GetSelectedSPName();
             if (sSPName != "")
-                GetEmptyOperatingForm().SetProcedureText(CodeGeneration.GetProcedureCSharpCode(sConnectionString, sSPName, 1));
+                GetEmptyOperatingFormSetProcedureCSharpCode(sSPName, 1);
         }
         private void getCReaderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string sSPName = GetSelectedSPName();
             if (sSPName != "")
-                GetEmptyOperatingForm().SetProcedureText(CodeGeneration.GetProcedureCSharpCode(sConnectionString, sSPName, 2));
+                GetEmptyOperatingFormSetProcedureCSharpCode(sSPName, 2);
         }
 
         private void getCSimpleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string sSPName = GetSelectedSPName();
             if (sSPName != "")
-                GetEmptyOperatingForm().SetProcedureText(CodeGeneration.GetProcedureCSharpCode(sConnectionString, sSPName, 3));
+                GetEmptyOperatingFormSetProcedureCSharpCode(sSPName, 3);
         }
 
         private void getCScalarToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string sSPName = GetSelectedSPName();
             if (sSPName != "")
-                GetEmptyOperatingForm().SetProcedureText(CodeGeneration.GetProcedureCSharpCode(sConnectionString, sSPName, 4));
+                GetEmptyOperatingFormSetProcedureCSharpCode(sSPName, 4);
         }
 
         private void connectionsToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -761,7 +807,7 @@ namespace DBStudioLite
             //    RefreshConnectionsMenu();
             //}
             //else
-            if(e.ClickedItem.Tag is int)
+            if (e.ClickedItem.Tag is int)
             {
                 ToolStripMenuItem childmenu1;
                 if (objConnections.SelectedIndex >= 0)
@@ -795,10 +841,7 @@ namespace DBStudioLite
             string sSPName = GetSelectedSPName();
             if (sSPName != "")
             {
-                string sProcedureBody = await DynamicDataSourceCode.GetProcedureDefinition(sConnectionString,
-                    sSPName);
-
-                GetEmptyOperatingForm().SetProcedureText(sProcedureBody);
+                await GetEmptyOperatingFormSetProcedureDefinition(sSPName);
             }
 
             //do not do this it may create a problem in dynamic query

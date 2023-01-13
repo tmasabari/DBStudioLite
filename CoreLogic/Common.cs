@@ -5,11 +5,10 @@ using System.Collections.Specialized;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 
-namespace DBStudioLite
+namespace CoreLogic
 {
-    static class Common
+    public static class Common
     {
         public static string ReadFile(string sFile)
         {
@@ -36,45 +35,6 @@ namespace DBStudioLite
 
         }
 
-        /// <summary>
-        /// https://stackoverflow.com/questions/1025670/how-do-you-automatically-resize-columns-in-a-datagridview-control-and-allow-the
-        /// </summary>
-        /// <param name="dataGridView"></param>
-        public static void AutoSizeGridView(DataGridView dataGridView, int fillColumn = -1)
-        {
-            for (int i = 0; i < dataGridView.ColumnCount; i++)
-            {
-                dataGridView.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            }
-            if (fillColumn > -1)
-                dataGridView.Columns[fillColumn].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            //dataGridView.Refresh();
-            //// Now that DataGridView has calculated it's Widths; we can now store each column Width values.
-            //for (int i = 0; i <= dataGridView.Columns.Count - 1; i++)
-            //{
-            //    // Store Auto Sized Widths:
-            //    int colw = dataGridView.Columns[i].Width;
-
-            //    // Remove AutoSizing:
-            //    dataGridView.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-
-            //    // Set Width to calculated AutoSize value:
-            //    dataGridView.Columns[i].Width = colw;
-            //}
-        }
-
-        /// <summary>
-        /// https://stackoverflow.com/questions/1706454/c-multiline-text-in-datagridview-control
-        /// </summary>
-        /// <param name="dataGridView"></param>
-        public static void SupportMultipleLineCells(DataGridView dataGridView)
-        {
-            foreach (DataGridViewColumn col in dataGridView.Columns)
-            {
-                col.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-            }
-        }
-
 
         public static DataTable LoadJsonToTable<T>(string fileName)
         {
@@ -85,7 +45,7 @@ namespace DBStudioLite
                 var data = (T)JsonConvert.DeserializeObject(jsonString, (typeof(T)));
                 if (data is IBaseData)
                     return (data as IBaseData).SnippetsData;
-                else if (data is DataTable )
+                else if (data is DataTable)
                     return data as DataTable;
             }
             return new DataTable();

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DBStudioLite
 {
@@ -86,8 +84,9 @@ namespace DBStudioLite
             return sQuery;
         }
 
-        public static string GetProcedureRun(string sConnectionString, string Name, string codeType)
+        public static string GetProcedureRun(string sConnectionString, string Name, string codeType, out string error)
         {
+            error = string.Empty;
             string executionMapStartText =
                 "FN|*|SELECT <Name/> (" + Environment.NewLine
                 + "AF|*|SELECT <Name/> (" + Environment.NewLine
@@ -103,8 +102,8 @@ namespace DBStudioLite
                 + "P|*|" + Environment.NewLine;
 
 
-            var startCollection = DBStudioLite.Common.GetNameValueCollection(executionMapStartText);
-            var endCollection = DBStudioLite.Common.GetNameValueCollection(executionMapCloseText);
+            var startCollection = CoreLogic.Common.GetNameValueCollection(executionMapStartText);
+            var endCollection = CoreLogic.Common.GetNameValueCollection(executionMapCloseText);
             string sProcedure = Environment.NewLine + startCollection[codeType].Replace("<Name/>", Name); // "EXECUTE " + Name + " (";
             SqlParameter parameter = null;
             try
@@ -140,7 +139,7 @@ namespace DBStudioLite
                         }
                         else
                             sSize = "";
-                        
+
                         string currentParam = string.Empty;
                         string paramName = parameter.ParameterName;
                         //if (paramIndex > 1) sProcedure += Environment.NewLine + ", ";
@@ -152,7 +151,8 @@ namespace DBStudioLite
                             paramType = "OUTPUT";
                             paramValue = "";
                         }
-                        else if (parameter.Direction == ParameterDirection.ReturnValue) { 
+                        else if (parameter.Direction == ParameterDirection.ReturnValue)
+                        {
                             paramType = "RETURN";
                             paramValue = "";
                         }
@@ -212,23 +212,23 @@ namespace DBStudioLite
                         //else
                         //    sValue = "";
 
-                        paramNameList.Add(parameter.ParameterName + " " + paramType );
+                        paramNameList.Add(parameter.ParameterName + " " + paramType);
 
                         currentParam += parameter.ParameterName + " " + parameter.SqlDbType.ToString("F") + sSize;
-                        if(!string.IsNullOrWhiteSpace(paramValue))
+                        if (!string.IsNullOrWhiteSpace(paramValue))
                             currentParam += " = " + paramValue;
 
                         paramStringList.Add(currentParam);
                     }
-                    if(paramStringList.Count > 0)
+                    if (paramStringList.Count > 0)
                         sProcedure = "DECLARE " + string.Join(Environment.NewLine + "DECLARE ", paramStringList.ToArray()) + sProcedure;
                     if (paramNameList.Count > 0)
-                        sProcedure += Environment.NewLine + string.Join(Environment.NewLine + ", " , paramNameList.ToArray());
+                        sProcedure += Environment.NewLine + string.Join(Environment.NewLine + ", ", paramNameList.ToArray());
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error occured" + e.Message, Application.ProductName, MessageBoxButtons.OK);
+                error = e.Message;
             }
             return sProcedure + endCollection[codeType];
             //remove start brace and comma and dont use end brace + ")"
@@ -236,8 +236,9 @@ namespace DBStudioLite
             //    + Environment.NewLine;
         }
 
-        public static async Task<string> GetProcedureDefinition(string sConnectionString, string Name)
+        public static async Task<Tuple<string, string>> GetProcedureDefinition(string sConnectionString, string Name)
         {
+            var error = string.Empty;
             //string tablename = Name.Substring(Name.LastIndexOf(".")+1);
             //string sQuery = "SELECT ROUTINE_DEFINITION FROM INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = '" + tablename + "' and ROUTINE_TYPE = '" + sType + "'";
             string sQuery = "EXEC sp_helptext N'" + Name + "';";
@@ -260,14 +261,15 @@ namespace DBStudioLite
                 }
                 else
                 {
-                    MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
+                    error = DataObj.ErrorText;
+                    //MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
                 }
                 //if (DataObj.ExecuteScalar(out objReturn) == false)
                 //    MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
                 //else
                 //    sProcedure = (string) objReturn;
             }
-            return sProcedure;
+            return new Tuple<string, string>(sProcedure, error); ;
         }
     }
 }
