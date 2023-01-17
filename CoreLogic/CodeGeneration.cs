@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Data;
-using System.Data.SqlClient;
-using System.Windows.Forms;
 
-namespace DBStudioLite
+namespace CoreLogic
 {
     public static class CodeGeneration
     {
-        public static string GetProcedureCSharpCode(string sConnectionString, string Name, int Type)
+        public static string GetProcedureCSharpCode(string sConnectionString, string Name, int Type
+            , out string error)
         {
+            error = string.Empty;
             string sCSharp = "", sParameterFunction = "", sValue = "";
             SqlParameter parameter = null;
 
@@ -54,7 +55,7 @@ namespace DBStudioLite
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error occured" + e.Message, Application.ProductName, MessageBoxButtons.OK);
+                error = e.Message;
             }
 
             sCSharp += "   DataSet DataobjSet = new DataSet();" + Environment.NewLine +

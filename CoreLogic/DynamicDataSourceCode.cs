@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace DBStudioLite
 {
@@ -24,7 +24,7 @@ namespace DBStudioLite
             "SELECT name, CAST( IIF( name in ('master','model','msdb','tempdb') , 1 , is_distributor) AS bit) AS [IsSystemObject], "
             + " create_date FROM sys.databases"; //database_id,
         public static readonly string GetAllSchemaCode =
-            "SELECT TABLE_NAME,TABLE_SCHEMA,TABLE_TYPE from INFORMATION_SCHEMA.Tables order by table_type, table_name; ";
+            "SELECT TABLE_NAME,TABLE_SCHEMA,TABLE_TYPE from INFORMATION_SCHEMA.Tables order by TABLE_TYPE, TABLE_SCHEMA, TABLE_NAME; ";
         //"SELECT Name FROM sysobjects WHERE (xtype = 'V') order by Name; " + // AND (status > 0)
         //U - tables V' - views 'S' - system tables
         //TR - trigger FN - scalar function, IF - table valued function, V - view, P - procedure 
@@ -48,7 +48,7 @@ namespace DBStudioLite
         public static readonly string GetAllDBModulesCode
             = "SELECT o.name as ModuleName, s.name as SchemaName, o.type as Type, modify_date as Modified,create_date as Created "
             + " FROM sys.sql_modules AS m INNER JOIN sys.objects AS o ON m.object_id = o.object_id"
-            + " INNER JOIN sys.schemas AS s ON o.schema_id = s.schema_id WHERE o.type <> 'V' ORDER By o.type; ";
+            + " INNER JOIN sys.schemas AS s ON o.schema_id = s.schema_id WHERE o.type <> 'V' ORDER By o.type, s.name, o.name; ";
         public static string GetDropCode(string sObjectName, string objectType)
         {
             var SQuery = "IF OBJECT_ID('" + sObjectName + "') IS NOT NULL" + Environment.NewLine
@@ -57,7 +57,8 @@ namespace DBStudioLite
         }
         public static string GetColumnsCode(string sTableName)
         {
-            var SQuery = "select '" + sTableName + "' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH from INFORMATION_SCHEMA.COLUMNS where table_name = '" + sTableName + "' ";
+            var SQuery = "select '" + sTableName + "' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT, NUMERIC_PRECISION, NUMERIC_SCALE,DATETIME_PRECISION "
+                    + "from INFORMATION_SCHEMA.COLUMNS where table_name = '" + sTableName + "' Order by ORDINAL_POSITION";
             return SQuery;
         }
         public static string GetColumnListCode(string sTableName)
@@ -84,8 +85,9 @@ namespace DBStudioLite
             return sQuery;
         }
 
-        public static string GetProcedureRun(string sConnectionString, string Name, string codeType)
+        public static string GetProcedureRun(string sConnectionString, string Name, string codeType, out string error)
         {
+            error = string.Empty;
             string executionMapStartText =
                 "FN|*|SELECT <Name/> (" + Environment.NewLine
                 + "AF|*|SELECT <Name/> (" + Environment.NewLine
@@ -101,8 +103,8 @@ namespace DBStudioLite
                 + "P|*|" + Environment.NewLine;
 
 
-            var startCollection = DBStudioLite.Common.GetNameValueCollection(executionMapStartText);
-            var endCollection = DBStudioLite.Common.GetNameValueCollection(executionMapCloseText);
+            var startCollection = CoreLogic.Common.GetNameValueCollection(executionMapStartText);
+            var endCollection = CoreLogic.Common.GetNameValueCollection(executionMapCloseText);
             string sProcedure = Environment.NewLine + startCollection[codeType].Replace("<Name/>", Name); // "EXECUTE " + Name + " (";
             SqlParameter parameter = null;
             try
@@ -111,38 +113,123 @@ namespace DBStudioLite
                     CommandType.StoredProcedure))
                 {
                     string sSize = "";
-                    string sValue = "";
 
                     DataObj.connection.Open();
                     SqlCommand obj = DataObj.command;
                     SqlCommandBuilder.DeriveParameters(obj);
+                    var paramStringList = new List<string>();
+                    var paramNameList = new List<string>();
                     for (int paramIndex = 1; paramIndex < obj.Parameters.Count; paramIndex++)
                     {
                         parameter = obj.Parameters[paramIndex];
+                        string paramValue = String.Empty;
+                        if (parameter.IsNullable)
+                            paramValue = "NULL";
 
                         if (parameter.Size > 0)
+                        {
                             sSize = "(" + parameter.Size.ToString() + ") ";
+                            paramValue = "''";
+                        }
+                        else if (parameter.Scale > 0)
+                        {
+                            sSize = "(" + parameter.Scale.ToString();
+                            if (parameter.Precision > 0) sSize += "," + parameter.Precision.ToString();
+                            sSize += ") ";
+                            paramValue = "0";
+                        }
                         else
                             sSize = "";
-                        if (parameter.Value != null)
-                            sValue = " = " + parameter.Value.ToString() + " ";
-                        else
-                            sValue = "";
 
-                        if (paramIndex > 1) sProcedure += Environment.NewLine + ", ";
-                        if (parameter.Direction == ParameterDirection.Input)
-                            sProcedure += parameter.ParameterName + " " + parameter.SqlDbType.ToString("F")
-                                + sSize + sValue;
-                        else if (parameter.Direction == ParameterDirection.Output
+                        string currentParam = string.Empty;
+                        string paramName = parameter.ParameterName;
+                        //if (paramIndex > 1) sProcedure += Environment.NewLine + ", ";
+                        string paramType = string.Empty;
+                        //if (parameter.Direction == ParameterDirection.Input)
+                        if (parameter.Direction == ParameterDirection.Output
                                     || parameter.Direction == ParameterDirection.InputOutput)
-                            sProcedure += parameter.ParameterName + " " + parameter.SqlDbType.ToString("F")
-                                + sSize + " OUTPUT" + sValue;
+                        {
+                            paramType = "OUTPUT";
+                            paramValue = "";
+                        }
+                        else if (parameter.Direction == ParameterDirection.ReturnValue)
+                        {
+                            paramType = "RETURN";
+                            paramValue = "";
+                        }
+                        else
+                        {
+                            switch (parameter.SqlDbType)
+                            {
+                                //case SqlDbType.VarBinary:
+                                //case SqlDbType.Binary:
+                                //case SqlDbType.Xml:
+                                //    break;
+                                //case SqlDbType.Udt:
+                                //    break;
+                                //case SqlDbType.Structured:
+                                //case SqlDbType.Image:
+                                //case SqlDbType.UniqueIdentifier:
+
+                                case SqlDbType.Date:
+                                case SqlDbType.Time:
+                                case SqlDbType.DateTime2:
+                                case SqlDbType.DateTimeOffset:
+                                case SqlDbType.SmallDateTime:
+                                case SqlDbType.DateTime:
+                                case SqlDbType.Timestamp:
+                                    paramValue = "'" + DateTime.Today.ToString("dd/MM/yyyy hh:mm") + "'";
+                                    break;
+
+                                case SqlDbType.Decimal:
+                                case SqlDbType.Float:
+                                case SqlDbType.Bit:
+                                case SqlDbType.TinyInt:
+                                case SqlDbType.SmallInt:
+                                case SqlDbType.Int:
+                                case SqlDbType.BigInt:
+                                case SqlDbType.Real:
+                                case SqlDbType.SmallMoney:
+                                case SqlDbType.Money:
+                                    paramValue = "0";
+                                    break;
+
+                                case SqlDbType.Char:
+                                case SqlDbType.NChar:
+                                case SqlDbType.NText:
+                                case SqlDbType.NVarChar:
+                                case SqlDbType.Text:
+                                case SqlDbType.VarChar:
+                                case SqlDbType.Variant:
+                                    paramValue = "''";
+                                    break;
+                                default:
+                                    paramValue = "NULL";
+                                    break;
+                            }
+                        }
+                        //if (parameter.Value != null)
+                        //    sValue = " = " + parameter.Value.ToString() + " ";
+                        //else
+                        //    sValue = "";
+
+                        paramNameList.Add(parameter.ParameterName + " " + paramType);
+
+                        currentParam += parameter.ParameterName + " " + parameter.SqlDbType.ToString("F") + sSize;
+                        if (!string.IsNullOrWhiteSpace(paramValue))
+                            currentParam += " = " + paramValue;
+
+                        paramStringList.Add(currentParam);
                     }
+                    if (paramStringList.Count > 0)
+                        sProcedure = "DECLARE " + string.Join(Environment.NewLine + "DECLARE ", paramStringList.ToArray()) + sProcedure;
+                    if (paramNameList.Count > 0)
+                        sProcedure += Environment.NewLine + string.Join(Environment.NewLine + ", ", paramNameList.ToArray());
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error occured" + e.Message, Application.ProductName, MessageBoxButtons.OK);
+                error = e.Message;
             }
             return sProcedure + endCollection[codeType];
             //remove start brace and comma and dont use end brace + ")"
@@ -150,8 +237,9 @@ namespace DBStudioLite
             //    + Environment.NewLine;
         }
 
-        public static async Task<string> GetProcedureDefinition(string sConnectionString, string Name)
+        public static async Task<Tuple<string, string>> GetProcedureDefinition(string sConnectionString, string Name)
         {
+            var error = string.Empty;
             //string tablename = Name.Substring(Name.LastIndexOf(".")+1);
             //string sQuery = "SELECT ROUTINE_DEFINITION FROM INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = '" + tablename + "' and ROUTINE_TYPE = '" + sType + "'";
             string sQuery = "EXEC sp_helptext N'" + Name + "';";
@@ -174,14 +262,15 @@ namespace DBStudioLite
                 }
                 else
                 {
-                    MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
+                    error = DataObj.ErrorText;
+                    //MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
                 }
                 //if (DataObj.ExecuteScalar(out objReturn) == false)
                 //    MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
                 //else
                 //    sProcedure = (string) objReturn;
             }
-            return sProcedure;
+            return new Tuple<string, string>(sProcedure, error); ;
         }
     }
 }

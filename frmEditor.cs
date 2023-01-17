@@ -1,18 +1,23 @@
-using DBStudioLite.ClosedXML;
+using CoreLogic;
 using ScintillaNET;
 using ScintillaNET_FindReplaceDialog;
 using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Win32Desktop;
+using Color = System.Drawing.Color;
+using Control = System.Windows.Forms.Control;
+using Style = ScintillaNET.Style;
 
 namespace DBStudioLite
 {
     public partial class FrmEditor : Form, IOperatingForm
     {
+        private int executeAllDbsIndex = 0;
 
         public FrmEditor()
         {
@@ -20,6 +25,7 @@ namespace DBStudioLite
             ConfigureMSSQLSyntax();
             ConfigureFindReplace();
             checkShowFullScreen.Checked = true;
+            splitCode.SplitterDistance = splitCode.Height / 2;
             // Enable Context Menu !
             //txtQuery.EnableContextMenu();
         }
@@ -186,6 +192,7 @@ namespace DBStudioLite
                 string sFileContents = Common.ReadFile(FileName);
                 txtQuery.Text = sFileContents;
             }
+            txtQuery.Focus();
         }
 
         public void SaveToFile()
@@ -199,6 +206,40 @@ namespace DBStudioLite
         private void btnExecuteAll_Click(object sender, EventArgs e)
         {
             if (txtQuery.Text != "") LoadQuery(txtQuery.Text);
+        }
+        private void butExecuteAllDBs_Click(object sender, EventArgs e)
+        {
+            List<string> dbNames = new List<string>();
+            var mdiParent = ((MDIDBStudioLite)this.MdiParent);
+            foreach (ListViewItem item in mdiParent.listViewDBs.Items)
+            {
+                if (item.SubItems[1].Text != "True")
+                    dbNames.Add(item.SubItems[0].Text);
+            }
+            //if there are no dbs or query is null do nothing
+            if (dbNames.Count == 0 || string.IsNullOrWhiteSpace(txtQuery.Text.Trim())) return;
+
+            //if current db pointer is not valid reset to 0
+            if (executeAllDbsIndex >= dbNames.Count) executeAllDbsIndex = 0;
+
+            //get current db name and first db name
+            var startDBName = dbNames[0];
+            var dBName = dbNames[executeAllDbsIndex];
+
+            var userInput = MessageBox.Show(
+                "Yes to Continue executing to (" + dBName + "), No to restart executing to ("
+                + startDBName + "), Cancel to skip excuting (" + dBName + ")",
+                "Would you like to Continue?", MessageBoxButtons.YesNoCancel);
+            if (userInput == DialogResult.No)
+            {
+                executeAllDbsIndex = 0;
+                dBName = startDBName;
+            }
+
+            if (userInput != DialogResult.Cancel) //both for Yes and No Load Query, for Cancel skip load query
+                LoadQuery(txtQuery.Text, IsLoadQueryToBox: true, dBName);
+
+            executeAllDbsIndex++;
         }
 
         private void butExecute_Click(object sender, EventArgs e)
@@ -240,12 +281,18 @@ namespace DBStudioLite
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.MarqueeAnimationSpeed = 0;
         }
-        public async Task LoadQuery(string SQuery, bool IsLoadQueryToBox = true)
+        public async Task LoadQuery(string SQuery, bool IsLoadQueryToBox = true, string dBName = "")
         {
             ShowProgress();
             lblRows.Visible = false;
 
-            string lsConnection = ((MDIDBStudioLite)this.MdiParent).sConnectionString;
+            string lsConnection = string.Empty;
+            var mdiParent = ((MDIDBStudioLite)this.MdiParent);
+            if (string.IsNullOrWhiteSpace(dBName))
+                lsConnection = mdiParent.sConnectionString;
+            else
+                lsConnection = mdiParent.GetConnectionString(dBName);
+
             if (IsLoadQueryToBox) txtQuery.Text = SQuery;
             const string emptyMessage = "The execution was completed successfully. There was no output.";
             using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQuery, true, CommandType.Text))
@@ -274,7 +321,7 @@ namespace DBStudioLite
                 }
                 else
                 {
-                    txtOutputText.Text = DataObj.ErrorText.Length > 0 ? DataObj.ErrorText : emptyMessage;
+                    txtOutputText.Text += DataObj.ErrorText.Length > 0 ? DataObj.ErrorText : emptyMessage;
                     focusMessages();
                 }
                 StopProgress();
@@ -362,28 +409,19 @@ namespace DBStudioLite
         }
 
 
-
-
-
         private void butExcel_Click(object sender, EventArgs e)
         {
-            ExportToExcel.Export(dataGrid1);
+            GridViewHelpers.Export(dataGrid1);
         }
 
         private void butGraph_Click(object sender, EventArgs e)
         {
-            (new DBStudioLite.FrmGraph()).Show();
+            //(new DBStudioLite.FrmGraph()).Show();
         }
 
         private void dataGrid1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = true;
-        }
-
-
-        private void lstTables_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
 
@@ -459,5 +497,7 @@ namespace DBStudioLite
             txtQuery.Margins[0].Width = txtQuery.TextWidth(Style.LineNumber, new string('9', maxLineNumberCharLength + 1)) + padding;
             this.maxLineNumberCharLength = maxLineNumberCharLength;
         }
+
+
     }
 }

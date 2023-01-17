@@ -1,8 +1,9 @@
-using DBStudioLite.ClosedXML;
+using CoreLogic;
 using System;
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
+using Win32Desktop;
 
 namespace DBStudioLite
 {
@@ -61,13 +62,13 @@ namespace DBStudioLite
 
                     textBox1.Text = sFile;
                     if (FormType == FormTypes.JsonEditor)
-                        dataGridView1.DataSource = Common.LoadJsonToTable(sFile);
+                        dataGridView1.DataSource = Common.LoadJsonToTable<DataTable>(sFile);
                     else
                         dataGridView1.DataSource = XMLDAL.GetFirstTableFromXMLFile(sFile);
 
                     dataGridView1.Refresh();
-                    Common.SupportMultipleLineCells(dataGridView1);
-                    if (FillColumn > -1) Common.AutoSizeGridView(dataGridView1, FillColumn);
+                    GridViewHelpers.SupportMultipleLineCells(dataGridView1);
+                    if (FillColumn > -1) GridViewHelpers.AutoSizeGridView(dataGridView1, FillColumn);
                 }
             }
             catch (Exception ex)
@@ -87,7 +88,17 @@ namespace DBStudioLite
                     if (FormType == FormTypes.JsonEditor)
                         Common.SaveTableToJson(sFile, dataTable);
                     else
-                        XMLDAL.SaveToFile(sFile, dataTable);
+                    {
+                        try
+                        {
+                            XMLDAL.SaveToFile(sFile, dataTable);
+                            MessageBox.Show("The data saved to " + sFile);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Unexpected error occurred " + Environment.NewLine + ex.ToString());
+                        }
+                    }
                     MessageBox.Show("The data saved to " + sFile);
                 }
             }
@@ -100,7 +111,7 @@ namespace DBStudioLite
 
         private void butExcel_Click(object sender, EventArgs e)
         {
-            ExportToExcel.Export(dataGridView1);
+            GridViewHelpers.Export(dataGridView1);
         }
     }
 }
