@@ -673,7 +673,13 @@ namespace DBStudioLite
 
         private void showTop100ReverseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetTableRows(100, true);
+            string sTableName = GetSelectedTableName();
+
+            if (sTableName != "")
+            {
+                string columnList = DynamicDAL.GetColumnList(sConnectionString, sTableName);
+                GetTableRows(100, true, columnList);
+            }
         }
 
         private void showFieldHeadersToolStripMenuItem_Click(object sender, EventArgs e)
@@ -883,7 +889,7 @@ namespace DBStudioLite
             DataSet ds;
             string localColumn;
             string localDataType = "";
-            int localLength;
+            int localLength=0, scale=0;
             bool localIdentity;
             string SQuery;
 
@@ -895,20 +901,24 @@ namespace DBStudioLite
             using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQuery, true, CommandType.Text))
             {
                 ds = await DataObj.Execute("RawTableInfo");
-                //task.Wait();
-                //ds = task.Result;
                 if (ds != null)
                 {
                     dt.Columns.Add("TableName", Type.GetType("System.String"));
                     dt.Columns.Add("ColumnName", Type.GetType("System.String"));
+
+                    dt.Columns.Add("IsNullable", Type.GetType("System.String"));
+                    dt.Columns.Add("DefaultValue", Type.GetType("System.String"));
+
                     dt.Columns.Add("DataType", Type.GetType("System.String"));
                     dt.Columns.Add("Length", Type.GetType("System.Int64"));
+                    dt.Columns.Add("DecimalPlaces", Type.GetType("System.Int64"));
                     dt.Columns.Add("Identity", Type.GetType("System.Boolean"));
 
                     var identityColumn = DynamicDAL.GetIdentityColumn(sConnectionString, TableName);
 
                     foreach (DataRow rw in ds.Tables["RawTableInfo"].Rows)
                     {
+                        scale = 0;
                         if (!System.Convert.IsDBNull(rw["Column_Name"]))
                         {
                             localColumn = rw["Column_Name"].ToString();
@@ -920,6 +930,16 @@ namespace DBStudioLite
                             {
                                 localLength = int.Parse(rw["CHARACTER_MAXIMUM_LENGTH"].ToString());
                             }
+                            else if (!System.Convert.IsDBNull(rw["NUMERIC_PRECISION"]))
+                            {
+                                localLength = int.Parse(rw["NUMERIC_PRECISION"].ToString());
+                                scale = int.Parse(rw["NUMERIC_SCALE"].ToString());
+                            }
+                            //showing 3 for datetime which is not length but precision so disabled
+                            //else if (!System.Convert.IsDBNull(rw["DATETIME_PRECISION"]))
+                            //{
+                            //    localLength = int.Parse(rw["DATETIME_PRECISION"].ToString());
+                            //}
                             else
                             {
                                 localLength = 0;
@@ -929,8 +949,11 @@ namespace DBStudioLite
                             workrow = dt.NewRow();
                             workrow["TableName"] = TableName;
                             workrow["ColumnName"] = localColumn;
+                            workrow["IsNullable"] = rw["IS_NULLABLE"].ToString();
+                            workrow["DefaultValue"] = rw["COLUMN_DEFAULT"].ToString();
                             workrow["Datatype"] = localDataType;
-                            workrow["Length"] = localLength;
+                            if(localLength > 0) workrow["Length"] = localLength;
+                            if (scale > 0) workrow["DecimalPlaces"] = scale;
                             workrow["Identity"] = localIdentity;
                             dt.Rows.Add(workrow);
                         }

@@ -57,7 +57,8 @@ namespace DBStudioLite
         }
         public static string GetColumnsCode(string sTableName)
         {
-            var SQuery = "select '" + sTableName + "' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH from INFORMATION_SCHEMA.COLUMNS where table_name = '" + sTableName + "' ";
+            var SQuery = "select '" + sTableName + "' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT, NUMERIC_PRECISION, NUMERIC_SCALE,DATETIME_PRECISION "
+                    + "from INFORMATION_SCHEMA.COLUMNS where table_name = '" + sTableName + "' Order by ORDINAL_POSITION";
             return SQuery;
         }
         public static string GetColumnListCode(string sTableName)

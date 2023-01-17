@@ -45,8 +45,17 @@ namespace DBStudioLite
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.currentConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshDatabasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshSchemaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.viewMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.databasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.codeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.newWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,9 +64,6 @@ namespace DBStudioLite
             this.tileHorizontalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.arrangeIconsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.statusBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.contentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.indexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -121,12 +127,6 @@ namespace DBStudioLite
             this.toolstripExecuteSnippet = new System.Windows.Forms.ToolStripMenuItem();
             this.tabForms = new System.Windows.Forms.TabControl();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.tablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.codeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.databasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.refreshDatabasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.refreshSchemaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -166,7 +166,6 @@ namespace DBStudioLite
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.MdiWindowListItem = this.windowsMenu;
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
             this.menuStrip.Size = new System.Drawing.Size(1324, 33);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "MenuStrip";
@@ -300,10 +299,26 @@ namespace DBStudioLite
             this.currentConnectionToolStripMenuItem.Text = "Connections";
             this.currentConnectionToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.connectionsToolStripMenuItem_DropDownItemClicked);
             // 
+            // refreshDatabasesToolStripMenuItem
+            // 
+            this.refreshDatabasesToolStripMenuItem.Name = "refreshDatabasesToolStripMenuItem";
+            this.refreshDatabasesToolStripMenuItem.Size = new System.Drawing.Size(259, 34);
+            this.refreshDatabasesToolStripMenuItem.Tag = "RefreshDBs";
+            this.refreshDatabasesToolStripMenuItem.Text = "Refresh &Databases";
+            this.refreshDatabasesToolStripMenuItem.Click += new System.EventHandler(this.refreshDatabasesToolStripMenuItem_Click);
+            // 
+            // refreshSchemaToolStripMenuItem
+            // 
+            this.refreshSchemaToolStripMenuItem.Name = "refreshSchemaToolStripMenuItem";
+            this.refreshSchemaToolStripMenuItem.Size = new System.Drawing.Size(259, 34);
+            this.refreshSchemaToolStripMenuItem.Tag = "RefreshSchemas";
+            this.refreshSchemaToolStripMenuItem.Text = "Refresh &Schema";
+            this.refreshSchemaToolStripMenuItem.Click += new System.EventHandler(this.refreshSchemaToolStripMenuItem_Click);
+            // 
             // manageToolStripMenuItem
             // 
             this.manageToolStripMenuItem.Name = "manageToolStripMenuItem";
-            this.manageToolStripMenuItem.Size = new System.Drawing.Size(178, 34);
+            this.manageToolStripMenuItem.Size = new System.Drawing.Size(259, 34);
             this.manageToolStripMenuItem.Tag = "Manage";
             this.manageToolStripMenuItem.Text = "Manage";
             this.manageToolStripMenuItem.Click += new System.EventHandler(this.manageToolStripMenuItem_Click);
@@ -311,7 +326,76 @@ namespace DBStudioLite
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(175, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(256, 6);
+            // 
+            // viewMenu
+            // 
+            this.viewMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolBarToolStripMenuItem,
+            this.statusBarToolStripMenuItem,
+            this.databasesToolStripMenuItem,
+            this.tablesToolStripMenuItem,
+            this.codeToolStripMenuItem,
+            this.optionsToolStripMenuItem});
+            this.viewMenu.Name = "viewMenu";
+            this.viewMenu.Size = new System.Drawing.Size(65, 29);
+            this.viewMenu.Text = "&View";
+            // 
+            // toolBarToolStripMenuItem
+            // 
+            this.toolBarToolStripMenuItem.Checked = true;
+            this.toolBarToolStripMenuItem.CheckOnClick = true;
+            this.toolBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolBarToolStripMenuItem.Name = "toolBarToolStripMenuItem";
+            this.toolBarToolStripMenuItem.Size = new System.Drawing.Size(196, 34);
+            this.toolBarToolStripMenuItem.Text = "&Toolbar";
+            this.toolBarToolStripMenuItem.Visible = false;
+            this.toolBarToolStripMenuItem.Click += new System.EventHandler(this.ToolBarToolStripMenuItem_Click);
+            // 
+            // statusBarToolStripMenuItem
+            // 
+            this.statusBarToolStripMenuItem.Checked = true;
+            this.statusBarToolStripMenuItem.CheckOnClick = true;
+            this.statusBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.statusBarToolStripMenuItem.Name = "statusBarToolStripMenuItem";
+            this.statusBarToolStripMenuItem.Size = new System.Drawing.Size(196, 34);
+            this.statusBarToolStripMenuItem.Text = "&Status Bar";
+            this.statusBarToolStripMenuItem.Visible = false;
+            this.statusBarToolStripMenuItem.Click += new System.EventHandler(this.StatusBarToolStripMenuItem_Click);
+            // 
+            // databasesToolStripMenuItem
+            // 
+            this.databasesToolStripMenuItem.Checked = true;
+            this.databasesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.databasesToolStripMenuItem.Name = "databasesToolStripMenuItem";
+            this.databasesToolStripMenuItem.Size = new System.Drawing.Size(196, 34);
+            this.databasesToolStripMenuItem.Text = "&Databases";
+            this.databasesToolStripMenuItem.Click += new System.EventHandler(this.databasesToolStripMenuItem_Click);
+            // 
+            // tablesToolStripMenuItem
+            // 
+            this.tablesToolStripMenuItem.Checked = true;
+            this.tablesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tablesToolStripMenuItem.Name = "tablesToolStripMenuItem";
+            this.tablesToolStripMenuItem.Size = new System.Drawing.Size(196, 34);
+            this.tablesToolStripMenuItem.Text = "&Tables";
+            this.tablesToolStripMenuItem.Click += new System.EventHandler(this.tablesToolStripMenuItem_Click);
+            // 
+            // codeToolStripMenuItem
+            // 
+            this.codeToolStripMenuItem.Checked = true;
+            this.codeToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.codeToolStripMenuItem.Name = "codeToolStripMenuItem";
+            this.codeToolStripMenuItem.Size = new System.Drawing.Size(196, 34);
+            this.codeToolStripMenuItem.Text = "&Code";
+            this.codeToolStripMenuItem.Click += new System.EventHandler(this.codeToolStripMenuItem_Click);
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(196, 34);
+            this.optionsToolStripMenuItem.Text = "&Options";
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem1
             // 
@@ -337,78 +421,43 @@ namespace DBStudioLite
             // newWindowToolStripMenuItem
             // 
             this.newWindowToolStripMenuItem.Name = "newWindowToolStripMenuItem";
-            this.newWindowToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.newWindowToolStripMenuItem.Size = new System.Drawing.Size(227, 34);
             this.newWindowToolStripMenuItem.Text = "&New Window";
             // 
             // cascadeToolStripMenuItem
             // 
             this.cascadeToolStripMenuItem.Name = "cascadeToolStripMenuItem";
-            this.cascadeToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.cascadeToolStripMenuItem.Size = new System.Drawing.Size(227, 34);
             this.cascadeToolStripMenuItem.Text = "&Cascade";
             this.cascadeToolStripMenuItem.Click += new System.EventHandler(this.CascadeToolStripMenuItem_Click);
             // 
             // tileVerticalToolStripMenuItem
             // 
             this.tileVerticalToolStripMenuItem.Name = "tileVerticalToolStripMenuItem";
-            this.tileVerticalToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.tileVerticalToolStripMenuItem.Size = new System.Drawing.Size(227, 34);
             this.tileVerticalToolStripMenuItem.Text = "Tile &Vertical";
             this.tileVerticalToolStripMenuItem.Click += new System.EventHandler(this.TileVerticalToolStripMenuItem_Click);
             // 
             // tileHorizontalToolStripMenuItem
             // 
             this.tileHorizontalToolStripMenuItem.Name = "tileHorizontalToolStripMenuItem";
-            this.tileHorizontalToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.tileHorizontalToolStripMenuItem.Size = new System.Drawing.Size(227, 34);
             this.tileHorizontalToolStripMenuItem.Text = "Tile &Horizontal";
             this.tileHorizontalToolStripMenuItem.Click += new System.EventHandler(this.TileHorizontalToolStripMenuItem_Click);
             // 
             // closeAllToolStripMenuItem
             // 
             this.closeAllToolStripMenuItem.Name = "closeAllToolStripMenuItem";
-            this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.closeAllToolStripMenuItem.Size = new System.Drawing.Size(227, 34);
             this.closeAllToolStripMenuItem.Text = "C&lose All";
             this.closeAllToolStripMenuItem.Click += new System.EventHandler(this.CloseAllToolStripMenuItem_Click);
             // 
             // arrangeIconsToolStripMenuItem
             // 
             this.arrangeIconsToolStripMenuItem.Name = "arrangeIconsToolStripMenuItem";
-            this.arrangeIconsToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.arrangeIconsToolStripMenuItem.Size = new System.Drawing.Size(227, 34);
             this.arrangeIconsToolStripMenuItem.Text = "&Arrange Icons";
             this.arrangeIconsToolStripMenuItem.Click += new System.EventHandler(this.ArrangeIconsToolStripMenuItem_Click);
-            // 
-            // viewMenu
-            // 
-            this.viewMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolBarToolStripMenuItem,
-            this.statusBarToolStripMenuItem,
-            this.databasesToolStripMenuItem,
-            this.tablesToolStripMenuItem,
-            this.codeToolStripMenuItem,
-            this.optionsToolStripMenuItem});
-            this.viewMenu.Name = "viewMenu";
-            this.viewMenu.Size = new System.Drawing.Size(65, 29);
-            this.viewMenu.Text = "&View";
-            // 
-            // toolBarToolStripMenuItem
-            // 
-            this.toolBarToolStripMenuItem.Checked = true;
-            this.toolBarToolStripMenuItem.CheckOnClick = true;
-            this.toolBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolBarToolStripMenuItem.Name = "toolBarToolStripMenuItem";
-            this.toolBarToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.toolBarToolStripMenuItem.Text = "&Toolbar";
-            this.toolBarToolStripMenuItem.Visible = false;
-            this.toolBarToolStripMenuItem.Click += new System.EventHandler(this.ToolBarToolStripMenuItem_Click);
-            // 
-            // statusBarToolStripMenuItem
-            // 
-            this.statusBarToolStripMenuItem.Checked = true;
-            this.statusBarToolStripMenuItem.CheckOnClick = true;
-            this.statusBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.statusBarToolStripMenuItem.Name = "statusBarToolStripMenuItem";
-            this.statusBarToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.statusBarToolStripMenuItem.Text = "&Status Bar";
-            this.statusBarToolStripMenuItem.Visible = false;
-            this.statusBarToolStripMenuItem.Click += new System.EventHandler(this.StatusBarToolStripMenuItem_Click);
             // 
             // helpMenu
             // 
@@ -758,7 +807,7 @@ namespace DBStudioLite
             this.tabSnippets.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabSnippets.Name = "tabSnippets";
             this.tabSnippets.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabSnippets.Size = new System.Drawing.Size(460, 788);
+            this.tabSnippets.Size = new System.Drawing.Size(462, 930);
             this.tabSnippets.TabIndex = 2;
             this.tabSnippets.Text = "Snippets";
             this.tabSnippets.UseVisualStyleBackColor = true;
@@ -776,7 +825,7 @@ namespace DBStudioLite
             this.listViewSnippets.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.listViewSnippets.Name = "listViewSnippets";
             this.listViewSnippets.ShowItemToolTips = true;
-            this.listViewSnippets.Size = new System.Drawing.Size(454, 784);
+            this.listViewSnippets.Size = new System.Drawing.Size(456, 926);
             this.listViewSnippets.TabIndex = 13;
             this.listViewSnippets.UseCompatibleStateImageBehavior = false;
             this.listViewSnippets.View = System.Windows.Forms.View.Details;
@@ -890,39 +939,39 @@ namespace DBStudioLite
             // 
             this.contextTablesViews.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.contextTablesViews.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showTop100ReverseToolStripMenuItem,
             this.showTop10ToolStripMenuItem,
             this.getColumnListToolStripMenuItem,
             this.showTop1ToolStripMenuItem,
             this.showTop100ToolStripMenuItem,
-            this.showTop100ReverseToolStripMenuItem,
             this.showAllToolStripMenuItem,
             this.showFieldHeadersToolStripMenuItem,
             this.toolStripSeparator10,
             this.viewStructureToolStripMenuItem,
             this.getDropCodeToolStripMenuItem});
             this.contextTablesViews.Name = "contextMenuStrip1";
-            this.contextTablesViews.Size = new System.Drawing.Size(332, 298);
+            this.contextTablesViews.Size = new System.Drawing.Size(321, 331);
             // 
             // showTop10ToolStripMenuItem
             // 
             this.showTop10ToolStripMenuItem.Name = "showTop10ToolStripMenuItem";
-            this.showTop10ToolStripMenuItem.Size = new System.Drawing.Size(331, 32);
+            this.showTop10ToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.showTop10ToolStripMenuItem.Text = "Show Top 10 (Fast)";
             this.showTop10ToolStripMenuItem.Visible = false;
             this.showTop10ToolStripMenuItem.Click += new System.EventHandler(this.showTop10ToolStripMenuItem_Click);
             // 
             // getColumnListToolStripMenuItem
             // 
-            this.getColumnListToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.getColumnListToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.getColumnListToolStripMenuItem.Name = "getColumnListToolStripMenuItem";
-            this.getColumnListToolStripMenuItem.Size = new System.Drawing.Size(331, 32);
+            this.getColumnListToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.getColumnListToolStripMenuItem.Text = "Show Top 100 + Columns List";
             this.getColumnListToolStripMenuItem.Click += new System.EventHandler(this.getColumnListToolStripMenuItem_Click);
             // 
             // showTop1ToolStripMenuItem
             // 
             this.showTop1ToolStripMenuItem.Name = "showTop1ToolStripMenuItem";
-            this.showTop1ToolStripMenuItem.Size = new System.Drawing.Size(331, 32);
+            this.showTop1ToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.showTop1ToolStripMenuItem.Text = "Show Top 1";
             this.showTop1ToolStripMenuItem.Visible = false;
             this.showTop1ToolStripMenuItem.Click += new System.EventHandler(this.showTop1ToolStripMenuItem_Click);
@@ -930,28 +979,29 @@ namespace DBStudioLite
             // showTop100ToolStripMenuItem
             // 
             this.showTop100ToolStripMenuItem.Name = "showTop100ToolStripMenuItem";
-            this.showTop100ToolStripMenuItem.Size = new System.Drawing.Size(331, 32);
+            this.showTop100ToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.showTop100ToolStripMenuItem.Text = "Show Top 100 (Fast)";
             this.showTop100ToolStripMenuItem.Click += new System.EventHandler(this.showTop100ToolStripMenuItem_Click_1);
             // 
             // showTop100ReverseToolStripMenuItem
             // 
+            this.showTop100ReverseToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.showTop100ReverseToolStripMenuItem.Name = "showTop100ReverseToolStripMenuItem";
-            this.showTop100ReverseToolStripMenuItem.Size = new System.Drawing.Size(331, 32);
+            this.showTop100ReverseToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.showTop100ReverseToolStripMenuItem.Text = "Show Top 100 Reverse";
             this.showTop100ReverseToolStripMenuItem.Click += new System.EventHandler(this.showTop100ReverseToolStripMenuItem_Click);
             // 
             // showAllToolStripMenuItem
             // 
             this.showAllToolStripMenuItem.Name = "showAllToolStripMenuItem";
-            this.showAllToolStripMenuItem.Size = new System.Drawing.Size(331, 32);
+            this.showAllToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.showAllToolStripMenuItem.Text = "Show All";
             this.showAllToolStripMenuItem.Click += new System.EventHandler(this.showAllToolStripMenuItem_Click_1);
             // 
             // showFieldHeadersToolStripMenuItem
             // 
             this.showFieldHeadersToolStripMenuItem.Name = "showFieldHeadersToolStripMenuItem";
-            this.showFieldHeadersToolStripMenuItem.Size = new System.Drawing.Size(331, 32);
+            this.showFieldHeadersToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.showFieldHeadersToolStripMenuItem.Text = "Show Field Headers";
             this.showFieldHeadersToolStripMenuItem.Visible = false;
             this.showFieldHeadersToolStripMenuItem.Click += new System.EventHandler(this.showFieldHeadersToolStripMenuItem_Click);
@@ -959,19 +1009,19 @@ namespace DBStudioLite
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(328, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(317, 6);
             // 
             // viewStructureToolStripMenuItem
             // 
             this.viewStructureToolStripMenuItem.Name = "viewStructureToolStripMenuItem";
-            this.viewStructureToolStripMenuItem.Size = new System.Drawing.Size(331, 32);
+            this.viewStructureToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.viewStructureToolStripMenuItem.Text = "View Structure / Code";
             this.viewStructureToolStripMenuItem.Click += new System.EventHandler(this.viewStructureToolStripMenuItem_Click_1);
             // 
             // getDropCodeToolStripMenuItem
             // 
             this.getDropCodeToolStripMenuItem.Name = "getDropCodeToolStripMenuItem";
-            this.getDropCodeToolStripMenuItem.Size = new System.Drawing.Size(331, 32);
+            this.getDropCodeToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.getDropCodeToolStripMenuItem.Text = "Get DROP Code";
             this.getDropCodeToolStripMenuItem.Click += new System.EventHandler(this.getDropCodeToolStripMenuItem_Click);
             // 
@@ -1037,56 +1087,6 @@ namespace DBStudioLite
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 24;
             this.progressBar1.Visible = false;
-            // 
-            // tablesToolStripMenuItem
-            // 
-            this.tablesToolStripMenuItem.Checked = true;
-            this.tablesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tablesToolStripMenuItem.Name = "tablesToolStripMenuItem";
-            this.tablesToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.tablesToolStripMenuItem.Text = "&Tables";
-            this.tablesToolStripMenuItem.Click += new System.EventHandler(this.tablesToolStripMenuItem_Click);
-            // 
-            // codeToolStripMenuItem
-            // 
-            this.codeToolStripMenuItem.Checked = true;
-            this.codeToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.codeToolStripMenuItem.Name = "codeToolStripMenuItem";
-            this.codeToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.codeToolStripMenuItem.Text = "&Code";
-            this.codeToolStripMenuItem.Click += new System.EventHandler(this.codeToolStripMenuItem_Click);
-            // 
-            // databasesToolStripMenuItem
-            // 
-            this.databasesToolStripMenuItem.Checked = true;
-            this.databasesToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.databasesToolStripMenuItem.Name = "databasesToolStripMenuItem";
-            this.databasesToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.databasesToolStripMenuItem.Text = "&Databases";
-            this.databasesToolStripMenuItem.Click += new System.EventHandler(this.databasesToolStripMenuItem_Click);
-            // 
-            // refreshDatabasesToolStripMenuItem
-            // 
-            this.refreshDatabasesToolStripMenuItem.Name = "refreshDatabasesToolStripMenuItem";
-            this.refreshDatabasesToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.refreshDatabasesToolStripMenuItem.Tag = "RefreshDBs";
-            this.refreshDatabasesToolStripMenuItem.Text = "Refresh &Databases";
-            this.refreshDatabasesToolStripMenuItem.Click += new System.EventHandler(this.refreshDatabasesToolStripMenuItem_Click);
-            // 
-            // refreshSchemaToolStripMenuItem
-            // 
-            this.refreshSchemaToolStripMenuItem.Name = "refreshSchemaToolStripMenuItem";
-            this.refreshSchemaToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.refreshSchemaToolStripMenuItem.Tag = "RefreshSchemas";
-            this.refreshSchemaToolStripMenuItem.Text = "Refresh &Schema";
-            this.refreshSchemaToolStripMenuItem.Click += new System.EventHandler(this.refreshSchemaToolStripMenuItem_Click);
-            // 
-            // optionsToolStripMenuItem
-            // 
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.optionsToolStripMenuItem.Text = "&Options";
-            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // MDIDBStudioLite
             // 

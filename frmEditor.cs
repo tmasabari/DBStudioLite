@@ -25,6 +25,7 @@ namespace DBStudioLite
             ConfigureMSSQLSyntax();
             ConfigureFindReplace();
             checkShowFullScreen.Checked = true;
+            splitCode.SplitterDistance = splitCode.Height / 2;
             // Enable Context Menu !
             //txtQuery.EnableContextMenu();
         }
@@ -415,7 +416,7 @@ namespace DBStudioLite
 
         private void butGraph_Click(object sender, EventArgs e)
         {
-            (new DBStudioLite.FrmGraph()).Show();
+            //(new DBStudioLite.FrmGraph()).Show();
         }
 
         private void dataGrid1_DataError(object sender, DataGridViewDataErrorEventArgs e)
