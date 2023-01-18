@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DBStudioLite
@@ -63,7 +64,7 @@ namespace DBStudioLite
         }
         public static string GetColumnListCode(string sTableName)
         {
-            string SQL = "SELECT STRING_AGG (COLUMN_NAME, ',') AS csv FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'"
+            string SQL = "SELECT STRING_AGG ('[' + COLUMN_NAME + ']', ',') AS csv FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'"
                 + sTableName + "'";
             return SQL;
         }
@@ -81,8 +82,17 @@ namespace DBStudioLite
             string sQuery = "";
             if (Rows != -1) sQuery = " top " + Rows.ToString() + " ";
             sQuery = "select " + sQuery + " " + (!string.IsNullOrEmpty(columnList) ? columnList : "*") + " from " + sTableName;
-            if (isReverse) sQuery += " order by 1 desc";
+            if (isReverse)
+            {
+                var columnName = !string.IsNullOrEmpty(columnList)? getFirstColumn(columnList) : "1";
+                sQuery += $" order by {columnName} desc";
+            }
             return sQuery;
+        }
+        private static string getFirstColumn(string columnList)
+        {
+            string[] separator = { "," };
+            return columnList.Split(separator, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
         }
 
         public static string GetProcedureRun(string sConnectionString, string Name, string codeType, out string error)

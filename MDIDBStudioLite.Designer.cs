@@ -110,11 +110,11 @@ namespace DBStudioLite
             this.addConnectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextTablesViews = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.showTop100ReverseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTop10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getColumnListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTop1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTop100ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showTop100ReverseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showFieldHeadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
@@ -950,7 +950,15 @@ namespace DBStudioLite
             this.viewStructureToolStripMenuItem,
             this.getDropCodeToolStripMenuItem});
             this.contextTablesViews.Name = "contextMenuStrip1";
-            this.contextTablesViews.Size = new System.Drawing.Size(321, 331);
+            this.contextTablesViews.Size = new System.Drawing.Size(321, 298);
+            // 
+            // showTop100ReverseToolStripMenuItem
+            // 
+            this.showTop100ReverseToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showTop100ReverseToolStripMenuItem.Name = "showTop100ReverseToolStripMenuItem";
+            this.showTop100ReverseToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
+            this.showTop100ReverseToolStripMenuItem.Text = "Show Top 100 Reverse";
+            this.showTop100ReverseToolStripMenuItem.Click += new System.EventHandler(this.showTop100ReverseToolStripMenuItem_Click);
             // 
             // showTop10ToolStripMenuItem
             // 
@@ -982,14 +990,6 @@ namespace DBStudioLite
             this.showTop100ToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.showTop100ToolStripMenuItem.Text = "Show Top 100 (Fast)";
             this.showTop100ToolStripMenuItem.Click += new System.EventHandler(this.showTop100ToolStripMenuItem_Click_1);
-            // 
-            // showTop100ReverseToolStripMenuItem
-            // 
-            this.showTop100ReverseToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.showTop100ReverseToolStripMenuItem.Name = "showTop100ReverseToolStripMenuItem";
-            this.showTop100ReverseToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
-            this.showTop100ReverseToolStripMenuItem.Text = "Show Top 100 Reverse";
-            this.showTop100ReverseToolStripMenuItem.Click += new System.EventHandler(this.showTop100ReverseToolStripMenuItem_Click);
             // 
             // showAllToolStripMenuItem
             // 

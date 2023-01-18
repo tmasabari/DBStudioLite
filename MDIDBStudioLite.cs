@@ -555,7 +555,8 @@ namespace DBStudioLite
 
         private void lstTables_DoubleClick(object sender, EventArgs e)
         {
-            getColumnListToolStripMenuItem_Click(sender, e);
+            showTop100ReverseToolStripMenuItem_Click(sender, e);
+            //getColumnListToolStripMenuItem_Click(sender, e);
             //LoadStructure();
         }
         private void viewStructureToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -1011,7 +1012,7 @@ namespace DBStudioLite
             else
                 return "";
         }
-        private string GetSelectedDBName()
+        public string GetSelectedDBName()
         {
             if (listViewDBs.SelectedItems.Count > 0)
             {
@@ -1019,6 +1020,10 @@ namespace DBStudioLite
             }
             else
                 return "";
+        }
+        public string GetSelectedConnection()
+        {
+            return objConnections.ConnectionName;
         }
 
         private void toolstripEditSnippet_Click(object sender, EventArgs e)

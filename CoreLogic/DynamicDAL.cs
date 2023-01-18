@@ -119,10 +119,11 @@ public class DynamicDAL : IDisposable
     {
         foreach (SqlError sqlError in args.Errors)
         {
-            var error = String.Format("Msg {0}, Number {1}, Class {2}, State {3}, Line {4}", sqlError.Message, sqlError.Number, sqlError.Class, sqlError.State, sqlError.LineNumber);
+            //'{sqlError.Server}'
+            var error = $"@{DateTime.Now.ToString("hh:mm:ss FFF")}, @Line {sqlError.LineNumber} '{sqlError.Message}'";
+            if(sqlError.Number > 0) error += $", Error {sqlError.Number}, Class {sqlError.Class}, State {sqlError.State}";
             SQLInfoMessageBuilder.AppendLine(error);
         }
-
     }
     void SelectCommand_StatementCompleted(object sender, StatementCompletedEventArgs args)
     {

@@ -17,7 +17,7 @@ namespace DBStudioLite
 {
     public partial class FrmEditor : Form, IOperatingForm
     {
-        private int executeAllDbsIndex = 0;
+        private FrmAllDbs frmAllDbs = new FrmAllDbs();
 
         public FrmEditor()
         {
@@ -209,37 +209,8 @@ namespace DBStudioLite
         }
         private void butExecuteAllDBs_Click(object sender, EventArgs e)
         {
-            List<string> dbNames = new List<string>();
             var mdiParent = ((MDIDBStudioLite)this.MdiParent);
-            foreach (ListViewItem item in mdiParent.listViewDBs.Items)
-            {
-                if (item.SubItems[1].Text != "True")
-                    dbNames.Add(item.SubItems[0].Text);
-            }
-            //if there are no dbs or query is null do nothing
-            if (dbNames.Count == 0 || string.IsNullOrWhiteSpace(txtQuery.Text.Trim())) return;
-
-            //if current db pointer is not valid reset to 0
-            if (executeAllDbsIndex >= dbNames.Count) executeAllDbsIndex = 0;
-
-            //get current db name and first db name
-            var startDBName = dbNames[0];
-            var dBName = dbNames[executeAllDbsIndex];
-
-            var userInput = MessageBox.Show(
-                "Yes to Continue executing to (" + dBName + "), No to restart executing to ("
-                + startDBName + "), Cancel to skip excuting (" + dBName + ")",
-                "Would you like to Continue?", MessageBoxButtons.YesNoCancel);
-            if (userInput == DialogResult.No)
-            {
-                executeAllDbsIndex = 0;
-                dBName = startDBName;
-            }
-
-            if (userInput != DialogResult.Cancel) //both for Yes and No Load Query, for Cancel skip load query
-                LoadQuery(txtQuery.Text, IsLoadQueryToBox: true, dBName);
-
-            executeAllDbsIndex++;
+            frmAllDbs.RefreshDetails(this, mdiParent.listViewDBs, txtQuery.Text.Trim());
         }
 
         private void butExecute_Click(object sender, EventArgs e)
@@ -289,41 +260,53 @@ namespace DBStudioLite
             string lsConnection = string.Empty;
             var mdiParent = ((MDIDBStudioLite)this.MdiParent);
             if (string.IsNullOrWhiteSpace(dBName))
+            {
                 lsConnection = mdiParent.sConnectionString;
+                dBName = mdiParent.GetSelectedDBName();
+            }
             else
+            {
                 lsConnection = mdiParent.GetConnectionString(dBName);
+            }
 
             if (IsLoadQueryToBox) txtQuery.Text = SQuery;
-            const string emptyMessage = "The execution was completed successfully. There was no output.";
+            string startMessage = $"@{DateTime.Now.ToString("hh:mm:ss FFF")} The execution started for {mdiParent.GetSelectedConnection()}.{dBName}.";
             using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
-                txtOutputText.Text = DataObj.SQLInfoMessageBuilder.ToString();
-                if (ds != null)
+                string endMessage = $"@{DateTime.Now.ToString("hh:mm:ss FFF")} The execution was completed successfully.";
+
+                dataGrid1.DataSource = (ds != null && ds.Tables["MyTable"] != null) ? ds.Tables["MyTable"]:null;
+                dataGrid1.Refresh();
+                txtOutputText.Font = new System.Drawing.Font("Courier New", 8.25f, System.Drawing.FontStyle.Bold);
+                txtOutputText.ForeColor = Color.Black; txtOutputText.BackColor = txtOutputText.BackColor;
+                txtOutputText.Text = startMessage + Environment.NewLine;
+                var executionMessages = DataObj.SQLInfoMessageBuilder.ToString();
+                if (!string.IsNullOrWhiteSpace(executionMessages))
+                    txtOutputText.Text += executionMessages; //not required due to appendline + Environment.NewLine;
+
+                //example scenario: exceptions
+                if (!string.IsNullOrWhiteSpace(DataObj.ErrorText))
                 {
-                    dataGrid1.DataSource = null;
-                    dataGrid1.Refresh();
-                    if (ds.Tables["MyTable"] != null)
-                    {
-                        dataGrid1.DataSource = ds.Tables["MyTable"];
-                        dataGrid1.Refresh();
-                        FocusDataResults();
-                    }
-                    else if (txtOutputText.Text.Length > 0)
-                    {
-                        focusMessages();
-                    }
-                    else
-                    {
-                        txtOutputText.Text = emptyMessage;
-                        focusMessages();
-                    }
-                }
-                else
-                {
-                    txtOutputText.Text += DataObj.ErrorText.Length > 0 ? DataObj.ErrorText : emptyMessage;
+                    txtOutputText.Text += DataObj.ErrorText + Environment.NewLine;
+                    txtOutputText.Font = new System.Drawing.Font("Courier New", 12f, System.Drawing.FontStyle.Bold);
+                    //https://stackoverflow.com/questions/20688408/how-do-you-change-the-text-color-of-a-readonly-textbox
+                    txtOutputText.ForeColor = Color.Red; txtOutputText.BackColor = txtOutputText.BackColor;
                     focusMessages();
                 }
+                //example scenario: just declare commands DECLARE @PRINT as INT
+                else if (string.IsNullOrWhiteSpace(executionMessages) && dataGrid1.DataSource == null)
+                {
+                    txtOutputText.Text += "There was no output." + Environment.NewLine;
+                    focusMessages();
+                }
+                //example scenario: SELECT statements from query or from sp/modules
+                else if (dataGrid1.DataSource != null) 
+                    FocusDataResults();
+                //example scenario: PRINT 'Message'
+                else
+                    focusMessages();
+                txtOutputText.Text += endMessage;
                 StopProgress();
             }
         }
