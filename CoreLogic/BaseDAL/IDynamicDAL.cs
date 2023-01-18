@@ -51,5 +51,7 @@ namespace CoreLogic
         string GetParmeterSize(IDataParameter dbparameter, ref string paramValue);
         string GetParamType(IDataParameter dbparameter);
         string GetInputParamValue(IDataParameter dbparameter);
+
+        string GetTableRowsCode(string sTableName, int Rows, bool isReverse = false, string columnList = null);
     }
 }

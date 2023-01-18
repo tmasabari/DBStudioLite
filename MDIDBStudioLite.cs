@@ -1,6 +1,5 @@
 using CoreLogic;
 using CoreLogic.BaseDAL;
-using CoreLogic.SqlServer;
 using DBStudioLite.Model;
 using DBStudioLite.WindowsLogic;
 using System;
@@ -47,20 +46,26 @@ namespace DBStudioLite
         {
             get
             {
-                return ";initial catalog=master";
+                return GetDBParameter("master");
             }
         }
         public string sConnectionString
         {
             get
             {
-                return objConnections.ConnectionText + sStandardConnectionParams + DBParameter;
+                return GetConnectionString();
             }
-        }
-
-        public string GetConnectionString(string dBName)
+        } 
+        public string GetConnectionString(string dBName="")
         {
-            return objConnections.ConnectionText + sStandardConnectionParams + GetDBParameter(dBName); ;
+            var connectionType = DataAccessFactory.GetConnectionType(objConnections.ConnectionText);
+            var text = objConnections.ConnectionText;
+            if (connectionType != "SQLite")
+            {
+                text += sStandardConnectionParams + DBParameter;
+                if(!string.IsNullOrWhiteSpace(dBName)) text += GetDBParameter(dBName);
+            }
+            return text;
         }
 
         public string sMasterConnectionString
@@ -258,8 +263,14 @@ namespace DBStudioLite
                     //txtOutputText.Text = DataObj.SQLInfoMessageBuilder.ToString();
                     if (ds != null)
                     {
-                        if (ds.Tables["MyTable"] != null)
+                        if (ds.Tables["MyTable"] == null)
                         {
+                            splitContainerDB.Panel1Collapsed = true;
+                        }
+                        else
+                        {
+                            splitContainerDB.Panel1Collapsed = false;
+
                             bool selected = false;
                             LoadListViewFromTable(listViewDBs, ds.Tables["MyTable"]);
                             if (!string.IsNullOrWhiteSpace(lastSessionSelectedDBName))
@@ -286,9 +297,9 @@ namespace DBStudioLite
                                     }
                                 }
                             }
-                            GetMetaData();
-
                         }
+                        //Always refresh the schema as some DB engines does not support multiple dbs
+                        GetMetaData();
                     }
                     else
                     {
@@ -914,7 +925,7 @@ namespace DBStudioLite
                     dt.Columns.Add("TableName", Type.GetType("System.String"));
                     dt.Columns.Add("ColumnName", Type.GetType("System.String"));
 
-                    dt.Columns.Add("IsNullable", Type.GetType("System.String"));
+                    dt.Columns.Add("IsNullable", Type.GetType("System.Boolean"));
                     dt.Columns.Add("DefaultValue", Type.GetType("System.String"));
 
                     dt.Columns.Add("DataType", Type.GetType("System.String"));
@@ -957,7 +968,7 @@ namespace DBStudioLite
                             workrow = dt.NewRow();
                             workrow["TableName"] = TableName;
                             workrow["ColumnName"] = localColumn;
-                            workrow["IsNullable"] = rw["IS_NULLABLE"].ToString();
+                            workrow["IsNullable"] = rw["IS_NULLABLE"];
                             workrow["DefaultValue"] = rw["COLUMN_DEFAULT"].ToString();
                             workrow["Datatype"] = localDataType;
                             if (localLength > 0) workrow["Length"] = localLength;

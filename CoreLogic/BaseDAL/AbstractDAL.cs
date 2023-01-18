@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2013.Excel;
-using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -30,12 +28,13 @@ namespace CoreLogic.BaseDAL
             if (Command != null) Command.Dispose();
             if (Connection != null)
             {
-                if (Connection.State == ConnectionState.Open) Connection.Close();        //Always close connection
+                //cannot access the disposed object so commented out
+                //if (Connection.State == ConnectionState.Open) Connection.Close(); //Always close connection
                 Connection.Dispose();
             }
         }
         protected abstract void ConnectionOpened();
-        protected abstract IDataAdapter DataAdapter(IDbCommand dbCommand);
+        protected abstract IDataAdapter GetDataAdapter(IDbCommand dbCommand);
 
         public object RunScalar(string SQL)
         {
@@ -195,10 +194,10 @@ namespace CoreLogic.BaseDAL
                             Command.Transaction = transaction;     // Assign Transaction to Command
                             var ds = new DataSet();
                             // create and fill the DataSet
-                            var da = DataAdapter(Command);
+                            var da = GetDataAdapter(Command);
                             da.Fill(ds); //TableName
-                            if(ds.Tables.Count > 0) ds.Tables[0].TableName = TableName;
-                            da=null;
+                            if (ds.Tables.Count > 0) ds.Tables[0].TableName = TableName;
+                            da = null;
                             transaction.Commit();
                             return ds;
                         }
@@ -222,10 +221,89 @@ namespace CoreLogic.BaseDAL
             }
             return null;
         }
+        public virtual string GetParamType(IDataParameter dbparameter)
+        {
+            return dbparameter.DbType.ToString("F");
+        }
 
 
+        public virtual string GetInputParamValue(IDataParameter dbparameter)
+        {
+            string paramValue;
+            switch (dbparameter.DbType)
+            {
+                //case DbType.VarBinary:
+                //case DbType.Binary:
+                //case DbType.Xml:
+                //    break;
+                //case DbType.Udt:
+                //    break;
+                //case DbType.Structured:
+                //case DbType.Image:
+                //case DbType.UniqueIdentifier:
 
+                case DbType.Date:
+                case DbType.Time:
+                case DbType.DateTime2:
+                case DbType.DateTimeOffset:
+                //case DbType.SmallDateTime:
+                case DbType.DateTime:
+                    //case DbType.Timestamp:
+                    paramValue = "'" + DateTime.Today.ToString("MM/dd/yyyy hh:mm") + "'";
+                    break;
 
+                case DbType.Boolean:
+                case DbType.Decimal:
+                case DbType.Currency:
+                case DbType.Single:
+                case DbType.Double:
+                case DbType.Byte:
+                case DbType.SByte:
+                case DbType.Int16:
+                case DbType.Int32:
+                case DbType.Int64:
+                case DbType.UInt16:
+                case DbType.UInt32:
+                case DbType.UInt64:
+                case DbType.VarNumeric:
+
+                    //case DbType.Float:
+                    //case DbType.Bit:
+                    //case DbType.TinyInt:
+                    //case DbType.SmallInt:
+                    //case DbType.Int:
+                    //case DbType.BigInt:
+                    //case DbType.Real:
+                    //case DbType.SmallMoney:
+                    //case DbType.Money:
+                    paramValue = "0";
+                    break;
+                case DbType.AnsiString:
+                case DbType.String:
+                case DbType.StringFixedLength:
+                case DbType.Object:
+                    //case DbType.Char:
+                    //case DbType.NChar:
+                    //case DbType.NText:
+                    //case DbType.NVarChar:
+                    //case DbType.Text:
+                    //case DbType.VarChar:
+                    //case DbType.Variant:
+                    paramValue = "''";
+                    break;
+                default:
+                    paramValue = "NULL";
+                    break;
+            }
+
+            return paramValue;
+        }
+
+        protected static string GetFirstColumn(string columnList)
+        {
+            string[] separator = { "," };
+            return columnList.Split(separator, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        }
 
     }
 }

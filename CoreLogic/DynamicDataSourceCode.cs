@@ -4,13 +4,12 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CoreLogic.SqlServer
+namespace CoreLogic
 {
-    //http://www.stormrage.com/SQLStuff/sp_GetDDL_Latest.txt
     public class DynamicDataSourceCode
     {
         private string sConnectionString;
-        public DynamicDataSourceCode(string connectionstring) 
+        public DynamicDataSourceCode(string connectionstring)
         {
             sConnectionString = connectionstring;
         }
@@ -95,20 +94,10 @@ namespace CoreLogic.SqlServer
         //GetAllDBModulesCode
         public string GetTableRowsCode(string sTableName, int Rows, bool isReverse = false, string columnList = null)
         {
-            string sQuery = "";
-            if (Rows != -1) sQuery = " top " + Rows.ToString() + " ";
-            sQuery = "select " + sQuery + " " + (!string.IsNullOrEmpty(columnList) ? columnList : "*") + " from " + sTableName;
-            if (isReverse)
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
             {
-                var columnName = !string.IsNullOrEmpty(columnList) ? getFirstColumn(columnList) : "1";
-                sQuery += $" order by {columnName} desc";
+                return DataObj.GetTableRowsCode(sTableName, Rows, isReverse, columnList);
             }
-            return sQuery;
-        }
-        private static string getFirstColumn(string columnList)
-        {
-            string[] separator = { "," };
-            return columnList.Split(separator, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
         }
 
         public string GetProcedureRun(string sConnectionString, string Name, string codeType, out string error)
@@ -251,12 +240,12 @@ namespace CoreLogic.SqlServer
                 object objreturn;
                 if (DataObj.ExecuteScalar(out objreturn))
                 {
-                    if (!(objreturn is System.DBNull))
+                    if (!(objreturn is DBNull))
                     {
                         return objreturn.ToString();
                     }
                 }
-                return String.Empty;
+                return string.Empty;
             }
         }
 
@@ -269,12 +258,12 @@ namespace CoreLogic.SqlServer
                 object objreturn;
                 if (DataObj.ExecuteScalar(out objreturn))
                 {
-                    if (objreturn != null && !(objreturn is System.DBNull))
+                    if (objreturn != null && !(objreturn is DBNull))
                     {
                         return objreturn.ToString();
                     }
                 }
-                return String.Empty;
+                return string.Empty;
             }
         }
         #endregion

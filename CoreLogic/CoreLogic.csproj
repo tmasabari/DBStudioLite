@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="SqlServer\DynamicDALSQLite.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="SqlServer\DynamicDALSqlServer.cs">
       <SubType>Code</SubType>
     </Compile>

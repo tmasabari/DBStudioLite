@@ -3,11 +3,7 @@ using CoreLogic.BaseDAL;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 /// <summary>
 /// Wrapper to do all database related operations
@@ -19,6 +15,8 @@ using System.Threading.Tasks;
 internal class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
 {
     #region "Sql Server Terms"
+    //http://www.stormrage.com/SQLStuff/sp_GetDDL_Latest.txt
+
     public string BaseTableType { get; set; }
     public string[] executableType { get; set; }
     public string[] codeTypeCodes { get; set; }
@@ -58,6 +56,19 @@ internal class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
             + "') and is_identity=1 And Objectproperty(object_id,'IsUserTable')=1";
         return SQL;
     }
+    public string GetTableRowsCode(string sTableName, int Rows, bool isReverse = false, string columnList = null)
+    {
+        string sQuery = "";
+        if (Rows != -1) sQuery = " top " + Rows.ToString() + " ";
+        sQuery = "select " + sQuery + " " + (!string.IsNullOrEmpty(columnList) ? columnList : "*") + " from " + sTableName;
+        if (isReverse)
+        {
+            var columnName = !string.IsNullOrEmpty(columnList) ? GetFirstColumn(columnList) : "1";
+            sQuery += $" order by {columnName} desc";
+        }
+        return sQuery;
+    }
+
     #endregion
 
     #region Database
@@ -69,7 +80,7 @@ internal class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
         var sqlconnection = (SqlConnection)Connection;
         sqlconnection.InfoMessage += new SqlInfoMessageEventHandler(connection_InfoMessage);
     }
-    protected override IDataAdapter DataAdapter(IDbCommand dbCommand)
+    protected override IDataAdapter GetDataAdapter(IDbCommand dbCommand)
     {
         return new SqlDataAdapter((SqlCommand)Command);
     }
@@ -129,6 +140,7 @@ internal class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
     }
     public void DeriveParameters(ref IDbCommand obj)
     {
+        //https://learn.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlcommandbuilder.deriveparameters
         SqlCommandBuilder.DeriveParameters((SqlCommand)obj);
     }
     public string GetCSharpCodeForParameter(IDataParameter parameter, string sParameterFunction, string sValue)
@@ -163,13 +175,13 @@ internal class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
             sSize = "";
         return sSize;
     }
-    public string GetParamType(IDataParameter dbparameter)
+    public override string GetParamType(IDataParameter dbparameter)
     {
         SqlParameter parameter = dbparameter as SqlParameter;
         return parameter.SqlDbType.ToString("F");
     }
 
-    public string GetInputParamValue(IDataParameter dbparameter)
+    public override string GetInputParamValue(IDataParameter dbparameter)
     {
         SqlParameter parameter = dbparameter as SqlParameter;
         string paramValue;
