@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -8,76 +7,93 @@ using System.Threading.Tasks;
 namespace CoreLogic.SqlServer
 {
     //http://www.stormrage.com/SQLStuff/sp_GetDDL_Latest.txt
-    public static class DynamicDataSourceCode
+    public class DynamicDataSourceCode
     {
-        public static readonly string BaseTableType = "BASE TABLE";
-        public static readonly string[] executableType = { "P", "AF", "IF", "FN", "TF" };
-
-        public static readonly string[] codeTypeCodes = { "P", "V", "TR", "AF", "IF", "TF", "FN", "SN" };
-        public static readonly string[] codeTypeDescriptions = { "SQL_STORED_PROCEDURE", "VIEW", "SQL_TRIGGER",
-                "AGGREGATE_FUNCTION", "SQL_INLINE_TABLE_VALUED_FUNCTION", "SQL_TABLE_VALUED_FUNCTION", "SQL_SCALAR_FUNCTION", "SYNONYMN" };
-        public static readonly string[] codeTypeKeywordss = { "PROCEDURE", "VIEW", "TRIGGER",
-                "FUNCTION", "FUNCTION", "FUNCTION", "FUNCTION", "SYNONYMN" };
-
-        //https://stackoverflow.com/questions/1819095/sql-server-how-to-tell-if-a-database-is-a-system-database
-        //if a database is named master, model, msdb or tempdb, it IS a system db; it is also a system db, if field is_distributor = 1 in the view sys.databases.
-        public static readonly string GetAllDBsCode =
-            "SELECT name, CAST( IIF( name in ('master','model','msdb','tempdb') , 1 , is_distributor) AS bit) AS [IsSystemObject], "
-            + " create_date FROM sys.databases"; //database_id,
-        public static readonly string GetAllSchemaCode =
-            "SELECT TABLE_NAME,TABLE_SCHEMA,TABLE_TYPE from INFORMATION_SCHEMA.Tables order by TABLE_TYPE, TABLE_SCHEMA, TABLE_NAME; ";
-        //"SELECT Name FROM sysobjects WHERE (xtype = 'V') order by Name; " + // AND (status > 0)
-        //U - tables V' - views 'S' - system tables
-        //TR - trigger FN - scalar function, IF - table valued function, V - view, P - procedure 
-        //[type_desc]     IN('SQL_STORED_PROCEDURE','VIEW','SQL_TRIGGER','AGGREGATE_FUNCTION','SQL_INLINE_TABLE_VALUED_FUNCTION','SQL_TABLE_VALUED_FUNCTION','SQL_SCALAR_FUNCTION','SYNONYMN')
-        //IN('P','V','TR','AF','IF','FN','TF','SN')
-
-
-        public static string GetSelectedCodeType(string UICodeType)
+        private string sConnectionString;
+        public DynamicDataSourceCode(string connectionstring) 
         {
-            int index = Array.IndexOf(codeTypeCodes, UICodeType.Trim());
-            if (index >= 0)
+            sConnectionString = connectionstring;
+        }
+        public string GetSelectedCodeType(string UICodeType)
+        {
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
             {
-                return codeTypeKeywordss[index];
+                int index = Array.IndexOf(DataObj.codeTypeCodes, UICodeType.Trim());
+                if (index >= 0)
+                {
+                    return DataObj.codeTypeKeywordss[index];
+                }
+                else
+                    return "";
             }
-            else
-                return "";
+        }
+        public string GetAllDBsCode
+        {
+            get
+            {
+                using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
+                {
+                    return DataObj.GetAllDBsCode;
+                }
+            }
+        }
+        public string GetAllSchemaCode
+        {
+            get
+            {
+                using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
+                {
+                    return DataObj.GetAllSchemaCode;
+                }
+            }
+        }
+        public string GetAllDBModulesCode
+        {
+            get
+            {
+                using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
+                {
+                    return DataObj.GetAllDBModulesCode;
+                }
+            }
+        }
+        public string BaseTableType
+        {
+            get
+            {
+                using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
+                {
+                    return DataObj.BaseTableType;
+                }
+            }
+        }
+        public string[] executableType
+        {
+            get
+            {
+                using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
+                {
+                    return DataObj.executableType;
+                }
+            }
+        }
+        public string GetColumnsCode(string sTableName)
+        {
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
+            {
+                return DataObj.GetColumnsCode(sTableName);
+            }
+        }
+        public string GetDropCode(string sObjectName, string objectType)
+        {
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
+            {
+                return DataObj.GetDropCode(sObjectName, objectType);
+            }
         }
 
-        public static readonly string CodeModuleFieldName = "ModuleName";
-        //get all types except views as views are already included in the data list.
-        public static readonly string GetAllDBModulesCode
-            = "SELECT o.name as ModuleName, s.name as SchemaName, o.type as Type, modify_date as Modified,create_date as Created "
-            + " FROM sys.sql_modules AS m INNER JOIN sys.objects AS o ON m.object_id = o.object_id"
-            + " INNER JOIN sys.schemas AS s ON o.schema_id = s.schema_id WHERE o.type <> 'V' ORDER By o.type, s.name, o.name; ";
-        public static string GetDropCode(string sObjectName, string objectType)
-        {
-            var SQuery = "IF OBJECT_ID('" + sObjectName + "') IS NOT NULL" + Environment.NewLine
-                + "  DROP " + objectType + " " + sObjectName;
-            return SQuery;
-        }
-        public static string GetColumnsCode(string sTableName)
-        {
-            var SQuery = "select '" + sTableName + "' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT, NUMERIC_PRECISION, NUMERIC_SCALE,DATETIME_PRECISION "
-                    + "from INFORMATION_SCHEMA.COLUMNS where table_name = '" + sTableName + "' Order by ORDINAL_POSITION";
-            return SQuery;
-        }
-        public static string GetColumnListCode(string sTableName)
-        {
-            string SQL = "SELECT STRING_AGG ('[' + COLUMN_NAME + ']', ',') AS csv FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'"
-                + sTableName + "'";
-            return SQL;
-        }
-        public static string GetIdentityColumnCode(string sTableName)
-        {
-            //https://raresql.com/2012/10/22/sql-server-multiple-ways-to-find-identity-column/
-            //SELECT Name FROM sys.columns WHERE object_id = OBJECT_ID('instrument') and is_identity=1 And Objectproperty(object_id,'IsUserTable')=1
-            string SQL = "SELECT Name FROM sys.columns WHERE object_id = OBJECT_ID('" + sTableName
-                + "') and is_identity=1 And Objectproperty(object_id,'IsUserTable')=1";
-            return SQL;
-        }
-
-        public static string GetTableRowsCode(string sTableName, int Rows, bool isReverse = false, string columnList = null)
+        //GetAllDBModulesCode
+        public string GetTableRowsCode(string sTableName, int Rows, bool isReverse = false, string columnList = null)
         {
             string sQuery = "";
             if (Rows != -1) sQuery = " top " + Rows.ToString() + " ";
@@ -95,7 +111,7 @@ namespace CoreLogic.SqlServer
             return columnList.Split(separator, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
         }
 
-        public static string GetProcedureRun(string sConnectionString, string Name, string codeType, out string error)
+        public string GetProcedureRun(string sConnectionString, string Name, string codeType, out string error)
         {
             error = string.Empty;
             string executionMapStartText =
@@ -118,7 +134,7 @@ namespace CoreLogic.SqlServer
             string sProcedure = Environment.NewLine + startCollection[codeType].Replace("<Name/>", Name); // "EXECUTE " + Name + " (";
             try
             {
-                using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, Name, true,
+                using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString, Name, true,
                     CommandType.StoredProcedure))
                 {
                     string sSize = "";
@@ -130,25 +146,12 @@ namespace CoreLogic.SqlServer
                     var paramNameList = new List<string>();
                     for (int paramIndex = 1; paramIndex < obj.Parameters.Count; paramIndex++)
                     {
-                        var parameter = (SqlParameter) obj.Parameters[paramIndex];
+                        var parameter = (IDataParameter)obj.Parameters[paramIndex];
                         string paramValue = string.Empty;
                         if (parameter.IsNullable)
                             paramValue = "NULL";
 
-                        if (parameter.Size > 0)
-                        {
-                            sSize = "(" + parameter.Size.ToString() + ") ";
-                            paramValue = "''";
-                        }
-                        else if (parameter.Scale > 0)
-                        {
-                            sSize = "(" + parameter.Scale.ToString();
-                            if (parameter.Precision > 0) sSize += "," + parameter.Precision.ToString();
-                            sSize += ") ";
-                            paramValue = "0";
-                        }
-                        else
-                            sSize = "";
+                        sSize = DataObj.GetParmeterSize(parameter, ref paramValue);
 
                         string currentParam = string.Empty;
                         string paramName = parameter.ParameterName;
@@ -166,56 +169,9 @@ namespace CoreLogic.SqlServer
                             paramType = "RETURN";
                             paramValue = "";
                         }
-                        else
+                        else         //Input parameters
                         {
-                            switch (parameter.SqlDbType)
-                            {
-                                //case SqlDbType.VarBinary:
-                                //case SqlDbType.Binary:
-                                //case SqlDbType.Xml:
-                                //    break;
-                                //case SqlDbType.Udt:
-                                //    break;
-                                //case SqlDbType.Structured:
-                                //case SqlDbType.Image:
-                                //case SqlDbType.UniqueIdentifier:
-
-                                case SqlDbType.Date:
-                                case SqlDbType.Time:
-                                case SqlDbType.DateTime2:
-                                case SqlDbType.DateTimeOffset:
-                                case SqlDbType.SmallDateTime:
-                                case SqlDbType.DateTime:
-                                case SqlDbType.Timestamp:
-                                    paramValue = "'" + DateTime.Today.ToString("dd/MM/yyyy hh:mm") + "'";
-                                    break;
-
-                                case SqlDbType.Decimal:
-                                case SqlDbType.Float:
-                                case SqlDbType.Bit:
-                                case SqlDbType.TinyInt:
-                                case SqlDbType.SmallInt:
-                                case SqlDbType.Int:
-                                case SqlDbType.BigInt:
-                                case SqlDbType.Real:
-                                case SqlDbType.SmallMoney:
-                                case SqlDbType.Money:
-                                    paramValue = "0";
-                                    break;
-
-                                case SqlDbType.Char:
-                                case SqlDbType.NChar:
-                                case SqlDbType.NText:
-                                case SqlDbType.NVarChar:
-                                case SqlDbType.Text:
-                                case SqlDbType.VarChar:
-                                case SqlDbType.Variant:
-                                    paramValue = "''";
-                                    break;
-                                default:
-                                    paramValue = "NULL";
-                                    break;
-                            }
+                            paramValue = DataObj.GetInputParamValue(parameter);
                         }
                         //if (parameter.Value != null)
                         //    sValue = " = " + parameter.Value.ToString() + " ";
@@ -223,8 +179,9 @@ namespace CoreLogic.SqlServer
                         //    sValue = "";
 
                         paramNameList.Add(parameter.ParameterName + " " + paramType);
-
-                        currentParam += parameter.ParameterName + " " + parameter.SqlDbType.ToString("F") + sSize;
+                        currentParam += parameter.ParameterName + " "
+                            + DataObj.GetParamType(parameter)
+                            + sSize;
                         if (!string.IsNullOrWhiteSpace(paramValue))
                             currentParam += " = " + paramValue;
 
@@ -241,12 +198,13 @@ namespace CoreLogic.SqlServer
                 error = e.Message;
             }
             return sProcedure + endCollection[codeType];
+
             //remove start brace and comma and dont use end brace + ")"
             //return sProcedure.Replace("(" + Environment.NewLine + ",", Environment.NewLine)
             //    + Environment.NewLine;
         }
 
-        public static async Task<Tuple<string, string>> GetProcedureDefinition(string sConnectionString, string Name)
+        public async Task<Tuple<string, string>> GetProcedureDefinition(string sConnectionString, string Name)
         {
             var error = string.Empty;
             //string tablename = Name.Substring(Name.LastIndexOf(".")+1);
@@ -256,7 +214,7 @@ namespace CoreLogic.SqlServer
             //string sQuery = "SELECT definition FROM sys.sql_modules WHERE object_id = (OBJECT_ID(N'" + Name + "'));";
             //object objReturn;
             string sProcedure = "";
-            using (IDynamicDAL DataObj = new DynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
+            using (IDynamicDAL DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
                 //task.Wait();
@@ -281,6 +239,45 @@ namespace CoreLogic.SqlServer
             }
             return new Tuple<string, string>(sProcedure, error); ;
         }
+
+
+        #region Table properties
+        public string GetColumnList(string sConnectionString, string sTableName)
+        {
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
+            {
+                string SQL = DataObj.GetColumnListCode(sTableName);
+                DataObj.SetValues(SQL, true, CommandType.Text);
+                object objreturn;
+                if (DataObj.ExecuteScalar(out objreturn))
+                {
+                    if (!(objreturn is System.DBNull))
+                    {
+                        return objreturn.ToString();
+                    }
+                }
+                return String.Empty;
+            }
+        }
+
+        public string GetIdentityColumn(string sConnectionString, string sTableName)
+        {
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
+            {
+                string SQL = DataObj.GetIdentityColumnCode(sTableName);
+                DataObj.SetValues(SQL, true, CommandType.Text);
+                object objreturn;
+                if (DataObj.ExecuteScalar(out objreturn))
+                {
+                    if (objreturn != null && !(objreturn is System.DBNull))
+                    {
+                        return objreturn.ToString();
+                    }
+                }
+                return String.Empty;
+            }
+        }
+        #endregion
     }
 }
 
@@ -290,7 +287,7 @@ namespace CoreLogic.SqlServer
 
 //    SQL = "SELECT COLUMNPROPERTY( OBJECT_ID('" + TableName + "'),'" + ColumnName + "','IsIdentity')";
 //    string lsConnection = sConnectionString;
-//    using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQL, true, CommandType.Text))
+//    using (DynamicDAL DataObj = DataAccessFactory.GetDynamicDAL(lsConnection, SQL, true, CommandType.Text))
 //    {
 //        object objreturn;
 //        if (DataObj.ExecuteScalar(out objreturn))

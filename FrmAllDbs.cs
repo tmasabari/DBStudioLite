@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static Azure.Core.HttpHeader;
 
 namespace DBStudioLite
 {
@@ -59,7 +52,7 @@ namespace DBStudioLite
             //this.Parent = Parent; //top level control cannot be added
             setButtons();
             this.ShowDialog(owner); //this sets to MDIform automatically
-        }   
+        }
 
         private void butCancel_Click(object sender, EventArgs e)
         {
@@ -98,7 +91,7 @@ namespace DBStudioLite
 
         private void CalculateNextIndex(int index)
         {
-            executeAllDbsIndex= index +1;
+            executeAllDbsIndex = index + 1;
             //if current db pointer is not valid reset to 0
             if (executeAllDbsIndex >= dbNames.Count) executeAllDbsIndex = 0;
         }

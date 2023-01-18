@@ -2,7 +2,6 @@ using CoreLogic;
 using ScintillaNET;
 using ScintillaNET_FindReplaceDialog;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Reflection;
@@ -271,12 +270,12 @@ namespace DBStudioLite
 
             if (IsLoadQueryToBox) txtQuery.Text = SQuery;
             string startMessage = $"@{DateTime.Now.ToString("hh:mm:ss FFF")} The execution started for {mdiParent.GetSelectedConnection()}.{dBName}.";
-            using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQuery, true, CommandType.Text))
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(lsConnection, SQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
-                string endMessage = $"@{DateTime.Now.ToString("hh:mm:ss FFF")} The execution was completed successfully.";
+                string endMessage = $"@{DateTime.Now.ToString("hh:mm:ss FFF")} The execution was completed.";
 
-                dataGrid1.DataSource = (ds != null && ds.Tables["MyTable"] != null) ? ds.Tables["MyTable"]:null;
+                dataGrid1.DataSource = (ds != null && ds.Tables["MyTable"] != null) ? ds.Tables["MyTable"] : null;
                 dataGrid1.Refresh();
                 txtOutputText.Font = new System.Drawing.Font("Courier New", 8.25f, System.Drawing.FontStyle.Bold);
                 txtOutputText.ForeColor = Color.Black; txtOutputText.BackColor = txtOutputText.BackColor;
@@ -288,7 +287,7 @@ namespace DBStudioLite
                 //example scenario: exceptions
                 if (!string.IsNullOrWhiteSpace(DataObj.ErrorText))
                 {
-                    txtOutputText.Text += DataObj.ErrorText + Environment.NewLine;
+                    txtOutputText.Text += "Error:" + DataObj.ErrorText + Environment.NewLine;
                     txtOutputText.Font = new System.Drawing.Font("Courier New", 12f, System.Drawing.FontStyle.Bold);
                     //https://stackoverflow.com/questions/20688408/how-do-you-change-the-text-color-of-a-readonly-textbox
                     txtOutputText.ForeColor = Color.Red; txtOutputText.BackColor = txtOutputText.BackColor;
@@ -301,7 +300,7 @@ namespace DBStudioLite
                     focusMessages();
                 }
                 //example scenario: SELECT statements from query or from sp/modules
-                else if (dataGrid1.DataSource != null) 
+                else if (dataGrid1.DataSource != null)
                     FocusDataResults();
                 //example scenario: PRINT 'Message'
                 else

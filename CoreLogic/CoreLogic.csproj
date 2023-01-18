@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="SqlServer\DynamicDAL.cs">
+    <Compile Update="SqlServer\DynamicDALSqlServer.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

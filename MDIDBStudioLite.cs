@@ -1,4 +1,5 @@
 using CoreLogic;
+using CoreLogic.BaseDAL;
 using CoreLogic.SqlServer;
 using DBStudioLite.Model;
 using DBStudioLite.WindowsLogic;
@@ -68,6 +69,10 @@ namespace DBStudioLite
             {
                 return objConnections.ConnectionText + sStandardConnectionParams + DBParameterMaster;
             }
+        }
+        public DynamicDataSourceCode GetDynamicDataSourceCode()
+        {
+            return new DynamicDataSourceCode(sConnectionString);
         }
 
         private bool bFirstTime = true;
@@ -246,8 +251,8 @@ namespace DBStudioLite
                 listViewDBs.Columns.Add("Name", 130, HorizontalAlignment.Left);
                 listViewDBs.Columns.Add("IsSystemDB", 50, HorizontalAlignment.Left);
                 listViewDBs.Columns.Add("Created", 130, HorizontalAlignment.Left);
-                string sQuery = DynamicDataSourceCode.GetAllDBsCode;
-                using (DynamicDAL DataObj = new DynamicDAL(sMasterConnectionString, sQuery, true, CommandType.Text))
+                string sQuery = GetDynamicDataSourceCode().GetAllDBsCode;
+                using (var DataObj = DataAccessFactory.GetDynamicDAL(sMasterConnectionString, sQuery, true, CommandType.Text))
                 {
                     var ds = await DataObj.Execute("MyTable");
                     //txtOutputText.Text = DataObj.SQLInfoMessageBuilder.ToString();
@@ -459,10 +464,10 @@ namespace DBStudioLite
 
         private void GetMetaData()
         {
-            string sQuery = DynamicDataSourceCode.GetAllSchemaCode + ";" + DynamicDataSourceCode.GetAllDBModulesCode;
-            using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
+            string sQuery = GetDynamicDataSourceCode().GetAllSchemaCode + ";" + GetDynamicDataSourceCode().GetAllDBModulesCode;
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
             {
-                if (DataObj.Execute(new DynamicDAL.dlgReaderOpen(ReaderEvent)) == false)
+                if (DataObj.Execute(new dlgReaderOpen(ReaderEvent)) == false)
                 {
                     MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
                 }
@@ -581,7 +586,7 @@ namespace DBStudioLite
         {
             if (lstProcedures.SelectedItems.Count > 0)
             {
-                return DynamicDataSourceCode.GetSelectedCodeType(lstProcedures.SelectedItems[0].SubItems[colType].Text).Trim();
+                return GetDynamicDataSourceCode().GetSelectedCodeType(lstProcedures.SelectedItems[0].SubItems[colType].Text).Trim();
             }
             else
                 return "";
@@ -600,7 +605,8 @@ namespace DBStudioLite
         {
             if (lstTables.SelectedItems.Count > 0)
             {
-                return lstTables.SelectedItems[0].SubItems[colType].Text.ToUpper() == DynamicDataSourceCode.BaseTableType
+                return lstTables.SelectedItems[0].SubItems[colType].Text.ToUpper()
+                    == GetDynamicDataSourceCode().BaseTableType
                     ? "TABLE" : "VIEW";
             }
             else
@@ -633,7 +639,7 @@ namespace DBStudioLite
             if (sTableName != "")
             {
                 string stablenameonly = lstTables.SelectedItems[0].SubItems[colName].Text;
-                if (lstTables.SelectedItems[0].SubItems[colType].Text.ToUpper() == DynamicDataSourceCode.BaseTableType)
+                if (lstTables.SelectedItems[0].SubItems[colType].Text.ToUpper() == GetDynamicDataSourceCode().BaseTableType)
                 {
                     var dataForm = GetEmptyOperatingForm();
                     dataForm.SetDataGrid(await GetTableDetails(stablenameonly));
@@ -652,7 +658,7 @@ namespace DBStudioLite
             string sTableName = GetSelectedTableNameWithSchema();
             if (sTableName != "")
             {
-                string sQuery = DynamicDataSourceCode.GetTableRowsCode(sTableName, Rows, isReverse, columnList);
+                string sQuery = GetDynamicDataSourceCode().GetTableRowsCode(sTableName, Rows, isReverse, columnList);
                 await GetEmptyOperatingForm().LoadQuery(sQuery);
             }
         }
@@ -663,7 +669,7 @@ namespace DBStudioLite
 
             if (sTableName != "")
             {
-                string columnList = DynamicDAL.GetColumnList(sConnectionString, sTableName);
+                string columnList = GetDynamicDataSourceCode().GetColumnList(sConnectionString, sTableName);
                 GetTableRows(100, false, columnList);
             }
         }
@@ -679,7 +685,7 @@ namespace DBStudioLite
 
             if (sTableName != "")
             {
-                string columnList = DynamicDAL.GetColumnList(sConnectionString, sTableName);
+                string columnList = GetDynamicDataSourceCode().GetColumnList(sConnectionString, sTableName);
                 GetTableRows(100, true, columnList);
             }
         }
@@ -720,7 +726,7 @@ namespace DBStudioLite
             if (string.IsNullOrWhiteSpace(codeType)) return;
 
             //Executable code 
-            if (DynamicDataSourceCode.executableType.Contains(codeType))
+            if (GetDynamicDataSourceCode().executableType.Contains(codeType))
             {
                 string sSPName = GetSelectedSPName();
                 if (sSPName != "")
@@ -737,7 +743,7 @@ namespace DBStudioLite
         private void GetEmptyOperatingFormSetProcedureRunText(string sSPName, string codeType)
         {
             var error = string.Empty;
-            var code = DynamicDataSourceCode.GetProcedureRun(sConnectionString, sSPName, codeType, out error);
+            var code = GetDynamicDataSourceCode().GetProcedureRun(sConnectionString, sSPName, codeType, out error);
             if (!string.IsNullOrWhiteSpace(error))
                 MessageBox.Show("Error occured" + error, Application.ProductName,
                     MessageBoxButtons.OK);
@@ -762,7 +768,7 @@ namespace DBStudioLite
         private async Task GetEmptyOperatingFormSetProcedureDefinition(string sTableName)
         {
             var error = string.Empty;
-            var codeTuple = await DynamicDataSourceCode.GetProcedureDefinition(sConnectionString, sTableName);
+            var codeTuple = await GetDynamicDataSourceCode().GetProcedureDefinition(sConnectionString, sTableName);
             if (!string.IsNullOrWhiteSpace(error))
                 MessageBox.Show("Error occured" + error, Application.ProductName,
                     MessageBoxButtons.OK);
@@ -891,7 +897,7 @@ namespace DBStudioLite
             DataSet ds;
             string localColumn;
             string localDataType = "";
-            int localLength=0, scale=0;
+            int localLength = 0, scale = 0;
             bool localIdentity;
             string SQuery;
 
@@ -899,8 +905,8 @@ namespace DBStudioLite
             DataRow workrow;
             string lsConnection = sConnectionString;
 
-            SQuery = DynamicDataSourceCode.GetColumnsCode(TableName);
-            using (DynamicDAL DataObj = new DynamicDAL(lsConnection, SQuery, true, CommandType.Text))
+            SQuery = GetDynamicDataSourceCode().GetColumnsCode(TableName);
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(lsConnection, SQuery, true, CommandType.Text))
             {
                 ds = await DataObj.Execute("RawTableInfo");
                 if (ds != null)
@@ -916,7 +922,7 @@ namespace DBStudioLite
                     dt.Columns.Add("DecimalPlaces", Type.GetType("System.Int64"));
                     dt.Columns.Add("Identity", Type.GetType("System.Boolean"));
 
-                    var identityColumn = DynamicDAL.GetIdentityColumn(sConnectionString, TableName);
+                    var identityColumn = GetDynamicDataSourceCode().GetIdentityColumn(sConnectionString, TableName);
 
                     foreach (DataRow rw in ds.Tables["RawTableInfo"].Rows)
                     {
@@ -954,7 +960,7 @@ namespace DBStudioLite
                             workrow["IsNullable"] = rw["IS_NULLABLE"].ToString();
                             workrow["DefaultValue"] = rw["COLUMN_DEFAULT"].ToString();
                             workrow["Datatype"] = localDataType;
-                            if(localLength > 0) workrow["Length"] = localLength;
+                            if (localLength > 0) workrow["Length"] = localLength;
                             if (scale > 0) workrow["DecimalPlaces"] = scale;
                             workrow["Identity"] = localIdentity;
                             dt.Rows.Add(workrow);
@@ -1215,7 +1221,7 @@ namespace DBStudioLite
         private void LoadDropCode(string objectName, string objectType)
         {
             if (objectName != "")
-                GetEmptyOperatingForm().SetProcedureText(DynamicDataSourceCode.GetDropCode(objectName, objectType));
+                GetEmptyOperatingForm().SetProcedureText(GetDynamicDataSourceCode().GetDropCode(objectName, objectType));
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)

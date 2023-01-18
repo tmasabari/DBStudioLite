@@ -1,8 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Data;
 
-namespace CoreLogic.SqlServer
+namespace CoreLogic.BaseDAL
 {
     public static class CodeGeneration
     {
@@ -20,7 +19,7 @@ namespace CoreLogic.SqlServer
 
             try
             {
-                using (IDynamicDAL DataObj = new DynamicDAL(sConnectionString, Name, true,
+                using (IDynamicDAL DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString, Name, true,
                     CommandType.StoredProcedure))
                 {
                     DataObj.Connection.Open();
@@ -28,7 +27,7 @@ namespace CoreLogic.SqlServer
                     DataObj.DeriveParameters(ref obj);
                     for (int i = 0; i < obj.Parameters.Count; i++)
                     {
-                        var parameter = (SqlParameter)obj.Parameters[i];
+                        var parameter = (IDataParameter)obj.Parameters[i];
                         sValue = "";
 
                         if (parameter.Direction == ParameterDirection.Input)
@@ -42,14 +41,7 @@ namespace CoreLogic.SqlServer
                         else if (parameter.Direction == ParameterDirection.ReturnValue)
                             sParameterFunction = "AddReturnParameter";
 
-                        //todo IDataParameter
-                        if (parameter.Size > 0)
-                            sCSharp += string.Format("   DataObj." + sParameterFunction + "(\"{0}\", SqlDbType.{1}, {2} {3});" + Environment.NewLine,
-                                parameter.ParameterName, parameter.SqlDbType.ToString("F"), parameter.Size.ToString(), sValue);
-                        else
-                            sCSharp += string.Format("   DataObj." + sParameterFunction + "(\"{0}\", SqlDbType.{1} {2});" + Environment.NewLine,
-                                parameter.ParameterName, parameter.SqlDbType.ToString("F"), sValue); //parameter.DbType.GetType().FullName
-
+                        sCSharp += DataObj.GetCSharpCodeForParameter(parameter, sParameterFunction, sValue);
                     }
                 }
             }
