@@ -9,10 +9,11 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.117" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DynamicDAL.cs">
+    <Compile Update="SqlServer\DynamicDAL.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

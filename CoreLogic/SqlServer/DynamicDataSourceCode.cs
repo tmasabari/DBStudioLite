@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DBStudioLite
+namespace CoreLogic.SqlServer
 {
     //http://www.stormrage.com/SQLStuff/sp_GetDDL_Latest.txt
     public static class DynamicDataSourceCode
@@ -84,7 +84,7 @@ namespace DBStudioLite
             sQuery = "select " + sQuery + " " + (!string.IsNullOrEmpty(columnList) ? columnList : "*") + " from " + sTableName;
             if (isReverse)
             {
-                var columnName = !string.IsNullOrEmpty(columnList)? getFirstColumn(columnList) : "1";
+                var columnName = !string.IsNullOrEmpty(columnList) ? getFirstColumn(columnList) : "1";
                 sQuery += $" order by {columnName} desc";
             }
             return sQuery;
@@ -113,10 +113,9 @@ namespace DBStudioLite
                 + "P|*|" + Environment.NewLine;
 
 
-            var startCollection = CoreLogic.Common.GetNameValueCollection(executionMapStartText);
-            var endCollection = CoreLogic.Common.GetNameValueCollection(executionMapCloseText);
+            var startCollection = Common.GetNameValueCollection(executionMapStartText);
+            var endCollection = Common.GetNameValueCollection(executionMapCloseText);
             string sProcedure = Environment.NewLine + startCollection[codeType].Replace("<Name/>", Name); // "EXECUTE " + Name + " (";
-            SqlParameter parameter = null;
             try
             {
                 using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, Name, true,
@@ -124,15 +123,15 @@ namespace DBStudioLite
                 {
                     string sSize = "";
 
-                    DataObj.connection.Open();
-                    SqlCommand obj = DataObj.command;
-                    SqlCommandBuilder.DeriveParameters(obj);
+                    DataObj.Connection.Open();
+                    var obj = DataObj.Command;
+                    DataObj.DeriveParameters(ref obj);
                     var paramStringList = new List<string>();
                     var paramNameList = new List<string>();
                     for (int paramIndex = 1; paramIndex < obj.Parameters.Count; paramIndex++)
                     {
-                        parameter = obj.Parameters[paramIndex];
-                        string paramValue = String.Empty;
+                        var parameter = (SqlParameter) obj.Parameters[paramIndex];
+                        string paramValue = string.Empty;
                         if (parameter.IsNullable)
                             paramValue = "NULL";
 
@@ -257,7 +256,7 @@ namespace DBStudioLite
             //string sQuery = "SELECT definition FROM sys.sql_modules WHERE object_id = (OBJECT_ID(N'" + Name + "'));";
             //object objReturn;
             string sProcedure = "";
-            using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
+            using (IDynamicDAL DataObj = new DynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
             {
                 var ds = await DataObj.Execute("MyTable");
                 //task.Wait();

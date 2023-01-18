@@ -2,7 +2,7 @@
 using System;
 using System.Data;
 
-namespace CoreLogic
+namespace CoreLogic.SqlServer
 {
     public static class CodeGeneration
     {
@@ -11,7 +11,6 @@ namespace CoreLogic
         {
             error = string.Empty;
             string sCSharp = "", sParameterFunction = "", sValue = "";
-            SqlParameter parameter = null;
 
             sCSharp = "string sConnectionString = ConfigurationManager.ConnectionStrings[\"MainConnection\"].ConnectionString;" + Environment.NewLine +
                 "using (CommonDatabase<SqlConnection, SqlCommand, SqlDataAdapter> DataObj =" + Environment.NewLine +
@@ -21,15 +20,15 @@ namespace CoreLogic
 
             try
             {
-                using (DynamicDAL DataObj = new DynamicDAL(sConnectionString, Name, true,
+                using (IDynamicDAL DataObj = new DynamicDAL(sConnectionString, Name, true,
                     CommandType.StoredProcedure))
                 {
-                    DataObj.connection.Open();
-                    SqlCommand obj = DataObj.command;
-                    SqlCommandBuilder.DeriveParameters(obj);
+                    DataObj.Connection.Open();
+                    var obj = DataObj.Command;
+                    DataObj.DeriveParameters(ref obj);
                     for (int i = 0; i < obj.Parameters.Count; i++)
                     {
-                        parameter = obj.Parameters[i];
+                        var parameter = (SqlParameter)obj.Parameters[i];
                         sValue = "";
 
                         if (parameter.Direction == ParameterDirection.Input)
@@ -43,11 +42,12 @@ namespace CoreLogic
                         else if (parameter.Direction == ParameterDirection.ReturnValue)
                             sParameterFunction = "AddReturnParameter";
 
+                        //todo IDataParameter
                         if (parameter.Size > 0)
-                            sCSharp += String.Format("   DataObj." + sParameterFunction + "(\"{0}\", SqlDbType.{1}, {2} {3});" + Environment.NewLine,
+                            sCSharp += string.Format("   DataObj." + sParameterFunction + "(\"{0}\", SqlDbType.{1}, {2} {3});" + Environment.NewLine,
                                 parameter.ParameterName, parameter.SqlDbType.ToString("F"), parameter.Size.ToString(), sValue);
                         else
-                            sCSharp += String.Format("   DataObj." + sParameterFunction + "(\"{0}\", SqlDbType.{1} {2});" + Environment.NewLine,
+                            sCSharp += string.Format("   DataObj." + sParameterFunction + "(\"{0}\", SqlDbType.{1} {2});" + Environment.NewLine,
                                 parameter.ParameterName, parameter.SqlDbType.ToString("F"), sValue); //parameter.DbType.GetType().FullName
 
                     }
