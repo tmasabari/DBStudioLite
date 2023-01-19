@@ -53,5 +53,6 @@ namespace CoreLogic
         string GetInputParamValue(IDataParameter dbparameter);
 
         string GetTableRowsCode(string sTableName, int Rows, bool isReverse = false, string columnList = null);
+        string GetModuleCode(string sModuleType, string sModuleName );
     }
 }

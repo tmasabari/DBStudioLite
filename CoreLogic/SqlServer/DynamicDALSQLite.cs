@@ -82,6 +82,12 @@ internal class DynamicDALSQLite : AbstractDAL, IDynamicDAL
         var SQuery = $"DROP {objectType}  IF EXISTS {sObjectName}" ;
         return SQuery;
     }
+    public string GetModuleCode(string sModuleType, string sModuleName)
+    {
+        if(sModuleName.Contains(".")) sModuleName = sModuleName.Substring(sModuleName.IndexOf(".") + 1);
+        sModuleName = sModuleName.Trim('[', ']');
+        return "select sql from sqlite_schema where name = '" + sModuleName + "';";
+    }
     #endregion
 
     #region Database

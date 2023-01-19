@@ -1,5 +1,6 @@
 using CoreLogic;
 using CoreLogic.BaseDAL;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
@@ -67,6 +68,15 @@ internal class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
             sQuery += $" order by {columnName} desc";
         }
         return sQuery;
+    }
+    public string GetModuleCode(string sModuleType, string sModuleName)
+    {
+        //string tablename = Name.Substring(Name.LastIndexOf(".")+1);
+        //string sQuery = "SELECT ROUTINE_DEFINITION FROM INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = '" + tablename + "' and ROUTINE_TYPE = '" + sType + "'";
+        //string sQuery = "SELECT OBJECT_DEFINITION (OBJECT_ID(N'" + Name + "'));";
+        //string sQuery = "SELECT definition FROM sys.sql_modules WHERE object_id = (OBJECT_ID(N'" + Name + "'));";
+        //object objReturn;
+        return "EXEC sp_helptext N'" + sModuleName + "';";
     }
 
     #endregion

@@ -256,9 +256,10 @@ namespace DBStudioLite
                 listViewDBs.Columns.Add("Name", 130, HorizontalAlignment.Left);
                 listViewDBs.Columns.Add("IsSystemDB", 50, HorizontalAlignment.Left);
                 listViewDBs.Columns.Add("Created", 130, HorizontalAlignment.Left);
-                string sQuery = GetDynamicDataSourceCode().GetAllDBsCode;
-                using (var DataObj = DataAccessFactory.GetDynamicDAL(sMasterConnectionString, sQuery, true, CommandType.Text))
+                using (var DataObj = DataAccessFactory.GetDynamicDAL(sMasterConnectionString))
                 {
+                    string sQuery = DataObj.GetAllDBsCode;
+                    DataObj.SetValues(sQuery, true, CommandType.Text);
                     var ds = await DataObj.Execute("MyTable");
                     //txtOutputText.Text = DataObj.SQLInfoMessageBuilder.ToString();
                     if (ds != null)
@@ -475,9 +476,10 @@ namespace DBStudioLite
 
         private void GetMetaData()
         {
-            string sQuery = GetDynamicDataSourceCode().GetAllSchemaCode + ";" + GetDynamicDataSourceCode().GetAllDBModulesCode;
-            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
             {
+                string sQuery = DataObj.GetAllSchemaCode + ";" + DataObj.GetAllDBModulesCode;
+                DataObj.SetValues(sQuery, true, CommandType.Text);
                 if (DataObj.Execute(new dlgReaderOpen(ReaderEvent)) == false)
                 {
                     MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
@@ -916,9 +918,10 @@ namespace DBStudioLite
             DataRow workrow;
             string lsConnection = sConnectionString;
 
-            SQuery = GetDynamicDataSourceCode().GetColumnsCode(TableName);
-            using (var DataObj = DataAccessFactory.GetDynamicDAL(lsConnection, SQuery, true, CommandType.Text))
+            using (var DataObj = DataAccessFactory.GetDynamicDAL(lsConnection))
             {
+                SQuery = DataObj.GetColumnsCode(TableName);
+                DataObj.SetValues(SQuery, true, CommandType.Text);
                 ds = await DataObj.Execute("RawTableInfo");
                 if (ds != null)
                 {

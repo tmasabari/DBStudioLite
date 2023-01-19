@@ -26,36 +26,6 @@ namespace CoreLogic
                     return "";
             }
         }
-        public string GetAllDBsCode
-        {
-            get
-            {
-                using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
-                {
-                    return DataObj.GetAllDBsCode;
-                }
-            }
-        }
-        public string GetAllSchemaCode
-        {
-            get
-            {
-                using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
-                {
-                    return DataObj.GetAllSchemaCode;
-                }
-            }
-        }
-        public string GetAllDBModulesCode
-        {
-            get
-            {
-                using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
-                {
-                    return DataObj.GetAllDBModulesCode;
-                }
-            }
-        }
         public string BaseTableType
         {
             get
@@ -76,13 +46,7 @@ namespace CoreLogic
                 }
             }
         }
-        public string GetColumnsCode(string sTableName)
-        {
-            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
-            {
-                return DataObj.GetColumnsCode(sTableName);
-            }
-        }
+
         public string GetDropCode(string sObjectName, string objectType)
         {
             using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
@@ -193,18 +157,15 @@ namespace CoreLogic
             //    + Environment.NewLine;
         }
 
+        //todo change for sqlite
         public async Task<Tuple<string, string>> GetProcedureDefinition(string sConnectionString, string Name)
         {
             var error = string.Empty;
-            //string tablename = Name.Substring(Name.LastIndexOf(".")+1);
-            //string sQuery = "SELECT ROUTINE_DEFINITION FROM INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = '" + tablename + "' and ROUTINE_TYPE = '" + sType + "'";
-            string sQuery = "EXEC sp_helptext N'" + Name + "';";
-            //string sQuery = "SELECT OBJECT_DEFINITION (OBJECT_ID(N'" + Name + "'));";
-            //string sQuery = "SELECT definition FROM sys.sql_modules WHERE object_id = (OBJECT_ID(N'" + Name + "'));";
-            //object objReturn;
             string sProcedure = "";
-            using (IDynamicDAL DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString, sQuery, true, CommandType.Text))
+            using (IDynamicDAL DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
             {
+                var sQuery = DataObj.GetModuleCode(string.Empty, Name);
+                DataObj.SetValues(sQuery, true, CommandType.Text);
                 var ds = await DataObj.Execute("MyTable");
                 //task.Wait();
                 //var ds = task.Result;
@@ -269,108 +230,3 @@ namespace CoreLogic
         #endregion
     }
 }
-
-//public bool CheckColumIdentity(string TableName, string ColumnName)
-//{
-//    string SQL;
-
-//    SQL = "SELECT COLUMNPROPERTY( OBJECT_ID('" + TableName + "'),'" + ColumnName + "','IsIdentity')";
-//    string lsConnection = sConnectionString;
-//    using (DynamicDAL DataObj = DataAccessFactory.GetDynamicDAL(lsConnection, SQL, true, CommandType.Text))
-//    {
-//        object objreturn;
-//        if (DataObj.ExecuteScalar(out objreturn))
-//        {
-//            if (!(objreturn is System.DBNull))
-//            {
-//                if ((int)objreturn == 1)
-//                {
-//                    return true;
-//                }
-//                else
-//                {
-//                    return false;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-//}
-
-
-//Now, let's turn to another routine that I'll need to complete the search: GetTableDetails (see Figure 4). This routine uses the SQL query shown here to retrieve the details of a particular table, including field names, datatype, and maximum length: 
-// SQL = "select '" & TableName & "' as TableName, " _
-//    SQL &= "COLUMN_NAME, DATA_TYPE, " _
-//    SQL &= "CHARACTER_MAXIMUM_LENGTH  from " _
-//    SQL &= "INFORMATION_SCHEMA.COLUMNS where " _
-//    SQL &= "table_name = '" & TableName & "' "
-
-//GetTableDetails is called when the user clicks the Search button (called cmdSearch). More on this soon.
-
-//One more function that I need to look at is CheckColumnIdentity. 
-//Function CheckColumnIdentity(ByVal TableName As String, _
-//    ByVal ColumnName As String) As Boolean
-//    Dim SQL As String
-//    SQL = "SELECT COLUMNPROPERTY( OBJECT_ID('" & " _
-//    SQL &= "TableName & "'),'" & ColumnName & _
-//    SQL &= "','IsIdentity')"
-//    If CInt(RunSQLScalar(SQL)) = 1 Then
-//        Return True
-//    Else
-//        Return False
-//    End If
-//End Function
-//This function takes a table name and column name as parameters and returns a Boolean value, indicating whether the column is an identity column. It uses COLUMNPROPERTY to determine if the column is an identity column. You can also use this property to determine if a column allows nulls, and so on.
-
-//Now, let's put this together by looking at the cmdSearch Click event code. The first few lines of code define the variables I'll need: 
-//Dim dt, dttemp As DataTable
-//Dim ds As New DataSet
-//Dim tabletosearch As String
-//Dim rw As DataRow
-//Dim IsMatch As Boolean = False
-
-//The following two lines set tabletosearch to the name of the table to search and clears the output textbox: 
-//tabletosearch = cboTables.Text
-//txtOutput.ResetText()
-
-//The next few lines control how the search is handled. If chkAllTables is True, then all of the details for each table are loaded into the dt table. If chkAllTables is False, then dt is loaded with the details for only the selected table: 
-//If chkAllTables.Checked Then
-//    For Each rw In dsTables.Tables(0).Rows
-//        dttemp = GetTableDetails(rw("Name").ToString)
-//        ds.Merge(dttemp)
-//    Next
-//    dt = ds.Tables(0)
-//Else
-//    dt = GetTableDetails(tabletosearch)
-//End If
-
-//Now that the tables are loaded, I can perform the search. The search is handled inside the For Each loop, which moves through all rows in the dt table: 
-//For Each rw In dt.Rows
-//The next line sets IsMatch to False as the default for each field. IsMatch is a flag that determines whether to output the field: 
-//IsMatch = False
-
-//Next, if chkContains is True, then InStr is used to determine if a match exists. If chkContains is False, then the Else clause checks for an exact match. If a match is found, IsMatch is set to True: 
-//If chkContains.Checked Then
-//    If InStr(UCase(rw("ColumnName").ToString), _
-//        UCase(txtSearchField.Text)) > 0 Then
-//        IsMatch = True
-//    End If
-//Else
-//    If UCase(rw("ColumnName").ToString) = UCase(txtSearchField.Text) Then
-//        IsMatch = True
-//    End If
-//End If
-//Now that the test is complete, I can output the data if IsMatch is True. The values in the various fields in the datatable are output to txtOutput, as shown here: 
-//If IsMatch Then
-//    txtOutput.Text &= rw("TableName").ToString _
-//        & " : " & rw("ColumnName").ToString & " - "
-//    txtOutput.Text &= rw("DataType").ToString _
-//        & " (" & rw("Length").ToString & ")"
-
-//    If CBool(rw("Identity").ToString) Then
-//        txtOutput.Text &= " Identity"
-//End If
-//        txtOutput.Text &= vbCrLf
-//    End If
-//Next
-//That's it. There is not a lot of code to this tool, but it sure is handy.
