@@ -41,6 +41,7 @@ namespace DBStudioLite
             this.tabFindResults = new System.Windows.Forms.TabPage();
             this.findAllResultsPanel1 = new ScintillaNET_FindReplaceDialog.FindAllResults.FindAllResultsPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.butExecuteAllDBs = new System.Windows.Forms.Button();
             this.lblRows = new System.Windows.Forms.Label();
             this.checkShowFullScreen = new System.Windows.Forms.CheckBox();
             this.butExcel = new System.Windows.Forms.Button();
@@ -50,7 +51,6 @@ namespace DBStudioLite
             this.btnExecuteAll = new System.Windows.Forms.Button();
             this.butExecute = new System.Windows.Forms.Button();
             this.findReplace1 = new ScintillaNET_FindReplaceDialog.FindReplace();
-            this.butExecuteAllDBs = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitCode)).BeginInit();
             this.splitCode.Panel1.SuspendLayout();
@@ -181,6 +181,7 @@ namespace DBStudioLite
             this.dataGrid1.AllowUserToDeleteRows = false;
             this.dataGrid1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGrid1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGrid1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
             this.dataGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGrid1.Location = new System.Drawing.Point(3, 4);
@@ -200,7 +201,7 @@ namespace DBStudioLite
             this.tabMessages.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabMessages.Name = "tabMessages";
             this.tabMessages.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabMessages.Size = new System.Drawing.Size(1497, 476);
+            this.tabMessages.Size = new System.Drawing.Size(1498, 476);
             this.tabMessages.TabIndex = 1;
             this.tabMessages.Text = "Messages";
             this.tabMessages.UseVisualStyleBackColor = true;
@@ -219,7 +220,7 @@ namespace DBStudioLite
             this.txtOutputText.Name = "txtOutputText";
             this.txtOutputText.ReadOnly = true;
             this.txtOutputText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOutputText.Size = new System.Drawing.Size(1491, 468);
+            this.txtOutputText.Size = new System.Drawing.Size(1492, 468);
             this.txtOutputText.TabIndex = 11;
             this.txtOutputText.WordWrap = false;
             // 
@@ -229,7 +230,7 @@ namespace DBStudioLite
             this.tabFindResults.Location = new System.Drawing.Point(4, 29);
             this.tabFindResults.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabFindResults.Name = "tabFindResults";
-            this.tabFindResults.Size = new System.Drawing.Size(1497, 476);
+            this.tabFindResults.Size = new System.Drawing.Size(1498, 476);
             this.tabFindResults.TabIndex = 2;
             this.tabFindResults.Text = "Find Results";
             this.tabFindResults.UseVisualStyleBackColor = true;
@@ -241,7 +242,7 @@ namespace DBStudioLite
             this.findAllResultsPanel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.findAllResultsPanel1.Name = "findAllResultsPanel1";
             this.findAllResultsPanel1.Scintilla = this.txtQuery;
-            this.findAllResultsPanel1.Size = new System.Drawing.Size(1497, 476);
+            this.findAllResultsPanel1.Size = new System.Drawing.Size(1498, 476);
             this.findAllResultsPanel1.TabIndex = 12;
             // 
             // panel1
@@ -261,6 +262,17 @@ namespace DBStudioLite
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1508, 42);
             this.panel1.TabIndex = 0;
+            // 
+            // butExecuteAllDBs
+            // 
+            this.butExecuteAllDBs.Location = new System.Drawing.Point(240, 6);
+            this.butExecuteAllDBs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.butExecuteAllDBs.Name = "butExecuteAllDBs";
+            this.butExecuteAllDBs.Size = new System.Drawing.Size(139, 35);
+            this.butExecuteAllDBs.TabIndex = 22;
+            this.butExecuteAllDBs.Text = "Execute All &DBs";
+            this.butExecuteAllDBs.UseVisualStyleBackColor = true;
+            this.butExecuteAllDBs.Click += new System.EventHandler(this.butExecuteAllDBs_Click);
             // 
             // lblRows
             // 
@@ -358,17 +370,6 @@ namespace DBStudioLite
             this.findReplace1._lastReplaceLastLine = 0;
             this.findReplace1._lastReplaceMark = false;
             this.findReplace1.Scintilla = this.txtQuery;
-            // 
-            // butExecuteAllDBs
-            // 
-            this.butExecuteAllDBs.Location = new System.Drawing.Point(240, 6);
-            this.butExecuteAllDBs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.butExecuteAllDBs.Name = "butExecuteAllDBs";
-            this.butExecuteAllDBs.Size = new System.Drawing.Size(139, 35);
-            this.butExecuteAllDBs.TabIndex = 22;
-            this.butExecuteAllDBs.Text = "Execute All &DBs";
-            this.butExecuteAllDBs.UseVisualStyleBackColor = true;
-            this.butExecuteAllDBs.Click += new System.EventHandler(this.butExecuteAllDBs_Click);
             // 
             // FrmEditor
             // 
