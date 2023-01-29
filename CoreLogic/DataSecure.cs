@@ -6,7 +6,30 @@ using System.Text;
 
 public class DataSecure
 {
+    public static string ReadFile(string sFile)
+    {
+        string sData = "";
+        try
+        {
+            using (StreamReader objfile = new StreamReader(sFile))
+            {
+                sData = objfile.ReadToEnd();
+                sData = DataSecure.DecryptString(sData);
+            }
+        }
+        catch
+        {
+        }
+        return sData;
+    }
+    public static void WriteFile(string sFile, string data)
+    {
+        using (StreamWriter objfile = new StreamWriter(sFile))
+        {
+            objfile.Write(DataSecure.EncryptString(data));
+        }
 
+    }
     private static string key = ConfigurationManager.AppSettings.Get("Encryptionkey");
     public static string EncryptString(string plainText)
     {

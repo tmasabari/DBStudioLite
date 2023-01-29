@@ -6,7 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 
-namespace CoreLogic
+namespace CoreLogic.PluginBase
 {
     public static class Common
     {

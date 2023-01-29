@@ -3,7 +3,7 @@ using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLogic
+namespace CoreLogic.PluginBase
 {
     public delegate void dlgReaderOpen(object sender, object Reader);
 
@@ -53,6 +53,6 @@ namespace CoreLogic
         string GetInputParamValue(IDataParameter dbparameter);
 
         string GetTableRowsCode(string sTableName, int Rows, bool isReverse = false, string columnList = null);
-        string GetModuleCode(string sModuleType, string sModuleName );
+        string GetModuleCode(string sModuleType, string sModuleName);
     }
 }

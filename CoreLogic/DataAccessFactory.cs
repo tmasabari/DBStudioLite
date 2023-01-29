@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace CoreLogic
+namespace CoreLogic.PluginBase
 {
     public static class DataAccessFactory
     {
@@ -25,7 +25,7 @@ namespace CoreLogic
 
         public static string GetConnectionType(string sConnection)
         {
-            if(sConnection.ToLower().Contains("version"))
+            if (sConnection.ToLower().Contains("version"))
                 return "SQLite";
             else
                 return "SqlServer";

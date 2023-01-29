@@ -1,5 +1,5 @@
-﻿using CoreLogic;
-using CoreLogic.ClosedXML;
+﻿using CoreLogic.PluginBase;
+using CoreLogic.PluginBase.ClosedXML;
 using System.Data;
 using System.Windows.Forms;
 

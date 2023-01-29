@@ -1,4 +1,4 @@
-using CoreLogic;
+using CoreLogic.PluginBase;
 using ScintillaNET;
 using ScintillaNET_FindReplaceDialog;
 using System;

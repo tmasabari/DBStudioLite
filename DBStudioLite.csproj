@@ -392,6 +392,10 @@
       <Project>{cc9a2e66-0dd5-481d-a7fb-92017c7443a0}</Project>
       <Name>CoreLogic</Name>
     </ProjectReference>
+    <ProjectReference Include="PluginBase\PluginBase.csproj">
+      <Project>{aad4ed17-bf40-4e51-a68c-4dfc664a3aba}</Project>
+      <Name>PluginBase</Name>
+    </ProjectReference>
     <ProjectReference Include="Win32\Win32.csproj">
       <Project>{afa002cc-daca-4968-8883-eb1409a4fe54}</Project>
       <Name>Win32</Name>

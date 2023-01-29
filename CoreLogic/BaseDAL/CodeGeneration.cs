@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 
-namespace CoreLogic.BaseDAL
+namespace CoreLogic.PluginBase.PluginBase
 {
     public static class CodeGeneration
     {

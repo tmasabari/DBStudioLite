@@ -1,8 +1,8 @@
-using CoreLogic;
-using CoreLogic.BaseDAL;
-using System.Data.SQLite;
+using CoreLogic.PluginBase;
+using CoreLogic.PluginBase.PluginBase;
 using System;
 using System.Data;
+using System.Data.SQLite;
 using System.Text;
 
 /// <summary>
@@ -18,7 +18,7 @@ using System.Text;
 //The using statement ensures that Dispose is called even if an exception occurs while you are calling methods on the object. 
 //You can achieve the same result by putting the object inside a try block and then calling Dispose in a finally block;
 
-internal class DynamicDALSQLite : AbstractDAL, IDynamicDAL
+public class DynamicDALSQLite : AbstractDAL, IDynamicDAL
 {
     #region "Sql Server Terms"
     //https://www.sqlite.org/schematab.html
@@ -79,12 +79,12 @@ internal class DynamicDALSQLite : AbstractDAL, IDynamicDAL
         //type|name|tbl_name|rootpage|sql
         //index|IFK_TrackGenreId|tracks|31|CREATE INDEX [IFK_TrackGenreId] ON "tracks" ([GenreId])
         //https://database.guide/drop-table-if-exists-in-sqlite/
-        var SQuery = $"DROP {objectType}  IF EXISTS {sObjectName}" ;
+        var SQuery = $"DROP {objectType}  IF EXISTS {sObjectName}";
         return SQuery;
     }
     public string GetModuleCode(string sModuleType, string sModuleName)
     {
-        if(sModuleName.Contains(".")) sModuleName = sModuleName.Substring(sModuleName.IndexOf(".") + 1);
+        if (sModuleName.Contains(".")) sModuleName = sModuleName.Substring(sModuleName.IndexOf(".") + 1);
         sModuleName = sModuleName.Trim('[', ']');
         return "select sql from sqlite_schema where name = '" + sModuleName + "';";
     }
@@ -109,7 +109,7 @@ internal class DynamicDALSQLite : AbstractDAL, IDynamicDAL
     public DynamicDALSQLite(string sConnection)
     {
         BaseTableType = "TABLE"; //must be upper case
-        executableType = new string[] {  };
+        executableType = new string[] { };
         //'table', 'index', 'view', or 'trigger' 
         codeTypeCodes = new string[] { "trigger" };
         codeTypeDescriptions = new string[] { "VIEW", "SQL_TRIGGER" };
@@ -129,7 +129,7 @@ internal class DynamicDALSQLite : AbstractDAL, IDynamicDAL
 
         sConnectionString = sConnection;
         SQLInfoMessageBuilder = new StringBuilder();
-        Connection = new SQLiteConnection (sConnectionString); //Raises error in case of invalid connection string
+        Connection = new SQLiteConnection(sConnectionString); //Raises error in case of invalid connection string
 
         Command = Connection.CreateCommand();
         Command.CommandType = CommandType.Text; //this is default type

@@ -1,6 +1,5 @@
-using CoreLogic;
-using CoreLogic.BaseDAL;
-using DocumentFormat.OpenXml.Wordprocessing;
+using CoreLogic.PluginBase;
+using CoreLogic.PluginBase.PluginBase;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
@@ -13,7 +12,7 @@ using System.Text;
 //The using statement ensures that Dispose is called even if an exception occurs while you are calling methods on the object. 
 //You can achieve the same result by putting the object inside a try block and then calling Dispose in a finally block;
 
-internal class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
+public class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
 {
     #region "Sql Server Terms"
     //http://www.stormrage.com/SQLStuff/sp_GetDDL_Latest.txt
@@ -39,7 +38,7 @@ internal class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
     }
     public string GetColumnsCode(string sTableName)
     {
-        var SQuery = "select '" + sTableName + "' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, COLUMN_DEFAULT, NUMERIC_PRECISION, NUMERIC_SCALE,DATETIME_PRECISION "
+        var SQuery = "select '" + sTableName + "' as TableName, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, IIF([IS_NULLABLE] = 'YES', 1, 0) as IS_NULLABLE, COLUMN_DEFAULT, NUMERIC_PRECISION, NUMERIC_SCALE,DATETIME_PRECISION "
                 + "from INFORMATION_SCHEMA.COLUMNS where table_name = '" + sTableName + "' Order by ORDINAL_POSITION";
         return SQuery;
     }

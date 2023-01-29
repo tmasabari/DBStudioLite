@@ -1,5 +1,5 @@
-using CoreLogic;
-using CoreLogic.BaseDAL;
+using CoreLogic.PluginBase;
+using CoreLogic.PluginBase.PluginBase;
 using DBStudioLite.Model;
 using DBStudioLite.WindowsLogic;
 using System;
@@ -55,15 +55,15 @@ namespace DBStudioLite
             {
                 return GetConnectionString();
             }
-        } 
-        public string GetConnectionString(string dBName="")
+        }
+        public string GetConnectionString(string dBName = "")
         {
-            var connectionType = DataAccessFactory.GetConnectionType(objConnections.ConnectionText);
-            var text = objConnections.ConnectionText;
+            var connectionType = DataAccessFactory.GetConnectionType(objConnections.GetConnectionString());
+            var text = objConnections.GetConnectionString();
             if (connectionType != "SQLite")
             {
                 text += sStandardConnectionParams + DBParameter;
-                if(!string.IsNullOrWhiteSpace(dBName)) text += GetDBParameter(dBName);
+                if (!string.IsNullOrWhiteSpace(dBName)) text += GetDBParameter(dBName);
             }
             return text;
         }
@@ -72,7 +72,7 @@ namespace DBStudioLite
         {
             get
             {
-                return objConnections.ConnectionText + sStandardConnectionParams + DBParameterMaster;
+                return objConnections.GetConnectionString() + sStandardConnectionParams + DBParameterMaster;
             }
         }
         public DynamicDataSourceCode GetDynamicDataSourceCode()
@@ -100,39 +100,31 @@ namespace DBStudioLite
             splitContainerDB.SplitterDistance = 120;
 
             objConnections = new frmConnections();
-            objConnections.ConnectionChanged += ObjConnections_ConnectionChanged;
         }
         private void MDIParent1_Activated(object sender, EventArgs e)
         {
             if (bFirstTime)
             {
-                object objIndex;
-                (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", out objIndex);
+                object objConnection;
+                (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", out objConnection);
+                if (objConnection != null) 
+                    if (!objConnections.SetConnectionName((string)objConnection))
+                    {
+
+                    }
 
                 object lastSessionSelectedDBNameObj = null;
                 (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "DB", out lastSessionSelectedDBNameObj);
                 if (lastSessionSelectedDBNameObj != null) lastSessionSelectedDBName = (string)lastSessionSelectedDBNameObj;
-
-                int connectionIndex = -1;
-                if (objIndex != null) connectionIndex = int.Parse(objIndex.ToString());
-                //refreshdbs automatically shows the progress bar
-                //if (connectionIndex >= 0 && objConnections.ConnectionList.Items.Count > 0 ) ShowProgress();
-                objConnections.SelectedIndex = connectionIndex;
 
                 object objLoadPreviousSession; //lState,
                 (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"Options", "LoadPreviousSession", out objLoadPreviousSession);
                 if (objLoadPreviousSession != null) frmOptions.chkLoadPreviousSession.Checked = Boolean.Parse((string)objLoadPreviousSession);
 
                 bFirstTime = false;
-                //this is not required as setting the connection from the registry automatically triggers the refresh
-                //RefreshDBs();
+                //this is  required as setting the connection from the registry is NOT automatically triggers the refresh
+                RefreshDBs();
                 RefreshSnippets();
-
-                //if (objConnections.ConnectionList.Items.Count == 0)
-                //{
-                //    this.Show();
-                //    objConnections.ShowDialog(this);
-                //}
 
                 RefreshConnectionsMenu();
 
@@ -173,16 +165,18 @@ namespace DBStudioLite
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.MarqueeAnimationSpeed = 0;
         }
-        private void ObjConnections_ConnectionChanged(object sender, EventArgs e)
-        {
-            currentConnectionToolStripMenuItem.Text = "Connections [" + objConnections.ConnectionName + "]";
-            if (string.IsNullOrWhiteSpace(objConnections.ConnectionText)) //don't use sMasterConnectionString or ConnectionName
-                StopProgress(); //stop further operations.
-            else
-            {
-                RefreshDBs();
-            }
-        }
+
+        //remove not required
+        //private void ObjConnections_ConnectionChanged(object sender, EventArgs e)
+        //{
+        //    currentConnectionToolStripMenuItem.Text = "Connections [" + objConnections.ConnectionName + "]";
+        //    if (string.IsNullOrWhiteSpace(objConnections.GetConnectionString())) //don't use sMasterConnectionString or ConnectionName
+        //        StopProgress(); //stop further operations.
+        //    else
+        //    {
+        //        RefreshDBs();
+        //    }
+        //}
 
         private IOperatingForm GetOperatingForm()  //bool CreateNew=true
         {
@@ -245,7 +239,7 @@ namespace DBStudioLite
             try
             {
                 //Refresh the schema automatically
-                if (string.IsNullOrWhiteSpace(objConnections.ConnectionText)) //don't use sMasterConnectionString
+                if (string.IsNullOrWhiteSpace(objConnections.GetConnectionString())) //don't use sMasterConnectionString
                 {
                     StopProgress();
                     return;
@@ -340,14 +334,13 @@ namespace DBStudioLite
                 ToolStripMenuItem childmenu = new ToolStripMenuItem();
                 childmenu.Text = (string)objConnections.sConnectionCaptions[i];
                 childmenu.Tag = i;
-                //contextConnections.Items.Add(childmenu);
                 currentConnectionToolStripMenuItem.DropDownItems.Add(childmenu);
             }
-            if (objConnections.SelectedIndex >= 0)
+            if (objConnections.GetSelectedIndex() >= 0)
             {
                 //ToolStripMenuItem childmenu1 = (ToolStripMenuItem)contextConnections.Items[objConnections.SelectedIndex];
                 ToolStripMenuItem childmenu1 = (ToolStripMenuItem)
-                    currentConnectionToolStripMenuItem.DropDownItems[objConnections.SelectedIndex + fixedConnectionsMenu];
+                    currentConnectionToolStripMenuItem.DropDownItems[objConnections.GetSelectedIndex() + fixedConnectionsMenu];
                 childmenu1.Checked = true;
             }
             //contextConnections.Show(btnConnections, e.Location);
@@ -485,9 +478,6 @@ namespace DBStudioLite
                     MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
                 }
             }
-            //todo
-            //tabDatabase.TabPages[1].Text = "Tables & Views(" + lstTables.Items.Count + ")";
-            //tabDatabase.TabPages[2].Text = "Procedures & Functions(" + lstProcedures.Items.Count + ")";
         }
 
         private void ReaderEvent(object sender, object objReader)
@@ -655,7 +645,7 @@ namespace DBStudioLite
                 if (lstTables.SelectedItems[0].SubItems[colType].Text.ToUpper() == GetDynamicDataSourceCode().BaseTableType)
                 {
                     var dataForm = GetEmptyOperatingForm();
-                    dataForm.SetDataGrid(await GetTableDetails(stablenameonly));
+                    dataForm.SetDataGrid(await GetDynamicDataSourceCode().GetTableDetails(stablenameonly));
                     dataForm.FocusDataResults();
                 }
 
@@ -825,39 +815,39 @@ namespace DBStudioLite
                 GetEmptyOperatingFormSetProcedureCSharpCode(sSPName, 4);
         }
 
-        private void connectionsToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void connectionsToolStripMenuItem_DropDownItemClicked(object sender, 
+            ToolStripItemClickedEventArgs e)
         {
-            //if (e.ClickedItem.Tag.ToString() == "Manage")
-            //{
-            //    objConnections.ShowDialog(this);
-            //    //contextConnection.Show(btnConnections, e.Location);
-            //    RefreshConnectionsMenu();
-            //}
-            //else
             if (e.ClickedItem.Tag is int)
             {
                 ToolStripMenuItem childmenu1;
-                if (objConnections.SelectedIndex >= 0)
+                int previousSelectedIndex = objConnections.GetSelectedIndex();
+                if (previousSelectedIndex >= 0)
                 {
-                    childmenu1 = (ToolStripMenuItem)
-                        currentConnectionToolStripMenuItem.DropDownItems[objConnections.SelectedIndex + fixedConnectionsMenu];
+                    childmenu1 = (ToolStripMenuItem)currentConnectionToolStripMenuItem.
+                        DropDownItems[previousSelectedIndex + fixedConnectionsMenu];
                     childmenu1.Checked = false;
                 }
 
-                objConnections.SelectedIndex = (int)e.ClickedItem.Tag;
-                if (objConnections.SelectedIndex >= 0)
+                if (objConnections.SetConnectionName(e.ClickedItem.Text))
                 {
                     childmenu1 = (ToolStripMenuItem)e.ClickedItem;
                     childmenu1.Checked = true;
+                    RefreshDBs();
+                }
+                else
+                {
+                    MessageBox.Show($"Connection '{e.ClickedItem.Text}' is not avilable.");
+                    //todo remove/refresh entries if it could not set the name?
                 }
             }
         }
 
-
-        private void contextConnections_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-            objConnections.SelectedIndex = (int)e.ClickedItem.Tag;
-        }
+        //remove context menu not used anymore
+        //private void contextConnections_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        //{
+        //    objConnections.SelectedIndex = (int)e.ClickedItem.Tag;
+        //}
 
         private void lstProcedures_DoubleClick(object sender, EventArgs e)
         {
@@ -895,7 +885,7 @@ namespace DBStudioLite
                 File.WriteAllText(lastSessionFilesPath, sb.ToString());
 
                 (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"Options", "LoadPreviousSession", frmOptions.chkLoadPreviousSession.Checked.ToString());
-                (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", objConnections.SelectedIndex.ToString());
+                (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", objConnections.GetConnectionName());
                 (new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "DB", GetSelectedDBName());
                 //(new WindowsRegistry()).WriteValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "CheckState",chkConnection.Checked.ToString());
             }
@@ -903,87 +893,6 @@ namespace DBStudioLite
             {
                 ShowMessageText.Show("Unexpected error occurred " + Environment.NewLine + ex.ToString(), "Close Error", this);
             }
-        }
-
-        public async Task<DataTable> GetTableDetails(string TableName)
-        {
-            DataSet ds;
-            string localColumn;
-            string localDataType = "";
-            int localLength = 0, scale = 0;
-            bool localIdentity;
-            string SQuery;
-
-            DataTable dt = new DataTable("TableInfo"); //output table
-            DataRow workrow;
-            string lsConnection = sConnectionString;
-
-            using (var DataObj = DataAccessFactory.GetDynamicDAL(lsConnection))
-            {
-                SQuery = DataObj.GetColumnsCode(TableName);
-                DataObj.SetValues(SQuery, true, CommandType.Text);
-                ds = await DataObj.Execute("RawTableInfo");
-                if (ds != null)
-                {
-                    dt.Columns.Add("TableName", Type.GetType("System.String"));
-                    dt.Columns.Add("ColumnName", Type.GetType("System.String"));
-
-                    dt.Columns.Add("IsNullable", Type.GetType("System.Boolean"));
-                    dt.Columns.Add("DefaultValue", Type.GetType("System.String"));
-
-                    dt.Columns.Add("DataType", Type.GetType("System.String"));
-                    dt.Columns.Add("Length", Type.GetType("System.Int64"));
-                    dt.Columns.Add("DecimalPlaces", Type.GetType("System.Int64"));
-                    dt.Columns.Add("Identity", Type.GetType("System.Boolean"));
-
-                    var identityColumn = GetDynamicDataSourceCode().GetIdentityColumn(sConnectionString, TableName);
-
-                    foreach (DataRow rw in ds.Tables["RawTableInfo"].Rows)
-                    {
-                        scale = 0;
-                        if (!System.Convert.IsDBNull(rw["Column_Name"]))
-                        {
-                            localColumn = rw["Column_Name"].ToString();
-                            if (!System.Convert.IsDBNull(rw["DATA_TYPE"]))
-                            {
-                                localDataType = rw["DATA_TYPE"].ToString();
-                            }
-                            if (!System.Convert.IsDBNull(rw["CHARACTER_MAXIMUM_LENGTH"]))
-                            {
-                                localLength = int.Parse(rw["CHARACTER_MAXIMUM_LENGTH"].ToString());
-                            }
-                            else if (!System.Convert.IsDBNull(rw["NUMERIC_PRECISION"]))
-                            {
-                                localLength = int.Parse(rw["NUMERIC_PRECISION"].ToString());
-                                scale = int.Parse(rw["NUMERIC_SCALE"].ToString());
-                            }
-                            //showing 3 for datetime which is not length but precision so disabled
-                            //else if (!System.Convert.IsDBNull(rw["DATETIME_PRECISION"]))
-                            //{
-                            //    localLength = int.Parse(rw["DATETIME_PRECISION"].ToString());
-                            //}
-                            else
-                            {
-                                localLength = 0;
-                            }
-                            localIdentity = localColumn == identityColumn;
-
-                            workrow = dt.NewRow();
-                            workrow["TableName"] = TableName;
-                            workrow["ColumnName"] = localColumn;
-                            workrow["IsNullable"] = rw["IS_NULLABLE"];
-                            workrow["DefaultValue"] = rw["COLUMN_DEFAULT"].ToString();
-                            workrow["Datatype"] = localDataType;
-                            if (localLength > 0) workrow["Length"] = localLength;
-                            if (scale > 0) workrow["DecimalPlaces"] = scale;
-                            workrow["Identity"] = localIdentity;
-                            dt.Rows.Add(workrow);
-                        }
-                    }
-                }
-            }
-            return dt;
-
         }
 
 
@@ -1044,7 +953,7 @@ namespace DBStudioLite
         }
         public string GetSelectedConnection()
         {
-            return objConnections.ConnectionName;
+            return objConnections.GetConnectionName();
         }
 
         private void toolstripEditSnippet_Click(object sender, EventArgs e)
@@ -1170,13 +1079,13 @@ namespace DBStudioLite
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            if (objConnections.ConnectionText == "") return;
+            if (objConnections.GetConnectionString() == "") return;
             GetMetaData(); //chkConnection.Checked
         }
 
         private void refreshSchemaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (objConnections.ConnectionText == "") return;
+            if (objConnections.GetConnectionString() == "") return;
             GetMetaData(); //chkConnection.Checked
         }
 

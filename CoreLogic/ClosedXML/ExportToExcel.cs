@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 
-namespace CoreLogic.ClosedXML
+namespace CoreLogic.PluginBase.ClosedXML
 {
     /// <summary>
     /// https://github.com/ClosedXML/ClosedXML

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoreLogic.BaseDAL
+namespace CoreLogic.PluginBase.PluginBase
 {
     public abstract class AbstractDAL
     {

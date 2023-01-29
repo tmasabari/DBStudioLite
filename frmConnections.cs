@@ -7,7 +7,7 @@ namespace DBStudioLite
 {
     public partial class frmConnections : Form
     {
-        public event EventHandler ConnectionChanged;
+        //public event EventHandler ConnectionChanged;
 
         public string ConnectionItems = "";
         string[] sItems;
@@ -20,7 +20,7 @@ namespace DBStudioLite
         {
             bFirstTime = true;
             InitializeComponent();
-            ConnectionItems = ReadFile(Application.StartupPath + "\\connections.txt");
+            ConnectionItems = DataSecure.ReadFile(Application.StartupPath + "\\connections.txt");
             ConnectionItems = ConnectionItems.Replace("\r\n", "");
 
             string[] sSplits = { "**" };
@@ -54,78 +54,40 @@ namespace DBStudioLite
 
         }
 
-        private string ReadFile(string sFile)
+        private string _selectedConnectionName;
+        public string GetConnectionName()
         {
-            string sData = "";
-            try
-            {
-                using (StreamReader objfile = new StreamReader(sFile))
-                {
-                    sData = objfile.ReadToEnd();
-                    sData = DataSecure.DecryptString(sData);
-                }
-            }
-            catch
-            {
-            }
-            return sData;
+            return _selectedConnectionName;
         }
-        private void WriteFile(string sFile, string data)
+        public bool SetConnectionName(string value)
         {
-            using (StreamWriter objfile = new StreamWriter(sFile))
+            if (sConnectionCaptions.Contains(value))
             {
-                objfile.Write(DataSecure.EncryptString(data));
+                _selectedConnectionName = value;
+                return true;
             }
-
-        }
-
-        public int SelectedIndex
-        {
-            get
+            else
             {
-                return ConnectionsList.SelectedIndex;
-            }
-            set
-            {
-                if (value < ConnectionList.Items.Count) ConnectionsList.SelectedIndex = value;
+                _selectedConnectionName = "";
+                return false;
             }
         }
-        public string ConnectionName
+        public int GetSelectedIndex()
         {
-            get
-            {
-                if (ConnectionsList.SelectedIndex >= 0)
-                    return (string)sConnectionCaptions[ConnectionsList.SelectedIndex];
-                else
-                    return "";
-            }
+            int index = sConnectionCaptions.IndexOf(_selectedConnectionName);
+            return index;
         }
-        public string ConnectionText
+        public string GetConnectionString()
         {
-            get
-            {
-                if (ConnectionsList.SelectedIndex >= 0)
-                    return (string)sConnectionData[ConnectionsList.SelectedIndex];
-                else
-                    return "";
-            }
-            set
-            {
-                sConnectionData[ConnectionsList.SelectedIndex] = value;
-            }
-        }
-        public ListBox ConnectionList
-        {
-            get
-            {
-                return ConnectionsList;
-            }
+            int index = sConnectionCaptions.IndexOf(_selectedConnectionName);
+            if (index == -1) return String.Empty;
+            return (string) sConnectionData[index];
         }
 
         private void ConnectionsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!this.Visible && ConnectionChanged != null)
-                ConnectionChanged.Invoke(this, EventArgs.Empty);
+            //if (!this.Visible && ConnectionChanged != null)
+            //    ConnectionChanged.Invoke(this, EventArgs.Empty);
 
             if (ConnectionsList.SelectedIndex < 0)
             {
@@ -146,7 +108,7 @@ namespace DBStudioLite
             ConnectionsList.Items.Add(sConnectionName);
             sConnectionCaptions.Add(sConnectionName);
             sConnectionData.Add("data source=<SERVERNAME\\INSTANCENAME>;user id=<UserAccountID>;password=<PASSWORD>");
-            ConnectionList.SelectedIndex = sConnectionData.Count - 1;
+            ConnectionsList.SelectedIndex = sConnectionData.Count - 1;
             //txtConnectionString.Text = "data source=<SERVERNAME\\INSTANCENAME>;user id=<UserAccountID>;password=<PASSWORD>";
         }
 
@@ -163,15 +125,15 @@ namespace DBStudioLite
                 sData = sData + (string)sConnectionCaptions[i] + "||" +
                         sConnectionData[i] + "**" + Environment.NewLine;
             }
-            WriteFile(Application.StartupPath + "\\connections.txt", sData);
+            DataSecure.WriteFile(Application.StartupPath + "\\connections.txt", sData);
         }
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (ConnectionList.SelectedIndex >= 0)
+            if (ConnectionsList.SelectedIndex >= 0)
             {
                 txtConnectionString.Text = "";
-                sConnectionCaptions.RemoveAt(ConnectionList.SelectedIndex);
-                sConnectionData.RemoveAt(ConnectionList.SelectedIndex);
+                sConnectionCaptions.RemoveAt(ConnectionsList.SelectedIndex);
+                sConnectionData.RemoveAt(ConnectionsList.SelectedIndex);
                 ConnectionsList.Items.RemoveAt(ConnectionsList.SelectedIndex);
             }
         }
@@ -185,7 +147,5 @@ namespace DBStudioLite
                 e.Cancel = true;
             }
         }
-
-
     }
 }
