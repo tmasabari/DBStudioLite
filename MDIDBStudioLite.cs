@@ -249,8 +249,8 @@ namespace DBStudioLite
                 ShowProgress();
                 listViewDBs.Clear();
                 listViewDBs.Columns.Add("Name", 130, HorizontalAlignment.Left);
-                listViewDBs.Columns.Add("IsSystemDB", 50, HorizontalAlignment.Left);
-                listViewDBs.Columns.Add("Created", 130, HorizontalAlignment.Left);
+                listViewDBs.Columns.Add("IsSystem", 100, HorizontalAlignment.Left);
+                listViewDBs.Columns.Add("Created", 180, HorizontalAlignment.Left);
                 using (var DataObj = DataAccessFactory.GetDynamicDAL(sMasterConnectionString))
                 {
                     string sQuery = DataObj.GetAllDBsCode;
@@ -500,9 +500,9 @@ namespace DBStudioLite
             {
                 // Add  to the ListView.
                 lstTables.Clear();
-                lstTables.Columns.Add("Table Name", 200, HorizontalAlignment.Left);
+                lstTables.Columns.Add("Table Name", 220, HorizontalAlignment.Left);
                 lstTables.Columns.Add("Schema", 50, HorizontalAlignment.Left);
-                lstTables.Columns.Add("Type", 80, HorizontalAlignment.Left);
+                lstTables.Columns.Add("Type", 130, HorizontalAlignment.Left);
                 if (!string.IsNullOrWhiteSpace(txtFilter.Text))
                     dtTablesViews.DefaultView.RowFilter = "[TABLE_NAME] LIKE '*" + txtFilter.Text.Trim() + "*'";
                 else
@@ -518,9 +518,9 @@ namespace DBStudioLite
 
                 lstProcedures.Columns.Add("Module Name", 200, HorizontalAlignment.Left);
                 lstProcedures.Columns.Add("Schema", 50, HorizontalAlignment.Left);
-                lstProcedures.Columns.Add("Type", 80, HorizontalAlignment.Left);
-                lstProcedures.Columns.Add("Modified", 100, HorizontalAlignment.Left);
-                lstProcedures.Columns.Add("Created", 100, HorizontalAlignment.Left);
+                lstProcedures.Columns.Add("Type", 50, HorizontalAlignment.Left);
+                lstProcedures.Columns.Add("Modified", 180, HorizontalAlignment.Left);
+                lstProcedures.Columns.Add("Created", 180, HorizontalAlignment.Left);
                 //            lstProcedures.Columns.Add("Definition", 80, HorizontalAlignment.Left);
 
                 if (!string.IsNullOrWhiteSpace(txtFilter.Text))
