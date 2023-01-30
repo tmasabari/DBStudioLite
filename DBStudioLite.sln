@@ -9,13 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreLogic", "CoreLogic\Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win32", "Win32\Win32.csproj", "{AFA002CC-DACA-4968-8883-EB1409A4FE54}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBStudioWeb", "DBStudioWeb\DBStudioWeb.csproj", "{ACFBC38C-0CC4-4D32-97B5-2A762826301A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginBase", "PluginBase\PluginBase.csproj", "{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginBase", "PluginBase\PluginBase.csproj", "{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBStudio.Plugin.SQLServer", "Plugins\DBStudio.Plugin.SQLServer\DBStudio.Plugin.SQLServer.csproj", "{4D38F492-3DF4-41C8-BC9E-0C7B4B897568}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBStudio.Plugin.SQLServer", "Plugins\DBStudio.Plugin.SQLServer\DBStudio.Plugin.SQLServer.csproj", "{4D38F492-3DF4-41C8-BC9E-0C7B4B897568}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBStudio.Plugin.SQLite", "DBStudio.Plugin.SQLite\DBStudio.Plugin.SQLite.csproj", "{FD28346E-1D63-4BDB-BA64-CE5DFAF3ABA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBStudio.Plugin.SQLite", "DBStudio.Plugin.SQLite\DBStudio.Plugin.SQLite.csproj", "{FD28346E-1D63-4BDB-BA64-CE5DFAF3ABA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{AFA002CC-DACA-4968-8883-EB1409A4FE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFA002CC-DACA-4968-8883-EB1409A4FE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFA002CC-DACA-4968-8883-EB1409A4FE54}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ACFBC38C-0CC4-4D32-97B5-2A762826301A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ACFBC38C-0CC4-4D32-97B5-2A762826301A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ACFBC38C-0CC4-4D32-97B5-2A762826301A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ACFBC38C-0CC4-4D32-97B5-2A762826301A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}.Release|Any CPU.ActiveCfg = Release|Any CPU

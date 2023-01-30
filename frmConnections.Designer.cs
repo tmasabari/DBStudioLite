@@ -30,7 +30,6 @@
         {
             this.splitConnectionString = new System.Windows.Forms.SplitContainer();
             this.splitButtons = new System.Windows.Forms.SplitContainer();
-            this.lblListCaption = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -76,14 +75,13 @@
             // 
             this.splitButtons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitButtons.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitButtons.IsSplitterFixed = true;
             this.splitButtons.Location = new System.Drawing.Point(0, 0);
             this.splitButtons.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitButtons.Name = "splitButtons";
-            this.splitButtons.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitButtons.Panel1
             // 
-            this.splitButtons.Panel1.Controls.Add(this.lblListCaption);
             this.splitButtons.Panel1.Controls.Add(this.btnSave);
             this.splitButtons.Panel1.Controls.Add(this.btnRemove);
             this.splitButtons.Panel1.Controls.Add(this.btnAdd);
@@ -92,23 +90,13 @@
             // 
             this.splitButtons.Panel2.Controls.Add(this.ConnectionsList);
             this.splitButtons.Size = new System.Drawing.Size(1009, 376);
-            this.splitButtons.SplitterDistance = 70;
+            this.splitButtons.SplitterDistance = 134;
             this.splitButtons.SplitterWidth = 6;
             this.splitButtons.TabIndex = 5;
             // 
-            // lblListCaption
-            // 
-            this.lblListCaption.AutoSize = true;
-            this.lblListCaption.Location = new System.Drawing.Point(4, 46);
-            this.lblListCaption.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblListCaption.Name = "lblListCaption";
-            this.lblListCaption.Size = new System.Drawing.Size(147, 20);
-            this.lblListCaption.TabIndex = 5;
-            this.lblListCaption.Text = "Saved Connections";
-            // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(244, 6);
+            this.btnSave.Location = new System.Drawing.Point(13, 96);
             this.btnSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(112, 35);
@@ -119,10 +107,10 @@
             // 
             // btnRemove
             // 
-            this.btnRemove.Location = new System.Drawing.Point(126, 5);
+            this.btnRemove.Location = new System.Drawing.Point(13, 51);
             this.btnRemove.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(109, 35);
+            this.btnRemove.Size = new System.Drawing.Size(112, 35);
             this.btnRemove.TabIndex = 4;
             this.btnRemove.Text = "&Remove";
             this.btnRemove.UseVisualStyleBackColor = true;
@@ -130,7 +118,7 @@
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(4, 6);
+            this.btnAdd.Location = new System.Drawing.Point(13, 6);
             this.btnAdd.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(112, 35);
@@ -142,12 +130,13 @@
             // ConnectionsList
             // 
             this.ConnectionsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConnectionsList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ConnectionsList.FormattingEnabled = true;
-            this.ConnectionsList.ItemHeight = 20;
+            this.ConnectionsList.ItemHeight = 29;
             this.ConnectionsList.Location = new System.Drawing.Point(0, 0);
             this.ConnectionsList.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ConnectionsList.Name = "ConnectionsList";
-            this.ConnectionsList.Size = new System.Drawing.Size(1009, 300);
+            this.ConnectionsList.Size = new System.Drawing.Size(869, 376);
             this.ConnectionsList.TabIndex = 1;
             this.ConnectionsList.SelectedIndexChanged += new System.EventHandler(this.ConnectionsList_SelectedIndexChanged);
             // 
@@ -175,7 +164,7 @@
             // lblConnectionCaption
             // 
             this.lblConnectionCaption.AutoSize = true;
-            this.lblConnectionCaption.Location = new System.Drawing.Point(0, 0);
+            this.lblConnectionCaption.Location = new System.Drawing.Point(-4, 13);
             this.lblConnectionCaption.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblConnectionCaption.Name = "lblConnectionCaption";
             this.lblConnectionCaption.Size = new System.Drawing.Size(247, 20);
@@ -203,6 +192,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1009, 594);
             this.Controls.Add(this.splitConnectionString);
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -213,12 +203,12 @@
             this.Text = "Connections";
             this.Activated += new System.EventHandler(this.frmConnections_Activated);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmConnections_FormClosing);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmConnections_KeyUp);
             this.splitConnectionString.Panel1.ResumeLayout(false);
             this.splitConnectionString.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitConnectionString)).EndInit();
             this.splitConnectionString.ResumeLayout(false);
             this.splitButtons.Panel1.ResumeLayout(false);
-            this.splitButtons.Panel1.PerformLayout();
             this.splitButtons.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitButtons)).EndInit();
             this.splitButtons.ResumeLayout(false);
@@ -241,7 +231,6 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.SplitContainer splitButtons;
         private System.Windows.Forms.ListBox ConnectionsList;
-        private System.Windows.Forms.Label lblListCaption;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.Label lblConnectionCaption;
     }

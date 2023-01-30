@@ -147,5 +147,10 @@ namespace DBStudioLite
                 e.Cancel = true;
             }
         }
+
+        private void frmConnections_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape) this.Hide();
+        }
     }
 }

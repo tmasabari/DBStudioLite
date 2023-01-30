@@ -20,5 +20,10 @@ namespace DBStudioLite
             this.Hide();
             e.Cancel = true;
         }
+
+        private void FrmOptions_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Escape) { this.Close(); } 
+        }
     }
 }
