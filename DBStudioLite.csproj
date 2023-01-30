@@ -49,11 +49,6 @@
     <Reference Include="ScintillaNET_FindReplaceDialog">
       <HintPath>..\..\ScintillaNET-FindReplaceDialog\ScintillaNET-FindReplaceDialog\ScintillaNet_FindReplaceDialog\obj\Release\net45\ScintillaNET_FindReplaceDialog.dll</HintPath>
     </Reference>
-    <Reference Include="System.IdentityModel" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
