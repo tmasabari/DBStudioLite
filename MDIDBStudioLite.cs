@@ -509,12 +509,12 @@ namespace DBStudioLite
                 LoadListViewFromTable(lstTables, dtTablesViews);
             }
 
+            lstProcedures.Clear();
             if (dtProcedures.Rows.Count > 0)
             {
                 //Process next resultset
                 // Add the columns to the ListView.
 
-                lstProcedures.Clear();
                 lstProcedures.Columns.Add("Module Name", 200, HorizontalAlignment.Left);
                 lstProcedures.Columns.Add("Schema", 50, HorizontalAlignment.Left);
                 lstProcedures.Columns.Add("Type", 80, HorizontalAlignment.Left);
