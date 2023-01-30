@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace CoreLogic.PluginBase.PluginBase
 {
@@ -34,7 +38,37 @@ namespace CoreLogic.PluginBase.PluginBase
             }
         }
         protected abstract void ConnectionOpened();
-        protected abstract IDataAdapter GetDataAdapter(IDbCommand dbCommand);
+        protected abstract DbDataAdapter GetDataAdapter(IDbCommand dbCommand);
+        protected abstract DbCommandBuilder GetCommandBuilder();
+
+        public virtual void DeriveParameters(ref IDbCommand obj)
+        {        //unsupported
+                 // SQLiteCommandBuilder does not implement DeriveParameters.
+                 // This is not surprising, since SQLite has no support for stored procs.
+                 //SQLiteCommandBuilder.DeriveParameters((SQLiteCommand)obj);
+
+            throw new NotImplementedException("This feature is not available for the databse.");
+        }
+        public virtual string GetParmeterSize(DbParameter parameter, ref string paramValue)
+        {
+            //SqlParameter parameter = dbparameter as SqlParameter;
+            string sSize;
+            if (parameter.Size > 0)
+            {
+                sSize = "(" + parameter.Size.ToString() + ") ";
+                paramValue = "''";
+            }
+            else if (parameter.Scale > 0)
+            {
+                sSize = "(" + parameter.Scale.ToString();
+                if (parameter.Precision > 0) sSize += "," + parameter.Precision.ToString();
+                sSize += ") ";
+                paramValue = "0";
+            }
+            else
+                sSize = "";
+            return sSize;
+        }
 
         public object RunScalar(string SQL)
         {
@@ -303,6 +337,155 @@ namespace CoreLogic.PluginBase.PluginBase
         {
             string[] separator = { "," };
             return columnList.Split(separator, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        }
+
+        public string GenerateSQL(string ObjectName, string objectType, SQLCommandType sQLCommandType)
+        {
+            try
+            {
+                if (Connection.State != ConnectionState.Open)
+                {
+                    Connection.Open();
+                    ConnectionOpened();
+                }
+                using (var command = Connection.CreateCommand())
+                {
+                    command.CommandText = $"Select * from [{ObjectName}]";
+                    command.CommandType = CommandType.Text;
+
+                    var da = GetDataAdapter(command);
+                    da.SelectCommand = (DbCommand) command;
+                    var builder = GetCommandBuilder();
+                    builder.DataAdapter = da;
+                    builder.QuotePrefix = "[";
+                    builder.QuoteSuffix = "]";
+                    DbCommand generatedCommand = null;
+                    switch (sQLCommandType)
+                    {
+                        
+                        case SQLCommandType.Insert:
+                            generatedCommand = builder.GetInsertCommand();
+                            break;
+                        case SQLCommandType.Update:
+                            generatedCommand = builder.GetUpdateCommand();
+                            break;
+                        case SQLCommandType.Delete:
+                            generatedCommand = builder.GetDeleteCommand();
+                            break;
+                    }
+                    if (generatedCommand == null) return String.Empty;
+                    var code= generatedCommand.CommandText;
+                    ProcessParameters(generatedCommand, out var paramStringList, out var paramNameList);
+                    if (paramStringList.Count > 0)
+                        code = "DECLARE " + string.Join(Environment.NewLine + "DECLARE ", paramStringList.ToArray()) 
+                            + Environment.NewLine + code;
+                    return code;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (this.LogError)
+                {
+                    ErrorText = ex.Message;
+                }
+            }
+            return null;
+        }
+
+        public virtual string GenerateCode(string Name, string codeType)
+        {
+            string executionMapStartText =
+                "FN|*|SELECT <Name/> (" + Environment.NewLine
+                + "AF|*|SELECT <Name/> (" + Environment.NewLine
+                + "IF|*|SELECT * From <Name/> (" + Environment.NewLine
+                + "TF|*|SELECT * From <Name/> (" + Environment.NewLine
+                + "P|*|EXECUTE <Name/> " + Environment.NewLine;
+
+            string executionMapCloseText =
+                "FN|*|)" + Environment.NewLine
+                + "AF|*|)" + Environment.NewLine
+                + "IF|*|)" + Environment.NewLine
+                + "TF|*|)" + Environment.NewLine
+                + "P|*|" + Environment.NewLine;
+
+
+            var startCollection = GetNameValueCollection(executionMapStartText);
+            var endCollection = GetNameValueCollection(executionMapCloseText);
+            string sProcedure = Environment.NewLine + startCollection[codeType].Replace("<Name/>", Name); // "EXECUTE " + Name + " (";
+
+            Connection.Open();
+            var obj = Command;
+            DeriveParameters(ref obj);
+            ProcessParameters(obj, out var paramStringList, out var paramNameList);
+            if (paramStringList.Count > 0)
+                sProcedure = "DECLARE " + string.Join(Environment.NewLine + "DECLARE ", paramStringList.ToArray()) + sProcedure;
+            if (paramNameList.Count > 0)
+                sProcedure += Environment.NewLine + string.Join(Environment.NewLine + ", ", paramNameList.ToArray());
+            return sProcedure + endCollection[codeType];
+        }
+
+        private void ProcessParameters(IDbCommand obj, out List<string> paramStringList, out List<string> paramNameList)
+        {
+            paramStringList = new List<string>();
+            paramNameList = new List<string>();
+            for (int paramIndex = 0; paramIndex < obj.Parameters.Count; paramIndex++)
+            {
+                var parameter = (DbParameter)obj.Parameters[paramIndex];
+                string paramValue = string.Empty;
+                if (parameter.IsNullable)
+                    paramValue = "NULL";
+
+                var sSize = GetParmeterSize(parameter, ref paramValue);
+
+                string currentParam = string.Empty;
+                //string paramName = parameter.ParameterName;
+                //if (paramIndex > 1) sProcedure += Environment.NewLine + ", ";
+                string paramType = string.Empty;
+                //if (parameter.Direction == ParameterDirection.Input)
+                if (parameter.Direction == ParameterDirection.Output
+                            || parameter.Direction == ParameterDirection.InputOutput)
+                {
+                    paramType = "OUTPUT";
+                    paramValue = "";
+                }
+                else if (parameter.Direction == ParameterDirection.ReturnValue)
+                {
+                    paramType = "RETURN";
+                    paramValue = "";
+                }
+                else         //Input parameters
+                {
+                    paramValue = GetInputParamValue(parameter);
+                }
+                //if (parameter.Value != null)
+                //    sValue = " = " + parameter.Value.ToString() + " ";
+                //else
+                //    sValue = "";
+
+                paramNameList.Add(parameter.ParameterName + " " + paramType);
+                currentParam += parameter.ParameterName + " "
+                    + GetParamType(parameter)
+                    + sSize;
+                if (!string.IsNullOrWhiteSpace(paramValue))
+                    currentParam += " = " + paramValue;
+
+                paramStringList.Add(currentParam);
+            }
+        }
+
+        public static NameValueCollection GetNameValueCollection(string input)
+        {
+            string[] lineSplit = { Environment.NewLine };
+            var executionMapArray = input.Split(lineSplit, StringSplitOptions.RemoveEmptyEntries);
+            string[] mapKeySplit = { "|*|" };
+            var nameValueCollection = new NameValueCollection();
+            Array.ForEach(executionMapArray, x =>
+            {
+                var splits = x.Split(mapKeySplit, StringSplitOptions.None); //keep empty values
+                nameValueCollection.Add(splits[0], splits[1]);
+            });
+
+            return nameValueCollection;
         }
 
     }

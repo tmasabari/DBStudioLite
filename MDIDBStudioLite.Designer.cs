@@ -120,6 +120,9 @@ namespace DBStudioLite
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.viewStructureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.getDropCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.getInsertCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.getUpdateCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.getDeleteCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuStripSnippets = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolstripLoadSnippet = new System.Windows.Forms.ToolStripMenuItem();
             this.toolstripEditSnippet = new System.Windows.Forms.ToolStripMenuItem();
@@ -127,6 +130,8 @@ namespace DBStudioLite
             this.toolstripExecuteSnippet = new System.Windows.Forms.ToolStripMenuItem();
             this.tabForms = new System.Windows.Forms.TabControl();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -154,7 +159,6 @@ namespace DBStudioLite
             // 
             // menuStrip
             // 
-            this.menuStrip.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenu,
@@ -166,7 +170,8 @@ namespace DBStudioLite
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.MdiWindowListItem = this.windowsMenu;
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1324, 33);
+            this.menuStrip.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.menuStrip.Size = new System.Drawing.Size(1471, 33);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "MenuStrip";
             // 
@@ -523,10 +528,10 @@ namespace DBStudioLite
             this.printPreviewToolStripButton,
             this.toolStripSeparator2,
             this.helpToolStripButton});
-            this.toolStrip.Location = new System.Drawing.Point(0, 35);
+            this.toolStrip.Location = new System.Drawing.Point(0, 44);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.toolStrip.Size = new System.Drawing.Size(1310, 39);
+            this.toolStrip.Size = new System.Drawing.Size(1456, 49);
             this.toolStrip.TabIndex = 1;
             this.toolStrip.Text = "ToolStrip";
             this.toolStrip.Visible = false;
@@ -537,7 +542,7 @@ namespace DBStudioLite
             this.newToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("newToolStripButton.Image")));
             this.newToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.newToolStripButton.Name = "newToolStripButton";
-            this.newToolStripButton.Size = new System.Drawing.Size(34, 34);
+            this.newToolStripButton.Size = new System.Drawing.Size(34, 44);
             this.newToolStripButton.Text = "New";
             // 
             // openToolStripButton
@@ -546,7 +551,7 @@ namespace DBStudioLite
             this.openToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("openToolStripButton.Image")));
             this.openToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.openToolStripButton.Name = "openToolStripButton";
-            this.openToolStripButton.Size = new System.Drawing.Size(34, 34);
+            this.openToolStripButton.Size = new System.Drawing.Size(34, 44);
             this.openToolStripButton.Text = "Open";
             this.openToolStripButton.Click += new System.EventHandler(this.OpenFile);
             // 
@@ -556,13 +561,13 @@ namespace DBStudioLite
             this.saveToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripButton.Image")));
             this.saveToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.saveToolStripButton.Name = "saveToolStripButton";
-            this.saveToolStripButton.Size = new System.Drawing.Size(34, 34);
+            this.saveToolStripButton.Size = new System.Drawing.Size(34, 44);
             this.saveToolStripButton.Text = "Save";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 39);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 49);
             // 
             // printToolStripButton
             // 
@@ -570,7 +575,7 @@ namespace DBStudioLite
             this.printToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("printToolStripButton.Image")));
             this.printToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.printToolStripButton.Name = "printToolStripButton";
-            this.printToolStripButton.Size = new System.Drawing.Size(34, 34);
+            this.printToolStripButton.Size = new System.Drawing.Size(34, 44);
             this.printToolStripButton.Text = "Print";
             // 
             // printPreviewToolStripButton
@@ -579,13 +584,13 @@ namespace DBStudioLite
             this.printPreviewToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("printPreviewToolStripButton.Image")));
             this.printPreviewToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.printPreviewToolStripButton.Name = "printPreviewToolStripButton";
-            this.printPreviewToolStripButton.Size = new System.Drawing.Size(34, 34);
+            this.printPreviewToolStripButton.Size = new System.Drawing.Size(34, 44);
             this.printPreviewToolStripButton.Text = "Print Preview";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 49);
             // 
             // helpToolStripButton
             // 
@@ -593,7 +598,7 @@ namespace DBStudioLite
             this.helpToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripButton.Image")));
             this.helpToolStripButton.ImageTransparentColor = System.Drawing.Color.Black;
             this.helpToolStripButton.Name = "helpToolStripButton";
-            this.helpToolStripButton.Size = new System.Drawing.Size(34, 34);
+            this.helpToolStripButton.Size = new System.Drawing.Size(34, 44);
             this.helpToolStripButton.Text = "Help";
             // 
             // statusStrip
@@ -601,10 +606,10 @@ namespace DBStudioLite
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 830);
+            this.statusStrip.Location = new System.Drawing.Point(0, 1038);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
-            this.statusStrip.Size = new System.Drawing.Size(1310, 32);
+            this.statusStrip.Padding = new System.Windows.Forms.Padding(2, 0, 23, 0);
+            this.statusStrip.Size = new System.Drawing.Size(1456, 40);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "StatusStrip";
             this.statusStrip.Visible = false;
@@ -612,7 +617,7 @@ namespace DBStudioLite
             // toolStripStatusLabel
             // 
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(60, 25);
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(60, 33);
             this.toolStripStatusLabel.Text = "Status";
             // 
             // panel1
@@ -620,9 +625,9 @@ namespace DBStudioLite
             this.panel1.Controls.Add(this.splitDatabase);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 33);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(470, 1007);
+            this.panel1.Size = new System.Drawing.Size(522, 1017);
             this.panel1.TabIndex = 4;
             // 
             // splitDatabase
@@ -630,7 +635,7 @@ namespace DBStudioLite
             this.splitDatabase.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitDatabase.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitDatabase.Location = new System.Drawing.Point(0, 0);
-            this.splitDatabase.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.splitDatabase.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.splitDatabase.Name = "splitDatabase";
             this.splitDatabase.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -643,17 +648,17 @@ namespace DBStudioLite
             // splitDatabase.Panel2
             // 
             this.splitDatabase.Panel2.Controls.Add(this.tabDatabase);
-            this.splitDatabase.Size = new System.Drawing.Size(470, 1007);
+            this.splitDatabase.Size = new System.Drawing.Size(522, 1017);
             this.splitDatabase.SplitterDistance = 38;
-            this.splitDatabase.SplitterWidth = 6;
+            this.splitDatabase.SplitterWidth = 8;
             this.splitDatabase.TabIndex = 15;
             // 
             // btnFilter
             // 
-            this.btnFilter.Location = new System.Drawing.Point(400, 8);
-            this.btnFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnFilter.Location = new System.Drawing.Point(444, 10);
+            this.btnFilter.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.btnFilter.Name = "btnFilter";
-            this.btnFilter.Size = new System.Drawing.Size(62, 30);
+            this.btnFilter.Size = new System.Drawing.Size(69, 38);
             this.btnFilter.TabIndex = 9;
             this.btnFilter.Text = "&Filter";
             this.btnFilter.UseVisualStyleBackColor = true;
@@ -662,20 +667,20 @@ namespace DBStudioLite
             // lblFilter
             // 
             this.lblFilter.AutoSize = true;
-            this.lblFilter.Location = new System.Drawing.Point(5, 9);
+            this.lblFilter.Location = new System.Drawing.Point(6, 11);
             this.lblFilter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFilter.Name = "lblFilter";
-            this.lblFilter.Size = new System.Drawing.Size(44, 20);
+            this.lblFilter.Size = new System.Drawing.Size(50, 25);
             this.lblFilter.TabIndex = 7;
             this.lblFilter.Text = "Filter";
             // 
             // txtFilter
             // 
-            this.txtFilter.Location = new System.Drawing.Point(57, 9);
-            this.txtFilter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtFilter.Location = new System.Drawing.Point(63, 11);
+            this.txtFilter.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.txtFilter.MaxLength = 0;
             this.txtFilter.Name = "txtFilter";
-            this.txtFilter.Size = new System.Drawing.Size(335, 26);
+            this.txtFilter.Size = new System.Drawing.Size(372, 31);
             this.txtFilter.TabIndex = 8;
             this.txtFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtFilter_KeyUp);
             // 
@@ -685,20 +690,20 @@ namespace DBStudioLite
             this.tabDatabase.Controls.Add(this.tabSnippets);
             this.tabDatabase.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabDatabase.Location = new System.Drawing.Point(0, 0);
-            this.tabDatabase.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tabDatabase.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.tabDatabase.Name = "tabDatabase";
             this.tabDatabase.SelectedIndex = 0;
-            this.tabDatabase.Size = new System.Drawing.Size(470, 963);
+            this.tabDatabase.Size = new System.Drawing.Size(522, 971);
             this.tabDatabase.TabIndex = 10;
             this.tabDatabase.DoubleClick += new System.EventHandler(this.lstTables_DoubleClick);
             // 
             // tabDatabases
             // 
             this.tabDatabases.Controls.Add(this.splitContainerDB);
-            this.tabDatabases.Location = new System.Drawing.Point(4, 29);
-            this.tabDatabases.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabDatabases.Location = new System.Drawing.Point(4, 34);
+            this.tabDatabases.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.tabDatabases.Name = "tabDatabases";
-            this.tabDatabases.Size = new System.Drawing.Size(462, 930);
+            this.tabDatabases.Size = new System.Drawing.Size(514, 933);
             this.tabDatabases.TabIndex = 3;
             this.tabDatabases.Text = "Databases";
             // 
@@ -707,7 +712,7 @@ namespace DBStudioLite
             this.splitContainerDB.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerDB.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainerDB.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerDB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.splitContainerDB.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.splitContainerDB.Name = "splitContainerDB";
             this.splitContainerDB.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -719,9 +724,9 @@ namespace DBStudioLite
             // splitContainerDB.Panel2
             // 
             this.splitContainerDB.Panel2.Controls.Add(this.splitContainerSchema);
-            this.splitContainerDB.Size = new System.Drawing.Size(462, 930);
+            this.splitContainerDB.Size = new System.Drawing.Size(514, 933);
             this.splitContainerDB.SplitterDistance = 150;
-            this.splitContainerDB.SplitterWidth = 5;
+            this.splitContainerDB.SplitterWidth = 6;
             this.splitContainerDB.TabIndex = 0;
             // 
             // listViewDBs
@@ -730,11 +735,10 @@ namespace DBStudioLite
             this.listViewDBs.AutoArrange = false;
             this.listViewDBs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewDBs.GridLines = true;
-            this.listViewDBs.HideSelection = false;
             this.listViewDBs.Location = new System.Drawing.Point(0, 0);
-            this.listViewDBs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.listViewDBs.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.listViewDBs.Name = "listViewDBs";
-            this.listViewDBs.Size = new System.Drawing.Size(462, 150);
+            this.listViewDBs.Size = new System.Drawing.Size(514, 150);
             this.listViewDBs.TabIndex = 12;
             this.listViewDBs.UseCompatibleStateImageBehavior = false;
             this.listViewDBs.View = System.Windows.Forms.View.Details;
@@ -744,7 +748,7 @@ namespace DBStudioLite
             // 
             this.splitContainerSchema.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerSchema.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerSchema.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.splitContainerSchema.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.splitContainerSchema.Name = "splitContainerSchema";
             this.splitContainerSchema.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -757,9 +761,9 @@ namespace DBStudioLite
             // 
             this.splitContainerSchema.Panel2.Controls.Add(this.lstProcedures);
             this.splitContainerSchema.Panel2MinSize = 140;
-            this.splitContainerSchema.Size = new System.Drawing.Size(462, 775);
+            this.splitContainerSchema.Size = new System.Drawing.Size(514, 777);
             this.splitContainerSchema.SplitterDistance = 268;
-            this.splitContainerSchema.SplitterWidth = 5;
+            this.splitContainerSchema.SplitterWidth = 6;
             this.splitContainerSchema.TabIndex = 0;
             this.splitContainerSchema.Resize += new System.EventHandler(this.splitContainerSchema_Resize);
             // 
@@ -769,11 +773,10 @@ namespace DBStudioLite
             this.lstTables.AutoArrange = false;
             this.lstTables.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstTables.GridLines = true;
-            this.lstTables.HideSelection = false;
             this.lstTables.Location = new System.Drawing.Point(0, 0);
-            this.lstTables.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lstTables.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.lstTables.Name = "lstTables";
-            this.lstTables.Size = new System.Drawing.Size(462, 268);
+            this.lstTables.Size = new System.Drawing.Size(514, 268);
             this.lstTables.TabIndex = 11;
             this.lstTables.UseCompatibleStateImageBehavior = false;
             this.lstTables.View = System.Windows.Forms.View.Details;
@@ -788,12 +791,11 @@ namespace DBStudioLite
             this.lstProcedures.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstProcedures.FullRowSelect = true;
             this.lstProcedures.GridLines = true;
-            this.lstProcedures.HideSelection = false;
             this.lstProcedures.Location = new System.Drawing.Point(0, 0);
-            this.lstProcedures.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lstProcedures.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.lstProcedures.Name = "lstProcedures";
             this.lstProcedures.ShowItemToolTips = true;
-            this.lstProcedures.Size = new System.Drawing.Size(462, 502);
+            this.lstProcedures.Size = new System.Drawing.Size(514, 503);
             this.lstProcedures.TabIndex = 12;
             this.lstProcedures.UseCompatibleStateImageBehavior = false;
             this.lstProcedures.View = System.Windows.Forms.View.Details;
@@ -803,11 +805,11 @@ namespace DBStudioLite
             // tabSnippets
             // 
             this.tabSnippets.Controls.Add(this.listViewSnippets);
-            this.tabSnippets.Location = new System.Drawing.Point(4, 29);
+            this.tabSnippets.Location = new System.Drawing.Point(4, 34);
             this.tabSnippets.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabSnippets.Name = "tabSnippets";
             this.tabSnippets.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabSnippets.Size = new System.Drawing.Size(462, 930);
+            this.tabSnippets.Size = new System.Drawing.Size(514, 933);
             this.tabSnippets.TabIndex = 2;
             this.tabSnippets.Text = "Snippets";
             this.tabSnippets.UseVisualStyleBackColor = true;
@@ -820,12 +822,11 @@ namespace DBStudioLite
             this.listViewSnippets.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewSnippets.FullRowSelect = true;
             this.listViewSnippets.GridLines = true;
-            this.listViewSnippets.HideSelection = false;
             this.listViewSnippets.Location = new System.Drawing.Point(3, 2);
-            this.listViewSnippets.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.listViewSnippets.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.listViewSnippets.Name = "listViewSnippets";
             this.listViewSnippets.ShowItemToolTips = true;
-            this.listViewSnippets.Size = new System.Drawing.Size(456, 926);
+            this.listViewSnippets.Size = new System.Drawing.Size(508, 929);
             this.listViewSnippets.TabIndex = 13;
             this.listViewSnippets.UseCompatibleStateImageBehavior = false;
             this.listViewSnippets.View = System.Windows.Forms.View.Details;
@@ -863,7 +864,7 @@ namespace DBStudioLite
             // 
             // TS_Procedure_Code
             // 
-            this.TS_Procedure_Code.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TS_Procedure_Code.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.TS_Procedure_Code.Name = "TS_Procedure_Code";
             this.TS_Procedure_Code.Size = new System.Drawing.Size(211, 32);
             this.TS_Procedure_Code.Text = "Modify";
@@ -946,15 +947,20 @@ namespace DBStudioLite
             this.showTop100ToolStripMenuItem,
             this.showAllToolStripMenuItem,
             this.showFieldHeadersToolStripMenuItem,
-            this.toolStripSeparator10,
+            this.toolStripSeparator6,
             this.viewStructureToolStripMenuItem,
+            this.toolStripSeparator7,
+            this.getInsertCodeToolStripMenuItem,
+            this.getUpdateCodeToolStripMenuItem,
+            this.getDeleteCodeToolStripMenuItem,
+            this.toolStripSeparator10,
             this.getDropCodeToolStripMenuItem});
             this.contextTablesViews.Name = "contextMenuStrip1";
-            this.contextTablesViews.Size = new System.Drawing.Size(321, 298);
+            this.contextTablesViews.Size = new System.Drawing.Size(321, 439);
             // 
             // showTop100ReverseToolStripMenuItem
             // 
-            this.showTop100ReverseToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.showTop100ReverseToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.showTop100ReverseToolStripMenuItem.Name = "showTop100ReverseToolStripMenuItem";
             this.showTop100ReverseToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.showTop100ReverseToolStripMenuItem.Text = "Show Top 100 Reverse";
@@ -970,7 +976,7 @@ namespace DBStudioLite
             // 
             // getColumnListToolStripMenuItem
             // 
-            this.getColumnListToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.getColumnListToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.getColumnListToolStripMenuItem.Name = "getColumnListToolStripMenuItem";
             this.getColumnListToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
             this.getColumnListToolStripMenuItem.Text = "Show Top 100 + Columns List";
@@ -1025,6 +1031,27 @@ namespace DBStudioLite
             this.getDropCodeToolStripMenuItem.Text = "Get DROP Code";
             this.getDropCodeToolStripMenuItem.Click += new System.EventHandler(this.getDropCodeToolStripMenuItem_Click);
             // 
+            // getInsertCodeToolStripMenuItem
+            // 
+            this.getInsertCodeToolStripMenuItem.Name = "getInsertCodeToolStripMenuItem";
+            this.getInsertCodeToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
+            this.getInsertCodeToolStripMenuItem.Text = "Get Insert Code";
+            this.getInsertCodeToolStripMenuItem.Click += new System.EventHandler(this.getInsertCodeToolStripMenuItem_Click);
+            // 
+            // getUpdateCodeToolStripMenuItem
+            // 
+            this.getUpdateCodeToolStripMenuItem.Name = "getUpdateCodeToolStripMenuItem";
+            this.getUpdateCodeToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
+            this.getUpdateCodeToolStripMenuItem.Text = "Get Update Code";
+            this.getUpdateCodeToolStripMenuItem.Click += new System.EventHandler(this.getUpdateCodeToolStripMenuItem_Click);
+            // 
+            // getDeleteCodeToolStripMenuItem
+            // 
+            this.getDeleteCodeToolStripMenuItem.Name = "getDeleteCodeToolStripMenuItem";
+            this.getDeleteCodeToolStripMenuItem.Size = new System.Drawing.Size(320, 32);
+            this.getDeleteCodeToolStripMenuItem.Text = "Get Delete Code";
+            this.getDeleteCodeToolStripMenuItem.Click += new System.EventHandler(this.getDeleteCodeToolStripMenuItem_Click);
+            // 
             // ctxMenuStripSnippets
             // 
             this.ctxMenuStripSnippets.ImageScalingSize = new System.Drawing.Size(24, 24);
@@ -1059,7 +1086,7 @@ namespace DBStudioLite
             // 
             // toolstripExecuteSnippet
             // 
-            this.toolstripExecuteSnippet.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toolstripExecuteSnippet.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.toolstripExecuteSnippet.Name = "toolstripExecuteSnippet";
             this.toolstripExecuteSnippet.Size = new System.Drawing.Size(216, 32);
             this.toolstripExecuteSnippet.Text = "&Execute";
@@ -1068,11 +1095,11 @@ namespace DBStudioLite
             // tabForms
             // 
             this.tabForms.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tabForms.Location = new System.Drawing.Point(470, 33);
-            this.tabForms.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabForms.Location = new System.Drawing.Point(522, 33);
+            this.tabForms.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.tabForms.Name = "tabForms";
             this.tabForms.SelectedIndex = 0;
-            this.tabForms.Size = new System.Drawing.Size(854, 30);
+            this.tabForms.Size = new System.Drawing.Size(949, 38);
             this.tabForms.TabIndex = 6;
             this.tabForms.Visible = false;
             this.tabForms.SelectedIndexChanged += new System.EventHandler(this.tabForms_SelectedIndexChanged_1);
@@ -1080,19 +1107,29 @@ namespace DBStudioLite
             // progressBar1
             // 
             this.progressBar1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.progressBar1.Location = new System.Drawing.Point(880, 542);
+            this.progressBar1.Location = new System.Drawing.Point(978, 678);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(184, 34);
+            this.progressBar1.Size = new System.Drawing.Size(204, 42);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar1.TabIndex = 24;
             this.progressBar1.Visible = false;
             // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(317, 6);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(317, 6);
+            // 
             // MDIDBStudioLite
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1324, 1040);
+            this.ClientSize = new System.Drawing.Size(1471, 1050);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.tabForms);
             this.Controls.Add(this.panel1);
@@ -1101,7 +1138,7 @@ namespace DBStudioLite
             this.Controls.Add(this.menuStrip);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip;
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Name = "MDIDBStudioLite";
             this.Text = "DBStudioLite";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -1242,6 +1279,11 @@ namespace DBStudioLite
         private System.Windows.Forms.ToolStripMenuItem refreshDatabasesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem refreshSchemaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem getInsertCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem getUpdateCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem getDeleteCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
     }
 }
 

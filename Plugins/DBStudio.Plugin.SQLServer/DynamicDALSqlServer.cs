@@ -3,6 +3,7 @@ using CoreLogic.PluginBase.PluginBase;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 
 /// <summary>
@@ -89,9 +90,14 @@ public class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
         var sqlconnection = (SqlConnection)Connection;
         sqlconnection.InfoMessage += new SqlInfoMessageEventHandler(connection_InfoMessage);
     }
-    protected override IDataAdapter GetDataAdapter(IDbCommand dbCommand)
+    protected override DbDataAdapter GetDataAdapter(IDbCommand dbCommand)
     {
         return new SqlDataAdapter((SqlCommand)Command);
+    }
+
+    protected override DbCommandBuilder GetCommandBuilder()
+    {
+        return new SqlCommandBuilder();
     }
 
     //new
@@ -147,7 +153,7 @@ public class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
         Command.CommandType = type;
         LogError = bLogError;
     }
-    public void DeriveParameters(ref IDbCommand obj)
+    public override void DeriveParameters(ref IDbCommand obj)
     {
         //https://learn.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlcommandbuilder.deriveparameters
         SqlCommandBuilder.DeriveParameters((SqlCommand)obj);
@@ -164,26 +170,7 @@ public class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
                 parameter.ParameterName, sqlParameter.SqlDbType.ToString("F"), sValue); //parameter.DbType.GetType().FullName
         return sCSharp;
     }
-    public string GetParmeterSize(IDataParameter dbparameter, ref string paramValue)
-    {
-        SqlParameter parameter = dbparameter as SqlParameter;
-        string sSize;
-        if (parameter.Size > 0)
-        {
-            sSize = "(" + parameter.Size.ToString() + ") ";
-            paramValue = "''";
-        }
-        else if (parameter.Scale > 0)
-        {
-            sSize = "(" + parameter.Scale.ToString();
-            if (parameter.Precision > 0) sSize += "," + parameter.Precision.ToString();
-            sSize += ") ";
-            paramValue = "0";
-        }
-        else
-            sSize = "";
-        return sSize;
-    }
+
     public override string GetParamType(IDataParameter dbparameter)
     {
         SqlParameter parameter = dbparameter as SqlParameter;

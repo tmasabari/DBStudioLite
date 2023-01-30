@@ -2,6 +2,7 @@ using CoreLogic.PluginBase;
 using CoreLogic.PluginBase.PluginBase;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
 
@@ -100,9 +101,14 @@ public class DynamicDALSQLite : AbstractDAL, IDynamicDAL
         //var SQLiteConnection  = (SQLiteConnection )Connection;
         //SQLiteConnection .InfoMessage += new SqlInfoMessageEventHandler(connection_InfoMessage);
     }
-    protected override IDataAdapter GetDataAdapter(IDbCommand dbCommand)
+    protected override DbDataAdapter GetDataAdapter(IDbCommand dbCommand)
     {
         return new SQLiteDataAdapter((SQLiteCommand)Command);
+    }
+
+    protected override DbCommandBuilder GetCommandBuilder()
+    {
+        return new SQLiteCommandBuilder();
     }
 
     //new
@@ -148,13 +154,7 @@ public class DynamicDALSQLite : AbstractDAL, IDynamicDAL
         Command.CommandType = type;
         LogError = bLogError;
     }
-    public void DeriveParameters(ref IDbCommand obj)
-    {
-        //unsupported
-        // SQLiteCommandBuilder does not implement DeriveParameters.
-        // This is not surprising, since SQLite has no support for stored procs.
-        //SQLiteCommandBuilder.DeriveParameters((SQLiteCommand)obj);
-    }
+
     public string GetCSharpCodeForParameter(IDataParameter parameter, string sParameterFunction, string sValue)
     {
         var SQLiteParameter = parameter as SQLiteParameter;
@@ -167,26 +167,7 @@ public class DynamicDALSQLite : AbstractDAL, IDynamicDAL
                 parameter.ParameterName, SQLiteParameter.DbType.ToString("F"), sValue); //parameter.DbType.GetType().FullName
         return sCSharp;
     }
-    public string GetParmeterSize(IDataParameter dbparameter, ref string paramValue)
-    {
-        SQLiteParameter parameter = dbparameter as SQLiteParameter;
-        string sSize;
-        if (parameter.Size > 0)
-        {
-            sSize = "(" + parameter.Size.ToString() + ") ";
-            paramValue = "''";
-        }
-        else if (parameter.Scale > 0)
-        {
-            sSize = "(" + parameter.Scale.ToString();
-            if (parameter.Precision > 0) sSize += "," + parameter.Precision.ToString();
-            sSize += ") ";
-            paramValue = "0";
-        }
-        else
-            sSize = "";
-        return sSize;
-    }
+
     //unsupported
     //void connection_InfoMessage(object sender, SqlInfoMessageEventArgs args)
     //{

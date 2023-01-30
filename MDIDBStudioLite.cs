@@ -6,6 +6,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -781,13 +782,6 @@ namespace DBStudioLite
             }
         }
 
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string sSPName = GetSelectedSPName();
-            if (sSPName != "")
-                LoadDropCode(sSPName, GetSelectedCodeType());
-        }
-
         private void TS_Procedure_Structure_Click(object sender, EventArgs e)
         {
             string sSPName = GetSelectedSPName();
@@ -1135,16 +1129,63 @@ namespace DBStudioLite
         {
             lastSessionSelectedDBName = GetSelectedDBName();
         }
+        private void LoadModuleDropCode()
+        {
+            string sSPName = GetSelectedSPName();
+            if (sSPName != "")
+            {
+                var codeType = GetSelectedCodeType();
+                var code = GetDynamicDataSourceCode().GetDropCode(sSPName, codeType);
+                LoadCode(code);
+            }
+        }
 
         private void getDropCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LoadDropCode(GetSelectedTableNameWithSchema(), GetSelectedTableType());
+            string objectName = GetSelectedTableName();
+            if (objectName != "")
+            {
+                var objectType = GetSelectedTableType();
+                var code = GetDynamicDataSourceCode().GetDropCode(objectName, objectType);
+                LoadCode(code);
+            }
         }
 
-        private void LoadDropCode(string objectName, string objectType)
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            LoadModuleDropCode();
+        }
+
+        private void getInsertCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadDMLCode(SQLCommandType.Insert);
+        }
+
+        private void getUpdateCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadDMLCode(SQLCommandType.Update);
+        }
+
+        private void getDeleteCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadDMLCode(SQLCommandType.Delete);
+        }
+
+        private void LoadDMLCode(SQLCommandType sQLCommandType)
+        {
+            string objectName = GetSelectedTableName();
             if (objectName != "")
-                GetEmptyOperatingForm().SetProcedureText(GetDynamicDataSourceCode().GetDropCode(objectName, objectType));
+            {
+                var objectType = GetSelectedTableType();
+                var code = GetDynamicDataSourceCode().GetDMLCode(objectName, objectType, sQLCommandType);
+                LoadCode(code);
+            }
+        }
+
+        private void LoadCode(string sql)
+        {
+            GetEmptyOperatingForm().SetProcedureText(sql);
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1160,6 +1201,7 @@ namespace DBStudioLite
                 //splitContainerSchema.Panel1.Height = splitContainerSchema.Height / 2;
             }
         }
+
     }
 }
 //this.newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {

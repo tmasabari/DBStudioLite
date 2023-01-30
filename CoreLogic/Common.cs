@@ -68,20 +68,5 @@ namespace CoreLogic.PluginBase
                 fileopener.Start();
             }
         }
-
-        public static NameValueCollection GetNameValueCollection(string input)
-        {
-            string[] lineSplit = { Environment.NewLine };
-            var executionMapArray = input.Split(lineSplit, StringSplitOptions.RemoveEmptyEntries);
-            string[] mapKeySplit = { "|*|" };
-            var nameValueCollection = new NameValueCollection();
-            Array.ForEach(executionMapArray, x =>
-            {
-                var splits = x.Split(mapKeySplit, StringSplitOptions.None); //keep empty values
-                nameValueCollection.Add(splits[0], splits[1]);
-            });
-
-            return nameValueCollection;
-        }
     }
 }

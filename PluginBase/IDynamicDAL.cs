@@ -1,11 +1,15 @@
-﻿using System;
+﻿using CoreLogic.PluginBase.PluginBase;
+using System;
 using System.Data;
+using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CoreLogic.PluginBase
 {
     public delegate void dlgReaderOpen(object sender, object Reader);
+    public enum SQLCommandType { Insert, Update, Delete }
+
 
     public interface IDynamicDAL : IDisposable
     {
@@ -19,6 +23,7 @@ namespace CoreLogic.PluginBase
         string GetAllDBModulesCode { get; set; }
         string GetAllDBsCode { get; set; }
         string GetAllSchemaCode { get; set; }
+        string GenerateCode(string Name, string codeType);
         string GetDropCode(string sObjectName, string objectType);
         string GetColumnsCode(string sTableName);
         string GetColumnListCode(string sTableName);
@@ -46,9 +51,9 @@ namespace CoreLogic.PluginBase
         Task<DataSet> Execute(string TableName);
         bool ExecuteScalar(out object ScalarData);
         object RunScalar(string SQL);
-
+        string GenerateSQL(string SQL, string objectType, SQLCommandType sQLCommandType);
         string GetCSharpCodeForParameter(IDataParameter parameter, string sParameterFunction, string sValue);
-        string GetParmeterSize(IDataParameter dbparameter, ref string paramValue);
+        string GetParmeterSize(DbParameter dbparameter, ref string paramValue);
         string GetParamType(IDataParameter dbparameter);
         string GetInputParamValue(IDataParameter dbparameter);
 
