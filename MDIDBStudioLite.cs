@@ -107,7 +107,7 @@ namespace DBStudioLite
             {
                 object objConnection;
                 (new WindowsRegistry()).ReadValue(Microsoft.Win32.Registry.CurrentUser, @"MyQuery", "Connection", out objConnection);
-                if (objConnection != null) 
+                if (objConnection != null)
                     if (!objConnections.SetConnectionName((string)objConnection))
                     {
 
@@ -815,7 +815,7 @@ namespace DBStudioLite
                 GetEmptyOperatingFormSetProcedureCSharpCode(sSPName, 4);
         }
 
-        private void connectionsToolStripMenuItem_DropDownItemClicked(object sender, 
+        private void connectionsToolStripMenuItem_DropDownItemClicked(object sender,
             ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem.Tag is int)

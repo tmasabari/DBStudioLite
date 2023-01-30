@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.IO;
 using System.Windows.Forms;
 
 namespace DBStudioLite
@@ -81,7 +80,7 @@ namespace DBStudioLite
         {
             int index = sConnectionCaptions.IndexOf(_selectedConnectionName);
             if (index == -1) return String.Empty;
-            return (string) sConnectionData[index];
+            return (string)sConnectionData[index];
         }
 
         private void ConnectionsList_SelectedIndexChanged(object sender, EventArgs e)
