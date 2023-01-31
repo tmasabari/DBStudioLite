@@ -46,11 +46,6 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ScintillaNET_FindReplaceDialog">
-      <HintPath>..\..\ScintillaNET-FindReplaceDialog\ScintillaNET-FindReplaceDialog\ScintillaNet_FindReplaceDialog\obj\Release\net45\ScintillaNET_FindReplaceDialog.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
@@ -114,9 +109,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CoreLogic\CoreLogic.csproj" />
-    <ProjectReference Include="PluginBase\PluginBase.csproj" />
-    <ProjectReference Include="Win32\Win32.csproj" />
+    <ProjectReference Include="..\CoreLogic\CoreLogic.csproj" />
+    <ProjectReference Include="..\PluginBase\PluginBase.csproj" />
+    <ProjectReference Include="..\Win32\Win32.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
@@ -133,41 +128,11 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="CoreLogic\BaseDAL\CodeGeneration.cs" />
-    <Compile Remove="CoreLogic\ClosedXML\ExportToExcel.cs" />
-    <Compile Remove="CoreLogic\Common.cs" />
-    <Compile Remove="CoreLogic\DataAccessFactory.cs" />
-    <Compile Remove="CoreLogic\DataSecure.cs" />
-    <Compile Remove="CoreLogic\DynamicDataSourceCode.cs" />
-    <Compile Remove="CoreLogic\Model\IBaseData.cs" />
-    <Compile Remove="CoreLogic\Model\Snippets.cs" />
-    <Compile Remove="CoreLogic\obj\Debug\netstandard2.0\.NETStandard,Version=v2.0.AssemblyAttributes.cs" />
-    <Compile Remove="CoreLogic\obj\Debug\netstandard2.0\CoreLogic.AssemblyInfo.cs" />
-    <Compile Remove="CoreLogic\XMLDAL.cs" />
-    <Compile Remove="DBStudio.Plugin.SQLite\DynamicDALSQLite.cs" />
-    <Compile Remove="DBStudio.Plugin.SQLite\obj\Debug\netstandard2.0\.NETStandard,Version=v2.0.AssemblyAttributes.cs" />
-    <Compile Remove="DBStudio.Plugin.SQLite\obj\Debug\netstandard2.0\DBStudio.Plugin.SQLite.AssemblyInfo.cs" />
-    <Compile Remove="DBStudioWeb\obj\Debug\net6.0\.NETCoreApp,Version=v6.0.AssemblyAttributes.cs" />
-    <Compile Remove="DBStudioWeb\obj\Debug\net6.0\DBStudioWeb.AssemblyInfo.cs" />
-    <Compile Remove="DBStudioWeb\obj\Debug\net6.0\DBStudioWeb.GlobalUsings.g.cs" />
-    <Compile Remove="DBStudioWeb\obj\Debug\net6.0\DBStudioWeb.RazorAssemblyInfo.cs" />
-    <Compile Remove="DBStudioWeb\Pages\Error.cshtml.cs" />
-    <Compile Remove="DBStudioWeb\Pages\Schema.cshtml.cs" />
-    <Compile Remove="DBStudioWeb\Program.cs" />
-    <Compile Remove="PluginBase\AbstractDAL.cs" />
-    <Compile Remove="PluginBase\IDynamicDAL.cs" />
-    <Compile Remove="PluginBase\obj\Debug\netstandard2.0\.NETStandard,Version=v2.0.AssemblyAttributes.cs" />
-    <Compile Remove="PluginBase\obj\Debug\netstandard2.0\PluginBase.AssemblyInfo.cs" />
-    <Compile Remove="Plugins\DBStudio.Plugin.SQLServer\DynamicDALSqlServer.cs" />
-    <Compile Remove="Plugins\DBStudio.Plugin.SQLServer\obj\Debug\netstandard2.0\.NETStandard,Version=v2.0.AssemblyAttributes.cs" />
-    <Compile Remove="Plugins\DBStudio.Plugin.SQLServer\obj\Debug\netstandard2.0\DBStudio.Plugin.SQLServer.AssemblyInfo.cs" />
     <Compile Remove="SessionVM.cs" />
-    <Compile Remove="Win32\GridViewHelpers.cs" />
-    <Compile Remove="Win32\obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-    <Compile Remove="Win32\obj\Debug\net48\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-    <Compile Remove="Win32\obj\Debug\net7.0-windows\.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" />
-    <Compile Remove="Win32\Properties\AssemblyInfo.cs" />
-    <Compile Remove="Win32\RichTextBoxExtensionMethods.cs" />
-    <Compile Remove="Win32\WindowsRegistry.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ScintillaNET_FindReplaceDialog">
+      <HintPath>..\..\..\..\ScintillaNET-FindReplaceDialog\ScintillaNET-FindReplaceDialog\ScintillaNet_FindReplaceDialog\bin\Release\net45\ScintillaNET_FindReplaceDialog.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

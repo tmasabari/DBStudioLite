@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DBStudio.Plugin.SQLite\DBStudio.Plugin.SQLite.csproj" />
+    <ProjectReference Include="..\Plugins\DBStudio.Plugin.SQLite\DBStudio.Plugin.SQLite.csproj" />
     <ProjectReference Include="..\PluginBase\PluginBase.csproj" />
     <ProjectReference Include="..\Plugins\DBStudio.Plugin.SQLServer\DBStudio.Plugin.SQLServer.csproj" />
   </ItemGroup>
