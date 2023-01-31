@@ -1,0 +1,83 @@
+[
+	{
+		"PDFFont": "PdfStandardFontCourier",
+		"TextColor": "0, 0, 0",
+		"FontSize": 12,
+		"FieldName": "Applicant1Name",
+		"X": 1.566,
+		"Y": 3.866
+	},
+	{
+		"PDFFont": "PdfStandardFontCourier",
+		"TextColor": "0, 0, 0",
+		"FontSize": 12,
+		"FieldName": "Applicant2Name",
+		"X": 1.566,
+		"Y": 4.533
+	},
+	{
+		"PDFFont": "PdfStandardFontCourier",
+		"TextColor": "0, 0, 0",
+		"FontSize": 12,
+		"FieldName": "Applicant1DOB",
+		"X": 6.113,
+		"Y": 3.866
+	},
+	{
+		"PDFFont": "PdfStandardFontCourier",
+		"TextColor": "0, 0, 0",
+		"FontSize": 12,
+		"FieldName": "Applicant2DOB",
+		"X": 6.113,
+		"Y": 4.533
+	},			
+	{
+		"PDFFont": "PdfStandardFontCourier",
+		"TextColor": "0, 0, 0",
+		"FontSize": 12,
+		"FieldName": "DayOfMarriage",
+		"X": 2.713,
+		"Y": 4.993
+	},
+	{
+		"PDFFont": "PdfStandardFontCourier",
+		"TextColor": "0, 0, 0",
+		"FontSize": 12,
+		"FieldName": "MonthOfMarriage",
+		"X": 4.466,
+		"Y": 4.993
+	},
+	{
+		"PDFFont": "PdfStandardFontCourier",
+		"TextColor": "0, 0, 0",
+		"FontSize": 12,
+		"FieldName": "YearOfMarriage",
+		"X": 6.402,
+		"Y": 4.993
+	},
+	{
+		"PDFFont": "PdfStandardFontCourier",
+		"TextColor": "0, 0, 0",
+		"FontSize": 12,
+		"FieldName": "Book",
+		"X": 3.58,
+		"Y": 5.586
+	},	
+	
+	{
+		"PDFFont": "PdfStandardFontCourier",
+		"TextColor": "0, 0, 0",
+		"FontSize": 12,
+		"FieldName": "Page",
+		"X": 4.0,
+		"Y": 5.586
+	},
+	{
+		"PDFFont": "PdfStandardFontCourier",
+		"TextColor": "0, 0, 0",
+		"FontSize": 12,
+		"FieldName": "Officiator",
+		"X": 4.444,
+		"Y": 9.027
+	}
+]
