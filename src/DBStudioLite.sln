@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32611.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBStudioLite", "WinForms\DBStudioLite.csproj", "{E59D304F-867F-4A04-88DD-C2AF5BFA6985}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreLogic", "CoreLogic\CoreLogic.csproj", "{CC9A2E66-0DD5-481D-A7FB-92017C7443A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win32", "Win32\Win32.csproj", "{AFA002CC-DACA-4968-8883-EB1409A4FE54}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginBase", "PluginBase\PluginBase.csproj", "{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBStudio.Plugin.SQLServer", "Plugins\DBStudio.Plugin.SQLServer\DBStudio.Plugin.SQLServer.csproj", "{4D38F492-3DF4-41C8-BC9E-0C7B4B897568}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBStudio.Plugin.SQLite", "Plugins\DBStudio.Plugin.SQLite\DBStudio.Plugin.SQLite.csproj", "{FD28346E-1D63-4BDB-BA64-CE5DFAF3ABA3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E59D304F-867F-4A04-88DD-C2AF5BFA6985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E59D304F-867F-4A04-88DD-C2AF5BFA6985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E59D304F-867F-4A04-88DD-C2AF5BFA6985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E59D304F-867F-4A04-88DD-C2AF5BFA6985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC9A2E66-0DD5-481D-A7FB-92017C7443A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC9A2E66-0DD5-481D-A7FB-92017C7443A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC9A2E66-0DD5-481D-A7FB-92017C7443A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC9A2E66-0DD5-481D-A7FB-92017C7443A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFA002CC-DACA-4968-8883-EB1409A4FE54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFA002CC-DACA-4968-8883-EB1409A4FE54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFA002CC-DACA-4968-8883-EB1409A4FE54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFA002CC-DACA-4968-8883-EB1409A4FE54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D38F492-3DF4-41C8-BC9E-0C7B4B897568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D38F492-3DF4-41C8-BC9E-0C7B4B897568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D38F492-3DF4-41C8-BC9E-0C7B4B897568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D38F492-3DF4-41C8-BC9E-0C7B4B897568}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD28346E-1D63-4BDB-BA64-CE5DFAF3ABA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD28346E-1D63-4BDB-BA64-CE5DFAF3ABA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD28346E-1D63-4BDB-BA64-CE5DFAF3ABA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD28346E-1D63-4BDB-BA64-CE5DFAF3ABA3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70E777F2-7765-4DEB-B8B9-BC293C9AFD37}
+	EndGlobalSection
+EndGlobal

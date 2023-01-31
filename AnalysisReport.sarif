@@ -18,14 +18,6 @@
               "helpUri": "https://docs.microsoft.com/en-us/dotnet/core/porting/upgrade-assistant-overview"
             },
             {
-              "id": "UA105",
-              "name": "PackageToBeDeleted",
-              "fullDescription": {
-                "text": "Packages that need to be deleted in order to upgrade the project to chosen TFM"
-              },
-              "helpUri": "https://docs.microsoft.com/en-us/dotnet/core/porting/upgrade-assistant-overview"
-            },
-            {
               "id": "UA106",
               "name": "PackageToBeAdded",
               "fullDescription": {
@@ -48,22 +40,6 @@
         {
           "ruleId": "UA103",
           "message": {
-            "text": "Reference to System.Configuration needs to be deleted."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/DBStudioLite.csproj"
-                },
-                "region": {}
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "UA103",
-          "message": {
             "text": "Reference to System.Web needs to be deleted."
           },
           "locations": [
@@ -81,54 +57,6 @@
           "ruleId": "UA103",
           "message": {
             "text": "Reference to System.Web.Extensions needs to be deleted."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/DBStudioLite.csproj"
-                },
-                "region": {}
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "UA105",
-          "message": {
-            "text": "Package ExcelNumberFormat, Version=1.1.0 needs to be deleted."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/DBStudioLite.csproj"
-                },
-                "region": {}
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "UA105",
-          "message": {
-            "text": "Package Microsoft.CSharp, Version=4.7.0 needs to be deleted."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/DBStudioLite.csproj"
-                },
-                "region": {}
-              }
-            }
-          ]
-        },
-        {
-          "ruleId": "UA106",
-          "message": {
-            "text": "Package System.Configuration.ConfigurationManager, Version=5.0.0 needs to be added."
           },
           "locations": [
             {
@@ -188,6 +116,102 @@
               }
             }
           ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.4.355802 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/CoreLogic/CoreLogic.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.4.355802 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/Win32/Win32.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package Microsoft.Windows.Compatibility, Version=7.0.0 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/Win32/Win32.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.4.355802 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/PluginBase/PluginBase.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.4.355802 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/Plugins/DBStudio.Plugin.SQLServer/DBStudio.Plugin.SQLServer.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA106",
+          "message": {
+            "text": "Package Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers, Version=0.4.355802 needs to be added."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/DBStudio.Plugin.SQLite/DBStudio.Plugin.SQLite.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
         }
       ],
       "columnKind": "utf16CodeUnits"
@@ -240,6 +264,22 @@
               "physicalLocation": {
                 "artifactLocation": {
                   "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/DBStudioLite.csproj"
+                },
+                "region": {}
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "UA209",
+          "message": {
+            "text": "Default font in Windows Forms has been changed from Microsoft Sans Serif to Seg Segoe UI, in order to change the default font use the API - Application.SetDefaultFont(Font font). For more details see here - https://devblogs.microsoft.com/dotnet/whats-new-in-windows-forms-in-net-6-0-preview-5/#application-wide-default-font."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///D:/code/AdvancedQuery%20NET%204/AdvancedQuery/Win32/Win32.csproj"
                 },
                 "region": {}
               }
