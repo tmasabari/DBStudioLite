@@ -208,7 +208,6 @@ namespace CoreLogic.PluginBase.PluginBase
             return bReturn;
         }
 
-        //to do remove tablename
         public Task<DataSet> Execute(string TableName)
         {
             try
@@ -354,7 +353,7 @@ namespace CoreLogic.PluginBase.PluginBase
                     command.CommandType = CommandType.Text;
 
                     var da = GetDataAdapter(command);
-                    da.SelectCommand = (DbCommand) command;
+                    da.SelectCommand = (DbCommand)command;
                     var builder = GetCommandBuilder();
                     builder.DataAdapter = da;
                     builder.QuotePrefix = "[";
@@ -362,22 +361,22 @@ namespace CoreLogic.PluginBase.PluginBase
                     DbCommand generatedCommand = null;
                     switch (sQLCommandType)
                     {
-                        
+
                         case SQLCommandType.Insert:
-                            generatedCommand = builder.GetInsertCommand();
+                            generatedCommand = builder.GetInsertCommand(true);
                             break;
                         case SQLCommandType.Update:
-                            generatedCommand = builder.GetUpdateCommand();
+                            generatedCommand = builder.GetUpdateCommand(true);
                             break;
                         case SQLCommandType.Delete:
-                            generatedCommand = builder.GetDeleteCommand();
+                            generatedCommand = builder.GetDeleteCommand(true);
                             break;
                     }
                     if (generatedCommand == null) return String.Empty;
-                    var code= generatedCommand.CommandText;
+                    var code = generatedCommand.CommandText;
                     ProcessParameters(generatedCommand, out var paramStringList, out var paramNameList);
                     if (paramStringList.Count > 0)
-                        code = "DECLARE " + string.Join(Environment.NewLine + "DECLARE ", paramStringList.ToArray()) 
+                        code = "DECLARE " + string.Join(Environment.NewLine + "DECLARE ", paramStringList.ToArray())
                             + Environment.NewLine + code;
                     return code;
                 }
@@ -394,6 +393,7 @@ namespace CoreLogic.PluginBase.PluginBase
 
         public virtual string GenerateCode(string Name, string codeType)
         {
+            //todo refactor to Interface 
             string executionMapStartText =
                 "FN|*|SELECT <Name/> (" + Environment.NewLine
                 + "AF|*|SELECT <Name/> (" + Environment.NewLine

@@ -3,15 +3,70 @@
   "UpdateURL": "https://gist.githubusercontent.com/tmasabari/e9bbaa3d8702d8e4c69ba7a03e602a6c/raw/fb80754f4b5c969b41e603264299a6f7635cc161/DBStudioLiteSnippets.json",
   "SnippetsData": [
     {
+      "SnippetName": "Create Table",
+      "value": "CREATE TABLE [dbo].[<TableName>] (\r\n    [<TableName>ID]     INT           \tIDENTITY (1, 1) NOT NULL,\r\n    [Name] \t\t\t\tNVARCHAR (200) \tNULL,\r\n    CONSTRAINT [PK_<TableName>_<TableName>ID] PRIMARY KEY CLUSTERED ([<TableName>ID] ASC)\r\n);",
+      "IsExecutable": "False",
+      "DBName": null,
+      "Parameters": "TableName"
+    },
+    {
+      "SnippetName": "Alter Table",
+      "value": "ALTER TABLE [dbo].[<TableName>]\r\n    ADD [<ColumnName1>]     <Type> NULL",
+      "IsExecutable": "False",
+      "DBName": null
+    },
+    {
+      "SnippetName": "Rename Table",
+      "value": "EXEC sp_rename '<OldTableName>', 'NewTableName'",
+      "IsExecutable": "False",
+      "DBName": null
+    },
+    {
+      "SnippetName": "Rename Column",
+      "value": "EXEC sp_rename '<TableName>.<OldColumnName>', 'NewColumnName'",
+      "IsExecutable": "False",
+      "DBName": null
+    },
+    {
+      "SnippetName": "Rename Index",
+      "value": "EXEC sp_rename '<TableName>.<ColumnName>.<OldIndexName>', 'NewIndexName'",
+      "IsExecutable": "False",
+      "DBName": null
+    },
+    {
+      "SnippetName": "Rename Constraint",
+      "value": "EXEC sp_rename '<SchemaName>.<ConstraintName>', 'NewConstraintName'",
+      "IsExecutable": "False",
+      "DBName": null
+    },
+    {
       "SnippetName": "select column as csv",
       "value": "SELECT STRING_AGG (<ColumnName>, ',') AS csv \r\nFROM <TableName>\r\nGROUP BY <ColumnName>",
       "IsExecutable": "False",
       "DBName": null
     },
     {
+      "SnippetName": "All Columns of the table",
+      "value": "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'<Tablename>'",
+      "IsExecutable": "False",
+      "DBName": null
+    },
+    {
+      "SnippetName": "All Primary key columns of the table",
+      "value": "select C.COLUMN_NAME FROM   INFORMATION_SCHEMA.TABLE_CONSTRAINTS T  \r\n JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE C \r\n  ON C.CONSTRAINT_NAME=T.CONSTRAINT_NAME \r\n  WHERE   C.TABLE_NAME='<tableName>' and T.CONSTRAINT_TYPE='PRIMARY KEY'",
+      "IsExecutable": "False",
+      "DBName": null
+    },
+    {
+      "SnippetName": "Autoincrement Field",
+      "value": "SELECT Name FROM sys.identity_columns WHERE object_id = OBJECT_ID(<TableName>)",
+      "IsExecutable": "False",
+      "DBName": null
+    },
+    {
       "SnippetName": "Search for repeated rows by column name",
       "value": "select column_name, count(column_name)\r\n  from table\r\ngroup by column_name\r\nhaving count (column_name) > 1",
-      "IsExecutable": "True",
+      "IsExecutable": "False",
       "DBName": null
     },
     {
@@ -39,19 +94,6 @@
       "DBName": null
     },
     {
-      "SnippetName": "Create Table",
-      "value": "CREATE TABLE [dbo].[<TableName>] (\r\n    [<TableName>ID]     INT           \tIDENTITY (1, 1) NOT NULL,\r\n    [Name] \t\t\t\tNVARCHAR (200) \tNULL,\r\n    CONSTRAINT [PK_<TableName>_<TableName>ID] PRIMARY KEY CLUSTERED ([<TableName>ID] ASC)\r\n);",
-      "IsExecutable": "False",
-      "DBName": null,
-      "Parameters": "TableName"
-    },
-    {
-      "SnippetName": "Alter Table",
-      "value": "ALTER TABLE [dbo].[<TableName>]\r\n    ADD [<ColumnName1>]     <Type> NULL",
-      "IsExecutable": "False",
-      "DBName": null
-    },
-    {
       "SnippetName": "Search a word in DB code",
       "value": "SELECT o.name as ModuleName, s.name as SchemaName, o.type as CodeType --, m.definition \r\n FROM sys.sql_modules AS m\r\nINNER JOIN sys.objects AS o ON m.object_id = o.object_id\r\nINNER JOIN sys.schemas AS s ON o.schema_id = s.schema_id\r\nWHERE m.definition like '%email%' ORDER By o.type\r\n--TR - trigger FN - scalar function, IF - table valued function, V - view, P - procedure",
       "IsExecutable": "False",
@@ -66,18 +108,6 @@
     {
       "SnippetName": "Query Columns Filter",
       "value": "select * from INFORMATION_SCHEMA.Columns where column_name like '%email%'",
-      "IsExecutable": "False",
-      "DBName": null
-    },
-    {
-      "SnippetName": "All Columns of the table",
-      "value": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'<Tablename>'",
-      "IsExecutable": "False",
-      "DBName": null
-    },
-    {
-      "SnippetName": "Autoincrement Field",
-      "value": "SELECT Name FROM sys.identity_columns WHERE object_id = OBJECT_ID(<TableName>)",
       "IsExecutable": "False",
       "DBName": null
     },

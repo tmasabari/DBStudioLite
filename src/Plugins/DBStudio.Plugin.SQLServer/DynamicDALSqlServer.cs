@@ -116,7 +116,7 @@ public class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
         //if a database is named master, model, msdb or tempdb, it IS a system db; it is also a system db, if field is_distributor = 1 in the view sys.databases.
         GetAllDBsCode =
             "SELECT name, CAST( IIF( name in ('master','model','msdb','tempdb') , 1 , is_distributor) AS bit) AS [IsSystemObject], "
-            + " create_date FROM sys.databases"; //database_id,
+            + " create_date FROM sys.databases order by name"; //database_id,
         GetAllSchemaCode =
             "SELECT TABLE_NAME,TABLE_SCHEMA,TABLE_TYPE from INFORMATION_SCHEMA.Tables order by TABLE_TYPE, TABLE_SCHEMA, TABLE_NAME; ";
         //"SELECT Name FROM sysobjects WHERE (xtype = 'V') order by Name; " + // AND (status > 0)
