@@ -58,10 +58,11 @@ namespace CoreLogic.PluginBase.PluginBase
                 sSize = "(" + parameter.Size.ToString() + ") ";
                 paramValue = "''";
             }
-            else if (parameter.Scale > 0)
+            //The scale must be less than or equal to the precision.
+            else if (parameter.Precision > 0)
             {
-                sSize = "(" + parameter.Scale.ToString();
-                if (parameter.Precision > 0) sSize += "," + parameter.Precision.ToString();
+                sSize = "(" + parameter.Precision.ToString();
+                if (parameter.Scale > 0) sSize += "," + parameter.Scale.ToString();
                 sSize += ") ";
                 paramValue = "0";
             }
