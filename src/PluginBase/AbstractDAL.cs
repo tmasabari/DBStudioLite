@@ -375,7 +375,7 @@ namespace CoreLogic.PluginBase.PluginBase
                     }
                     if (generatedCommand == null) return String.Empty;
                     var code = generatedCommand.CommandText;
-                    ProcessParameters(generatedCommand, out var paramStringList, out var paramNameList);
+                    ProcessParameters(generatedCommand, out var paramStringList, out var paramNameList, out var _);
                     if (paramStringList.Count > 0)
                         code = "DECLARE " + string.Join(Environment.NewLine + "DECLARE ", paramStringList.ToArray())
                             + Environment.NewLine + code;
@@ -400,7 +400,7 @@ namespace CoreLogic.PluginBase.PluginBase
                 + "AF|*|SELECT <Name/> (" + Environment.NewLine
                 + "IF|*|SELECT * From <Name/> (" + Environment.NewLine
                 + "TF|*|SELECT * From <Name/> (" + Environment.NewLine
-                + "P|*|EXECUTE <Name/> " + Environment.NewLine;
+                + "P|*|EXECUTE <Return/> <Name/> " + Environment.NewLine;
 
             string executionMapCloseText =
                 "FN|*|)" + Environment.NewLine
@@ -417,7 +417,8 @@ namespace CoreLogic.PluginBase.PluginBase
             Connection.Open();
             var obj = Command;
             DeriveParameters(ref obj);
-            ProcessParameters(obj, out var paramStringList, out var paramNameList);
+            ProcessParameters(obj, out var paramStringList, out var paramNameList, out var returnParamName);
+            sProcedure = sProcedure.Replace("<Return/> ", $"{returnParamName} = ");
             if (paramStringList.Count > 0)
                 sProcedure = "DECLARE " + string.Join(Environment.NewLine + "DECLARE ", paramStringList.ToArray()) + sProcedure;
             if (paramNameList.Count > 0)
@@ -425,10 +426,12 @@ namespace CoreLogic.PluginBase.PluginBase
             return sProcedure + endCollection[codeType];
         }
 
-        private void ProcessParameters(IDbCommand obj, out List<string> paramStringList, out List<string> paramNameList)
+        private void ProcessParameters(IDbCommand obj, out List<string> paramDeclareList, out List<string> paramExecutionList,
+            out string ReturnParamName)
         {
-            paramStringList = new List<string>();
-            paramNameList = new List<string>();
+            ReturnParamName = string.Empty;
+            paramDeclareList = new List<string>();
+            paramExecutionList = new List<string>();
             for (int paramIndex = 0; paramIndex < obj.Parameters.Count; paramIndex++)
             {
                 var parameter = (DbParameter)obj.Parameters[paramIndex];
@@ -441,36 +444,32 @@ namespace CoreLogic.PluginBase.PluginBase
                 string currentParam = string.Empty;
                 //string paramName = parameter.ParameterName;
                 //if (paramIndex > 1) sProcedure += Environment.NewLine + ", ";
-                string paramType = string.Empty;
                 //if (parameter.Direction == ParameterDirection.Input)
                 if (parameter.Direction == ParameterDirection.Output
                             || parameter.Direction == ParameterDirection.InputOutput)
                 {
-                    paramType = "OUTPUT";
+                    paramExecutionList.Add(parameter.ParameterName + " OUTPUT");
                     paramValue = "";
                 }
                 else if (parameter.Direction == ParameterDirection.ReturnValue)
                 {
-                    paramType = "RETURN";
+                    ReturnParamName = parameter.ParameterName;
                     paramValue = "";
                 }
                 else         //Input parameters
                 {
+                    paramExecutionList.Add(parameter.ParameterName + " ");
                     paramValue = GetInputParamValue(parameter);
                 }
-                //if (parameter.Value != null)
-                //    sValue = " = " + parameter.Value.ToString() + " ";
-                //else
-                //    sValue = "";
 
-                paramNameList.Add(parameter.ParameterName + " " + paramType);
+                //declaration logic
                 currentParam += parameter.ParameterName + " "
                     + GetParamType(parameter)
                     + sSize;
                 if (!string.IsNullOrWhiteSpace(paramValue))
                     currentParam += " = " + paramValue;
 
-                paramStringList.Add(currentParam);
+                paramDeclareList.Add(currentParam);
             }
         }
 

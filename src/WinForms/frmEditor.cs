@@ -253,6 +253,9 @@ namespace DBStudioLite
         }
         public async Task LoadQuery(string SQuery, bool IsLoadQueryToBox = true, string dBName = "")
         {
+            //clean up the data source at first. otherwise re ordering the columns will not work.
+            dataGrid1.DataSource = null;
+            dataGrid1.Refresh();
             ShowProgress();
             lblRows.Visible = false;
 
