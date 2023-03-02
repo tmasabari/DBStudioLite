@@ -1,9 +1,12 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace CoreLogic.PluginBase
 {
     public static class DataAccessFactory
     {
+        public static Func<string, string, IDynamicDAL> FuncGetDynamicDAL = null;
+
         public static IDynamicDAL GetDynamicDAL(string sConnection,
             string sProcedure, bool bLogError, CommandType type)
         {
@@ -14,13 +17,8 @@ namespace CoreLogic.PluginBase
 
         public static IDynamicDAL GetDynamicDAL(string sConnection)
         {
-            switch (GetConnectionType(sConnection))
-            {
-                case "SQLite":
-                    return new DynamicDALSQLite(sConnection);
-                default:
-                    return new DynamicDALSqlServer(sConnection);
-            }
+            var sDBIdentifier = GetConnectionType(sConnection);
+            return FuncGetDynamicDAL(sDBIdentifier, sConnection);
         }
 
         public static string GetConnectionType(string sConnection)

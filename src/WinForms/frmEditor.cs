@@ -277,9 +277,9 @@ namespace DBStudioLite
             {
                 var ds = await DataObj.Execute("MyTable");
                 string endMessage = $"@{DateTime.Now.ToString("hh:mm:ss FFF")} The execution was completed.";
-
                 dataGrid1.DataSource = (ds != null && ds.Tables["MyTable"] != null) ? ds.Tables["MyTable"] : null;
                 dataGrid1.Refresh();
+                GridViewHelpers.EnableManualResize(dataGrid1);
                 txtOutputText.Font = new System.Drawing.Font("Courier New", 8.25f, System.Drawing.FontStyle.Bold);
                 txtOutputText.ForeColor = Color.Black; txtOutputText.BackColor = txtOutputText.BackColor;
                 txtOutputText.Text = startMessage + Environment.NewLine;

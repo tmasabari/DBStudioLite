@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Win32Desktop
 {
-    public class GridViewHelpers
+    public static class GridViewHelpers
     {
         public static void Export(DataGridView dataGridView)
         {
@@ -51,6 +51,22 @@ namespace Win32Desktop
             //    // Set Width to calculated AutoSize value:
             //    dataGridView.Columns[i].Width = colw;
             //}
+        }
+
+        public static void EnableManualResize(DataGridView dataGridView) 
+        {
+            // Now that DataGridView has calculated it's Widths; we can now store each column Width values.
+            for (int i = 0; i <= dataGridView.Columns.Count - 1; i++)
+            {
+                // Store Auto Sized Widths:
+                int colw = dataGridView.Columns[i].Width;
+
+                // Remove AutoSizing:
+                dataGridView.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+
+                // Set Width to calculated AutoSize value:
+                dataGridView.Columns[i].Width = colw;
+            }
         }
 
         /// <summary>

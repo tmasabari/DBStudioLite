@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32611.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBStudioLite", "WinForms\DBStudioLite.csproj", "{E59D304F-867F-4A04-88DD-C2AF5BFA6985}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBStudioLite", "WinForms\DBStudioLite.csproj", "{E59D304F-867F-4A04-88DD-C2AF5BFA6985}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreLogic", "CoreLogic\CoreLogic.csproj", "{CC9A2E66-0DD5-481D-A7FB-92017C7443A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win32", "Win32\Win32.csproj", "{AFA002CC-DACA-4968-8883-EB1409A4FE54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win32", "Win32\Win32.csproj", "{AFA002CC-DACA-4968-8883-EB1409A4FE54}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginBase", "PluginBase\PluginBase.csproj", "{AAD4ED17-BF40-4E51-A68C-4DFC664A3ABA}"
 EndProject

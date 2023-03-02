@@ -1,6 +1,7 @@
 using CoreLogic.PluginBase;
 using CoreLogic.PluginBase.PluginBase;
 using DBStudioLite.Model;
+using DBStudioLite.Plugins;
 using DBStudioLite.WindowsLogic;
 using System;
 using System.Data;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
