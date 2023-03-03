@@ -47,7 +47,7 @@ namespace CoreLogic.PluginBase
         //void AddOutputParameter(string field, SqlDbType type, int size);
         void DeriveParameters(ref IDbCommand obj);
         bool Execute();
-        bool Execute(dlgReaderOpen function);
+        Task<bool> Execute(dlgReaderOpen function);
         Task<DataSet> Execute(string TableName);
         bool ExecuteScalar(out object ScalarData);
         object RunScalar(string SQL);

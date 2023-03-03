@@ -126,40 +126,43 @@ namespace CoreLogic.PluginBase.PluginBase
             return bReturn;
         }
 
-        public bool Execute(dlgReaderOpen function)
+        public Task<bool> Execute(dlgReaderOpen function)
         {
-            bool bReturn = false;
-            try
+            return Task.Run(() =>
             {
-                if (Connection.State != ConnectionState.Open)
+                bool bReturn = false;
+                try
                 {
-                    Connection.Open();
-                    ConnectionOpened();
-                }
-                using (var transaction = Connection.BeginTransaction())
-                {
-                    // Execute the command.                rowsAffected = cmd.ExecuteNonQuery();
-                    Command.Transaction = transaction;                                  // Assign Transaction to Command
-                    using (Reader = Command.ExecuteReader())
+                    if (Connection.State != ConnectionState.Open)
                     {
-                        ReaderOpen += function;
-                        //Invoking all the event handlers
-                        if (ReaderOpen != null) ReaderOpen(this, Reader);
-                        ReaderOpen -= function;
+                        Connection.Open();
+                        ConnectionOpened();
                     }
+                    using (var transaction = Connection.BeginTransaction())
+                    {
+                        // Execute the command.                rowsAffected = cmd.ExecuteNonQuery();
+                        Command.Transaction = transaction;                                  // Assign Transaction to Command
+                        using (Reader = Command.ExecuteReader())
+                        {
+                            ReaderOpen += function;
+                            //Invoking all the event handlers
+                            if (ReaderOpen != null) ReaderOpen(this, Reader);
+                            ReaderOpen -= function;
+                        }
 
-                    transaction.Commit();
-                    bReturn = true;
+                        transaction.Commit();
+                        bReturn = true;
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                if (this.LogError)
+                catch (Exception ex)
                 {
-                    ErrorText = ex.Message; // (new ErrorLog()).LogError(ex, sConnectionString); 
+                    if (this.LogError)
+                    {
+                        ErrorText = ex.Message; // (new ErrorLog()).LogError(ex, sConnectionString); 
+                    }
                 }
-            }
-            return bReturn;
+                return bReturn;
+            });
         }
 
         //https://stackoverflow.com/questions/10723558/instantiate-idataadapter-from-instance-of-idbconnection

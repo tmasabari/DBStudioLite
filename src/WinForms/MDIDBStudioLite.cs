@@ -154,7 +154,8 @@ namespace DBStudioLite
         }
 
         public void ShowProgress()
-        {
+        { 
+            if (progressBar1.Visible) return; //if it is already visible just exit
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.MarqueeAnimationSpeed = 100;
             progressBar1.Left = (this.ClientSize.Width - progressBar1.Width) / 2;
@@ -164,6 +165,7 @@ namespace DBStudioLite
 
         public void StopProgress()
         {
+            if (!progressBar1.Visible) return; //if it is NOT already visible just exit
             progressBar1.Visible = false;
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.MarqueeAnimationSpeed = 0;
@@ -297,7 +299,7 @@ namespace DBStudioLite
                             }
                         }
                         //Always refresh the schema as some DB engines does not support multiple dbs
-                        GetMetaData();
+                        await GetMetaData();
                     }
                     else
                     {
@@ -470,17 +472,24 @@ namespace DBStudioLite
             }
         }
 
-        private void GetMetaData()
+        private async Task GetMetaData()
         {
+            ShowProgress();
+
             using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
             {
                 string sQuery = DataObj.GetAllSchemaCode + ";" + DataObj.GetAllDBModulesCode;
                 DataObj.SetValues(sQuery, true, CommandType.Text);
-                if (DataObj.Execute(new dlgReaderOpen(ReaderEvent)) == false)
+                if (await DataObj.Execute(new dlgReaderOpen(ReaderEvent)) == false)
                 {
                     MessageBox.Show("Error occured" + DataObj.ErrorText, Application.ProductName, MessageBoxButtons.OK);
                 }
+                else
+                {
+                    RefreshDBStructure();
+                }
             }
+            StopProgress();
         }
 
         private void ReaderEvent(object sender, object objReader)
@@ -491,9 +500,6 @@ namespace DBStudioLite
             //Reader.NextResult(); Load automatically moves to next result set
             dtProcedures = new DataTable();
             dtProcedures.Load(Reader);
-
-            RefreshDBStructure();
-
         }
 
         private void RefreshDBStructure()
@@ -533,9 +539,6 @@ namespace DBStudioLite
                 //dtProcedures.DefaultView.Sort = "[ModuleName]"; order is included in query
                 LoadListViewFromTable(lstProcedures, dtProcedures);
             }
-
-            if (progressBar1.Visible) StopProgress();
-
         }
 
         private void LoadListViewFromTable(ListView lstView, DataTable dt)
