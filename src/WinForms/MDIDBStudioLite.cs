@@ -153,12 +153,15 @@ namespace DBStudioLite
             }
         }
 
-        public void ShowProgress()
+        public void ShowProgress(bool IsSchemaUpdates = true)
         { 
             if (progressBar1.Visible) return; //if it is already visible just exit
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.MarqueeAnimationSpeed = 100;
-            progressBar1.Left = (this.ClientSize.Width - progressBar1.Width) / 2;
+            if(IsSchemaUpdates)
+                progressBar1.Left = (tabDatabase.Width - progressBar1.Width) / 2; //center align to Schema
+            else
+                progressBar1.Left = (this.ClientSize.Width - progressBar1.Width) / 2; //center align to MDI
             progressBar1.Top = (this.ClientSize.Height - progressBar1.Height) / 2;
             progressBar1.Visible = true;
         }
