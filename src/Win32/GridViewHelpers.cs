@@ -80,5 +80,15 @@ namespace Win32Desktop
                 col.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             }
         }
+
+        public static void CopyToClipboardWithHeaders(DataGridView _dgv, DataGridViewClipboardCopyMode mode)
+        {
+            //Copy to clipboard
+            _dgv.ClipboardCopyMode = mode;
+            DataObject dataObj = _dgv.GetClipboardContent();
+            if (dataObj != null)
+                Clipboard.SetDataObject(dataObj);
+            _dgv.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithAutoHeaderText;
+        }
     }
 }

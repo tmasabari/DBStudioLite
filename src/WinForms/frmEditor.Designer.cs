@@ -28,376 +28,411 @@ namespace DBStudioLite
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.splitCode = new System.Windows.Forms.SplitContainer();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.incrementalSearcher1 = new ScintillaNET_FindReplaceDialog.IncrementalSearcher();
-            this.txtQuery = new ScintillaNET.Scintilla();
-            this.tabstripResults = new System.Windows.Forms.TabControl();
-            this.tabResults = new System.Windows.Forms.TabPage();
-            this.dataGrid1 = new System.Windows.Forms.DataGridView();
-            this.tabMessages = new System.Windows.Forms.TabPage();
-            this.txtOutputText = new System.Windows.Forms.TextBox();
-            this.tabFindResults = new System.Windows.Forms.TabPage();
-            this.findAllResultsPanel1 = new ScintillaNET_FindReplaceDialog.FindAllResults.FindAllResultsPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.butExecuteAllDBs = new System.Windows.Forms.Button();
-            this.lblRows = new System.Windows.Forms.Label();
-            this.checkShowFullScreen = new System.Windows.Forms.CheckBox();
-            this.butExcel = new System.Windows.Forms.Button();
-            this.btnClear = new System.Windows.Forms.Button();
-            this.Paste = new System.Windows.Forms.Button();
-            this.btnCopy = new System.Windows.Forms.Button();
-            this.btnExecuteAll = new System.Windows.Forms.Button();
-            this.butExecute = new System.Windows.Forms.Button();
-            this.findReplace1 = new ScintillaNET_FindReplaceDialog.FindReplace();
-            this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitCode)).BeginInit();
-            this.splitCode.Panel1.SuspendLayout();
-            this.splitCode.Panel2.SuspendLayout();
-            this.splitCode.SuspendLayout();
-            this.tabstripResults.SuspendLayout();
-            this.tabResults.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
-            this.tabMessages.SuspendLayout();
-            this.tabFindResults.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            splitCode = new System.Windows.Forms.SplitContainer();
+            progressBar1 = new System.Windows.Forms.ProgressBar();
+            incrementalSearcher1 = new ScintillaNET_FindReplaceDialog.IncrementalSearcher();
+            txtQuery = new ScintillaNET.Scintilla();
+            tabstripResults = new System.Windows.Forms.TabControl();
+            tabResults = new System.Windows.Forms.TabPage();
+            dataGrid1 = new System.Windows.Forms.DataGridView();
+            contextDataGrid = new System.Windows.Forms.ContextMenuStrip(components);
+            copyWithHeadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            tabMessages = new System.Windows.Forms.TabPage();
+            txtOutputText = new System.Windows.Forms.TextBox();
+            tabFindResults = new System.Windows.Forms.TabPage();
+            findAllResultsPanel1 = new ScintillaNET_FindReplaceDialog.FindAllResults.FindAllResultsPanel();
+            panel1 = new System.Windows.Forms.Panel();
+            butExecuteAllDBs = new System.Windows.Forms.Button();
+            lblRows = new System.Windows.Forms.Label();
+            checkShowFullScreen = new System.Windows.Forms.CheckBox();
+            butExcel = new System.Windows.Forms.Button();
+            btnClear = new System.Windows.Forms.Button();
+            Paste = new System.Windows.Forms.Button();
+            btnCopy = new System.Windows.Forms.Button();
+            btnExecuteAll = new System.Windows.Forms.Button();
+            butExecute = new System.Windows.Forms.Button();
+            findReplace1 = new ScintillaNET_FindReplaceDialog.FindReplace();
+            tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitCode).BeginInit();
+            splitCode.Panel1.SuspendLayout();
+            splitCode.Panel2.SuspendLayout();
+            splitCode.SuspendLayout();
+            tabstripResults.SuspendLayout();
+            tabResults.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGrid1).BeginInit();
+            contextDataGrid.SuspendLayout();
+            tabMessages.SuspendLayout();
+            tabFindResults.SuspendLayout();
+            panel1.SuspendLayout();
+            SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.splitCode, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 4.761905F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 95.2381F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1514, 1050);
-            this.tableLayoutPanel1.TabIndex = 24;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(splitCode, 0, 1);
+            tableLayoutPanel1.Controls.Add(panel1, 0, 0);
+            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 4.761905F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 95.2381F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(1682, 1050);
+            tableLayoutPanel1.TabIndex = 24;
             // 
             // splitCode
             // 
-            this.splitCode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitCode.Location = new System.Drawing.Point(4, 55);
-            this.splitCode.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.splitCode.Name = "splitCode";
-            this.splitCode.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitCode.Dock = System.Windows.Forms.DockStyle.Fill;
+            splitCode.Location = new System.Drawing.Point(4, 56);
+            splitCode.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            splitCode.Name = "splitCode";
+            splitCode.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitCode.Panel1
             // 
-            this.splitCode.Panel1.Controls.Add(this.progressBar1);
-            this.splitCode.Panel1.Controls.Add(this.incrementalSearcher1);
-            this.splitCode.Panel1.Controls.Add(this.txtQuery);
+            splitCode.Panel1.Controls.Add(progressBar1);
+            splitCode.Panel1.Controls.Add(incrementalSearcher1);
+            splitCode.Panel1.Controls.Add(txtQuery);
             // 
             // splitCode.Panel2
             // 
-            this.splitCode.Panel2.Controls.Add(this.tabstripResults);
-            this.splitCode.Size = new System.Drawing.Size(1506, 990);
-            this.splitCode.SplitterDistance = 475;
-            this.splitCode.SplitterWidth = 6;
-            this.splitCode.TabIndex = 19;
+            splitCode.Panel2.Controls.Add(tabstripResults);
+            splitCode.Size = new System.Drawing.Size(1674, 988);
+            splitCode.SplitterDistance = 474;
+            splitCode.SplitterWidth = 8;
+            splitCode.TabIndex = 19;
             // 
             // progressBar1
             // 
-            this.progressBar1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.progressBar1.Location = new System.Drawing.Point(666, 412);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(184, 34);
-            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBar1.TabIndex = 25;
-            this.progressBar1.Visible = false;
+            progressBar1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            progressBar1.Location = new System.Drawing.Point(741, 455);
+            progressBar1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new System.Drawing.Size(204, 42);
+            progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            progressBar1.TabIndex = 25;
+            progressBar1.Visible = false;
             // 
             // incrementalSearcher1
             // 
-            this.incrementalSearcher1.AutoPosition = true;
-            this.incrementalSearcher1.AutoSize = true;
-            this.incrementalSearcher1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.incrementalSearcher1.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.incrementalSearcher1.FindReplace = null;
-            this.incrementalSearcher1.Location = new System.Drawing.Point(575, 0);
-            this.incrementalSearcher1.Margin = new System.Windows.Forms.Padding(0);
-            this.incrementalSearcher1.Name = "incrementalSearcher1";
-            this.incrementalSearcher1.Scintilla = null;
-            this.incrementalSearcher1.Size = new System.Drawing.Size(340, 28);
-            this.incrementalSearcher1.TabIndex = 8;
-            this.incrementalSearcher1.ToolItem = false;
-            this.incrementalSearcher1.Visible = false;
+            incrementalSearcher1.AutoPosition = true;
+            incrementalSearcher1.AutoSize = true;
+            incrementalSearcher1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            incrementalSearcher1.BackColor = System.Drawing.Color.LightSteelBlue;
+            incrementalSearcher1.FindReplace = null;
+            incrementalSearcher1.Location = new System.Drawing.Point(639, 0);
+            incrementalSearcher1.Margin = new System.Windows.Forms.Padding(0);
+            incrementalSearcher1.Name = "incrementalSearcher1";
+            incrementalSearcher1.Scintilla = null;
+            incrementalSearcher1.Size = new System.Drawing.Size(371, 33);
+            incrementalSearcher1.TabIndex = 8;
+            incrementalSearcher1.ToolItem = false;
+            incrementalSearcher1.Visible = false;
             // 
             // txtQuery
             // 
-            this.txtQuery.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtQuery.Location = new System.Drawing.Point(0, 0);
-            this.txtQuery.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtQuery.Name = "txtQuery";
-            this.txtQuery.Size = new System.Drawing.Size(1506, 475);
-            this.txtQuery.TabIndex = 0;
-            this.txtQuery.TextChanged += new System.EventHandler(this.txtQuery1_TextChanged);
-            this.txtQuery.Enter += new System.EventHandler(this.txtQuery_Enter);
-            this.txtQuery.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtQuery_KeyDown);
+            txtQuery.AutoCMaxHeight = 9;
+            txtQuery.BiDirectionality = ScintillaNET.BiDirectionalDisplayType.Disabled;
+            txtQuery.CaretLineBackColor = System.Drawing.Color.OldLace;
+            txtQuery.CaretLineVisible = true;
+            txtQuery.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtQuery.LexerName = null;
+            txtQuery.Location = new System.Drawing.Point(0, 0);
+            txtQuery.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            txtQuery.Name = "txtQuery";
+            txtQuery.ScrollWidth = 1;
+            txtQuery.Size = new System.Drawing.Size(1674, 474);
+            txtQuery.TabIndents = true;
+            txtQuery.TabIndex = 0;
+            txtQuery.UseRightToLeftReadingLayout = false;
+            txtQuery.WrapMode = ScintillaNET.WrapMode.None;
+            txtQuery.TextChanged += txtQuery1_TextChanged;
+            txtQuery.Enter += txtQuery_Enter;
+            txtQuery.KeyDown += txtQuery_KeyDown;
             // 
             // tabstripResults
             // 
-            this.tabstripResults.Controls.Add(this.tabResults);
-            this.tabstripResults.Controls.Add(this.tabMessages);
-            this.tabstripResults.Controls.Add(this.tabFindResults);
-            this.tabstripResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabstripResults.Location = new System.Drawing.Point(0, 0);
-            this.tabstripResults.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabstripResults.Name = "tabstripResults";
-            this.tabstripResults.SelectedIndex = 0;
-            this.tabstripResults.Size = new System.Drawing.Size(1506, 509);
-            this.tabstripResults.TabIndex = 9;
+            tabstripResults.Controls.Add(tabResults);
+            tabstripResults.Controls.Add(tabMessages);
+            tabstripResults.Controls.Add(tabFindResults);
+            tabstripResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            tabstripResults.Location = new System.Drawing.Point(0, 0);
+            tabstripResults.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            tabstripResults.Name = "tabstripResults";
+            tabstripResults.SelectedIndex = 0;
+            tabstripResults.Size = new System.Drawing.Size(1674, 506);
+            tabstripResults.TabIndex = 9;
             // 
             // tabResults
             // 
-            this.tabResults.Controls.Add(this.dataGrid1);
-            this.tabResults.Location = new System.Drawing.Point(4, 29);
-            this.tabResults.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabResults.Name = "tabResults";
-            this.tabResults.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabResults.Size = new System.Drawing.Size(1498, 476);
-            this.tabResults.TabIndex = 0;
-            this.tabResults.Text = "Data Results";
-            this.tabResults.UseVisualStyleBackColor = true;
+            tabResults.Controls.Add(dataGrid1);
+            tabResults.Location = new System.Drawing.Point(4, 34);
+            tabResults.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            tabResults.Name = "tabResults";
+            tabResults.Padding = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            tabResults.Size = new System.Drawing.Size(1666, 468);
+            tabResults.TabIndex = 0;
+            tabResults.Text = "Data Results";
+            tabResults.UseVisualStyleBackColor = true;
             // 
             // dataGrid1
             // 
-            this.dataGrid1.AllowUserToAddRows = false;
-            this.dataGrid1.AllowUserToDeleteRows = false;
-            this.dataGrid1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGrid1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dataGrid1.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
-            this.dataGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGrid1.Location = new System.Drawing.Point(3, 4);
-            this.dataGrid1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.dataGrid1.Name = "dataGrid1";
-            this.dataGrid1.ReadOnly = true;
-            this.dataGrid1.RowHeadersWidth = 62;
-            this.dataGrid1.RowTemplate.Height = 23;
-            this.dataGrid1.Size = new System.Drawing.Size(1492, 468);
-            this.dataGrid1.TabIndex = 10;
-            this.dataGrid1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGrid1_DataError_1);
+            dataGrid1.AllowUserToAddRows = false;
+            dataGrid1.AllowUserToDeleteRows = false;
+            dataGrid1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGrid1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            dataGrid1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGrid1.ContextMenuStrip = contextDataGrid;
+            dataGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            dataGrid1.Location = new System.Drawing.Point(3, 5);
+            dataGrid1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            dataGrid1.Name = "dataGrid1";
+            dataGrid1.ReadOnly = true;
+            dataGrid1.RowHeadersWidth = 62;
+            dataGrid1.RowTemplate.Height = 23;
+            dataGrid1.Size = new System.Drawing.Size(1660, 458);
+            dataGrid1.TabIndex = 10;
+            dataGrid1.DataError += dataGrid1_DataError_1;
+            // 
+            // contextDataGrid
+            // 
+            contextDataGrid.ImageScalingSize = new System.Drawing.Size(24, 24);
+            contextDataGrid.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { copyWithHeadersToolStripMenuItem, copyToolStripMenuItem });
+            contextDataGrid.Name = "contextDataGrid";
+            contextDataGrid.Size = new System.Drawing.Size(239, 68);
+            // 
+            // copyWithHeadersToolStripMenuItem
+            // 
+            copyWithHeadersToolStripMenuItem.Name = "copyWithHeadersToolStripMenuItem";
+            copyWithHeadersToolStripMenuItem.Size = new System.Drawing.Size(238, 32);
+            copyWithHeadersToolStripMenuItem.Text = "Copy With Headers";
+            copyWithHeadersToolStripMenuItem.Click += copyWithHeadersToolStripMenuItem_Click;
+            // 
+            // copyToolStripMenuItem
+            // 
+            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            copyToolStripMenuItem.Size = new System.Drawing.Size(238, 32);
+            copyToolStripMenuItem.Text = "Copy";
+            copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
             // 
             // tabMessages
             // 
-            this.tabMessages.Controls.Add(this.txtOutputText);
-            this.tabMessages.Location = new System.Drawing.Point(4, 29);
-            this.tabMessages.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabMessages.Name = "tabMessages";
-            this.tabMessages.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabMessages.Size = new System.Drawing.Size(1498, 476);
-            this.tabMessages.TabIndex = 1;
-            this.tabMessages.Text = "Messages";
-            this.tabMessages.UseVisualStyleBackColor = true;
+            tabMessages.Controls.Add(txtOutputText);
+            tabMessages.Location = new System.Drawing.Point(4, 34);
+            tabMessages.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            tabMessages.Name = "tabMessages";
+            tabMessages.Padding = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            tabMessages.Size = new System.Drawing.Size(1666, 468);
+            tabMessages.TabIndex = 1;
+            tabMessages.Text = "Messages";
+            tabMessages.UseVisualStyleBackColor = true;
             // 
             // txtOutputText
             // 
-            this.txtOutputText.AcceptsReturn = true;
-            this.txtOutputText.AcceptsTab = true;
-            this.txtOutputText.AllowDrop = true;
-            this.txtOutputText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtOutputText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOutputText.HideSelection = false;
-            this.txtOutputText.Location = new System.Drawing.Point(3, 4);
-            this.txtOutputText.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtOutputText.Multiline = true;
-            this.txtOutputText.Name = "txtOutputText";
-            this.txtOutputText.ReadOnly = true;
-            this.txtOutputText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtOutputText.Size = new System.Drawing.Size(1492, 468);
-            this.txtOutputText.TabIndex = 11;
-            this.txtOutputText.WordWrap = false;
+            txtOutputText.AcceptsReturn = true;
+            txtOutputText.AcceptsTab = true;
+            txtOutputText.AllowDrop = true;
+            txtOutputText.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtOutputText.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            txtOutputText.HideSelection = false;
+            txtOutputText.Location = new System.Drawing.Point(3, 5);
+            txtOutputText.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            txtOutputText.Multiline = true;
+            txtOutputText.Name = "txtOutputText";
+            txtOutputText.ReadOnly = true;
+            txtOutputText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            txtOutputText.Size = new System.Drawing.Size(1660, 458);
+            txtOutputText.TabIndex = 11;
+            txtOutputText.WordWrap = false;
             // 
             // tabFindResults
             // 
-            this.tabFindResults.Controls.Add(this.findAllResultsPanel1);
-            this.tabFindResults.Location = new System.Drawing.Point(4, 29);
-            this.tabFindResults.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabFindResults.Name = "tabFindResults";
-            this.tabFindResults.Size = new System.Drawing.Size(1498, 476);
-            this.tabFindResults.TabIndex = 2;
-            this.tabFindResults.Text = "Find Results";
-            this.tabFindResults.UseVisualStyleBackColor = true;
+            tabFindResults.Controls.Add(findAllResultsPanel1);
+            tabFindResults.Location = new System.Drawing.Point(4, 34);
+            tabFindResults.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            tabFindResults.Name = "tabFindResults";
+            tabFindResults.Size = new System.Drawing.Size(1666, 468);
+            tabFindResults.TabIndex = 2;
+            tabFindResults.Text = "Find Results";
+            tabFindResults.UseVisualStyleBackColor = true;
             // 
             // findAllResultsPanel1
             // 
-            this.findAllResultsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.findAllResultsPanel1.Location = new System.Drawing.Point(0, 0);
-            this.findAllResultsPanel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.findAllResultsPanel1.Name = "findAllResultsPanel1";
-            this.findAllResultsPanel1.Scintilla = this.txtQuery;
-            this.findAllResultsPanel1.Size = new System.Drawing.Size(1498, 476);
-            this.findAllResultsPanel1.TabIndex = 12;
+            findAllResultsPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            findAllResultsPanel1.Location = new System.Drawing.Point(0, 0);
+            findAllResultsPanel1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            findAllResultsPanel1.Name = "findAllResultsPanel1";
+            findAllResultsPanel1.Scintilla = txtQuery;
+            findAllResultsPanel1.Size = new System.Drawing.Size(1666, 468);
+            findAllResultsPanel1.TabIndex = 12;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.butExecuteAllDBs);
-            this.panel1.Controls.Add(this.lblRows);
-            this.panel1.Controls.Add(this.checkShowFullScreen);
-            this.panel1.Controls.Add(this.butExcel);
-            this.panel1.Controls.Add(this.btnClear);
-            this.panel1.Controls.Add(this.Paste);
-            this.panel1.Controls.Add(this.btnCopy);
-            this.panel1.Controls.Add(this.btnExecuteAll);
-            this.panel1.Controls.Add(this.butExecute);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 4);
-            this.panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1508, 42);
-            this.panel1.TabIndex = 0;
+            panel1.Controls.Add(butExecuteAllDBs);
+            panel1.Controls.Add(lblRows);
+            panel1.Controls.Add(checkShowFullScreen);
+            panel1.Controls.Add(butExcel);
+            panel1.Controls.Add(btnClear);
+            panel1.Controls.Add(Paste);
+            panel1.Controls.Add(btnCopy);
+            panel1.Controls.Add(btnExecuteAll);
+            panel1.Controls.Add(butExecute);
+            panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            panel1.Location = new System.Drawing.Point(3, 5);
+            panel1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(1676, 40);
+            panel1.TabIndex = 0;
             // 
             // butExecuteAllDBs
             // 
-            this.butExecuteAllDBs.Location = new System.Drawing.Point(240, 6);
-            this.butExecuteAllDBs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.butExecuteAllDBs.Name = "butExecuteAllDBs";
-            this.butExecuteAllDBs.Size = new System.Drawing.Size(139, 35);
-            this.butExecuteAllDBs.TabIndex = 22;
-            this.butExecuteAllDBs.Text = "Execute All &DBs";
-            this.butExecuteAllDBs.UseVisualStyleBackColor = true;
-            this.butExecuteAllDBs.Click += new System.EventHandler(this.butExecuteAllDBs_Click);
+            butExecuteAllDBs.Location = new System.Drawing.Point(267, 8);
+            butExecuteAllDBs.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            butExecuteAllDBs.Name = "butExecuteAllDBs";
+            butExecuteAllDBs.Size = new System.Drawing.Size(154, 44);
+            butExecuteAllDBs.TabIndex = 22;
+            butExecuteAllDBs.Text = "Execute All &DBs";
+            butExecuteAllDBs.UseVisualStyleBackColor = true;
+            butExecuteAllDBs.Click += butExecuteAllDBs_Click;
             // 
             // lblRows
             // 
-            this.lblRows.AutoSize = true;
-            this.lblRows.Location = new System.Drawing.Point(970, 11);
-            this.lblRows.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblRows.Name = "lblRows";
-            this.lblRows.Size = new System.Drawing.Size(81, 20);
-            this.lblRows.TabIndex = 21;
-            this.lblRows.Text = "Total rows";
-            this.lblRows.Visible = false;
+            lblRows.AutoSize = true;
+            lblRows.Location = new System.Drawing.Point(1078, 14);
+            lblRows.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            lblRows.Name = "lblRows";
+            lblRows.Size = new System.Drawing.Size(92, 25);
+            lblRows.TabIndex = 21;
+            lblRows.Text = "Total rows";
+            lblRows.Visible = false;
             // 
             // checkShowFullScreen
             // 
-            this.checkShowFullScreen.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkShowFullScreen.AutoSize = true;
-            this.checkShowFullScreen.Location = new System.Drawing.Point(832, 6);
-            this.checkShowFullScreen.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.checkShowFullScreen.Name = "checkShowFullScreen";
-            this.checkShowFullScreen.Size = new System.Drawing.Size(117, 30);
-            this.checkShowFullScreen.TabIndex = 7;
-            this.checkShowFullScreen.Text = "&Show Results";
-            this.checkShowFullScreen.UseVisualStyleBackColor = true;
-            this.checkShowFullScreen.CheckedChanged += new System.EventHandler(this.checkShowMessages_CheckedChanged);
+            checkShowFullScreen.Appearance = System.Windows.Forms.Appearance.Button;
+            checkShowFullScreen.AutoSize = true;
+            checkShowFullScreen.Location = new System.Drawing.Point(924, 8);
+            checkShowFullScreen.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            checkShowFullScreen.Name = "checkShowFullScreen";
+            checkShowFullScreen.Size = new System.Drawing.Size(126, 35);
+            checkShowFullScreen.TabIndex = 7;
+            checkShowFullScreen.Text = "&Show Results";
+            checkShowFullScreen.UseVisualStyleBackColor = true;
+            checkShowFullScreen.CheckedChanged += checkShowMessages_CheckedChanged;
             // 
             // butExcel
             // 
-            this.butExcel.Location = new System.Drawing.Point(693, 6);
-            this.butExcel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.butExcel.Name = "butExcel";
-            this.butExcel.Size = new System.Drawing.Size(132, 35);
-            this.butExcel.TabIndex = 6;
-            this.butExcel.Text = "Export to Excel";
-            this.butExcel.UseVisualStyleBackColor = true;
-            this.butExcel.Click += new System.EventHandler(this.butExcel_Click);
+            butExcel.Location = new System.Drawing.Point(770, 8);
+            butExcel.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            butExcel.Name = "butExcel";
+            butExcel.Size = new System.Drawing.Size(147, 44);
+            butExcel.TabIndex = 6;
+            butExcel.Text = "Export to Excel";
+            butExcel.UseVisualStyleBackColor = true;
+            butExcel.Click += butExcel_Click;
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(408, 7);
-            this.btnClear.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(82, 35);
-            this.btnClear.TabIndex = 3;
-            this.btnClear.Text = "Clear";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            btnClear.Location = new System.Drawing.Point(453, 9);
+            btnClear.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new System.Drawing.Size(91, 44);
+            btnClear.TabIndex = 3;
+            btnClear.Text = "Clear";
+            btnClear.UseVisualStyleBackColor = true;
+            btnClear.Click += btnClear_Click;
             // 
             // Paste
             // 
-            this.Paste.Location = new System.Drawing.Point(591, 7);
-            this.Paste.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Paste.Name = "Paste";
-            this.Paste.Size = new System.Drawing.Size(94, 35);
-            this.Paste.TabIndex = 5;
-            this.Paste.Text = "Paste All";
-            this.Paste.UseVisualStyleBackColor = true;
-            this.Paste.Click += new System.EventHandler(this.Paste_Click);
+            Paste.Location = new System.Drawing.Point(657, 9);
+            Paste.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            Paste.Name = "Paste";
+            Paste.Size = new System.Drawing.Size(104, 44);
+            Paste.TabIndex = 5;
+            Paste.Text = "Paste All";
+            Paste.UseVisualStyleBackColor = true;
+            Paste.Click += Paste_Click;
             // 
             // btnCopy
             // 
-            this.btnCopy.Location = new System.Drawing.Point(498, 7);
-            this.btnCopy.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(85, 35);
-            this.btnCopy.TabIndex = 4;
-            this.btnCopy.Text = "Copy All";
-            this.btnCopy.UseVisualStyleBackColor = true;
-            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            btnCopy.Location = new System.Drawing.Point(553, 9);
+            btnCopy.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            btnCopy.Name = "btnCopy";
+            btnCopy.Size = new System.Drawing.Size(94, 44);
+            btnCopy.TabIndex = 4;
+            btnCopy.Text = "Copy All";
+            btnCopy.UseVisualStyleBackColor = true;
+            btnCopy.Click += btnCopy_Click;
             // 
             // btnExecuteAll
             // 
-            this.btnExecuteAll.Location = new System.Drawing.Point(0, 6);
-            this.btnExecuteAll.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnExecuteAll.Name = "btnExecuteAll";
-            this.btnExecuteAll.Size = new System.Drawing.Size(112, 35);
-            this.btnExecuteAll.TabIndex = 1;
-            this.btnExecuteAll.Text = "E&xecute All";
-            this.btnExecuteAll.UseVisualStyleBackColor = true;
-            this.btnExecuteAll.Click += new System.EventHandler(this.btnExecuteAll_Click);
+            btnExecuteAll.Location = new System.Drawing.Point(0, 8);
+            btnExecuteAll.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            btnExecuteAll.Name = "btnExecuteAll";
+            btnExecuteAll.Size = new System.Drawing.Size(124, 44);
+            btnExecuteAll.TabIndex = 1;
+            btnExecuteAll.Text = "E&xecute All";
+            btnExecuteAll.UseVisualStyleBackColor = true;
+            btnExecuteAll.Click += btnExecuteAll_Click;
             // 
             // butExecute
             // 
-            this.butExecute.Location = new System.Drawing.Point(120, 4);
-            this.butExecute.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.butExecute.Name = "butExecute";
-            this.butExecute.Size = new System.Drawing.Size(112, 35);
-            this.butExecute.TabIndex = 2;
-            this.butExecute.Text = "&Execute";
-            this.butExecute.UseVisualStyleBackColor = true;
-            this.butExecute.Click += new System.EventHandler(this.butExecute_Click);
+            butExecute.Location = new System.Drawing.Point(133, 5);
+            butExecute.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            butExecute.Name = "butExecute";
+            butExecute.Size = new System.Drawing.Size(124, 44);
+            butExecute.TabIndex = 2;
+            butExecute.Text = "&Execute";
+            butExecute.UseVisualStyleBackColor = true;
+            butExecute.Click += butExecute_Click;
             // 
             // findReplace1
             // 
-            this.findReplace1._lastReplaceHighlight = false;
-            this.findReplace1._lastReplaceLastLine = 0;
-            this.findReplace1._lastReplaceMark = false;
-            this.findReplace1.Scintilla = this.txtQuery;
+            findReplace1._lastReplaceHighlight = false;
+            findReplace1._lastReplaceLastLine = 0;
+            findReplace1._lastReplaceMark = false;
+            findReplace1.Scintilla = txtQuery;
             // 
             // FrmEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1514, 1050);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Name = "FrmEditor";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.splitCode.Panel1.ResumeLayout(false);
-            this.splitCode.Panel1.PerformLayout();
-            this.splitCode.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitCode)).EndInit();
-            this.splitCode.ResumeLayout(false);
-            this.tabstripResults.ResumeLayout(false);
-            this.tabResults.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
-            this.tabMessages.ResumeLayout(false);
-            this.tabMessages.PerformLayout();
-            this.tabFindResults.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1682, 1050);
+            Controls.Add(tableLayoutPanel1);
+            KeyPreview = true;
+            Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            Name = "FrmEditor";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            FormClosing += FrmMain_FormClosing;
+            tableLayoutPanel1.ResumeLayout(false);
+            splitCode.Panel1.ResumeLayout(false);
+            splitCode.Panel1.PerformLayout();
+            splitCode.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitCode).EndInit();
+            splitCode.ResumeLayout(false);
+            tabstripResults.ResumeLayout(false);
+            tabResults.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dataGrid1).EndInit();
+            contextDataGrid.ResumeLayout(false);
+            tabMessages.ResumeLayout(false);
+            tabMessages.PerformLayout();
+            tabFindResults.ResumeLayout(false);
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -424,6 +459,9 @@ namespace DBStudioLite
         public System.Windows.Forms.CheckBox checkShowFullScreen;
         public System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button butExecuteAllDBs;
+        private System.Windows.Forms.ContextMenuStrip contextDataGrid;
+        private System.Windows.Forms.ToolStripMenuItem copyWithHeadersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
     }
 }
 

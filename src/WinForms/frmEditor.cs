@@ -483,6 +483,16 @@ namespace DBStudioLite
             this.maxLineNumberCharLength = maxLineNumberCharLength;
         }
 
+        private void copyWithHeadersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GridViewHelpers.CopyToClipboardWithHeaders(dataGrid1,
+                DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText);
+        }
 
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GridViewHelpers.CopyToClipboardWithHeaders(dataGrid1,
+                DataGridViewClipboardCopyMode.EnableWithoutHeaderText);
+        }
     }
 }
