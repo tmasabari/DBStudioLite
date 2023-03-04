@@ -130,15 +130,15 @@ namespace CoreLogic.PluginBase
 
 
         #region Table properties
-        public string GetColumnList(string sConnectionString, string sTableName)
+        public async Task<string> GetColumnList(string sConnectionString, string sTableName)
         {
             using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
             {
                 string SQL = DataObj.GetColumnListCode(sTableName);
-                DataObj.SetValues(SQL, true, CommandType.Text);
-                object objreturn;
-                if (DataObj.ExecuteScalar(out objreturn))
+                var result = await DataObj.ExecuteScalar(SQL);
+                if (result.Item2)
                 {
+                    var objreturn = result.Item1;
                     if (!(objreturn is DBNull))
                     {
                         return objreturn.ToString();
@@ -148,15 +148,15 @@ namespace CoreLogic.PluginBase
             }
         }
 
-        public string GetIdentityColumn(string sConnectionString, string sTableName)
+        public async Task<string> GetIdentityColumn(string sConnectionString, string sTableName)
         {
             using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
             {
                 string SQL = DataObj.GetIdentityColumnCode(sTableName);
-                DataObj.SetValues(SQL, true, CommandType.Text);
-                object objreturn;
-                if (DataObj.ExecuteScalar(out objreturn))
+                var result = await DataObj.ExecuteScalar(SQL);
+                if (result.Item2)
                 {
+                    var objreturn = result.Item1;
                     if (objreturn != null && !(objreturn is DBNull))
                     {
                         return objreturn.ToString();
@@ -196,7 +196,7 @@ namespace CoreLogic.PluginBase
                     dt.Columns.Add("DecimalPlaces", Type.GetType("System.Int64"));
                     dt.Columns.Add("Identity", Type.GetType("System.Boolean"));
 
-                    var identityColumn = GetIdentityColumn(sConnectionString, TableName);
+                    var identityColumn = await GetIdentityColumn(sConnectionString, TableName);
 
                     foreach (DataRow rw in ds.Tables["RawTableInfo"].Rows)
                     {

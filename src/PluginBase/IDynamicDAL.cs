@@ -41,16 +41,11 @@ namespace CoreLogic.PluginBase
         string ErrorText { get; set; }
         StringBuilder SQLInfoMessageBuilder { get; set; }
 
-        //void AddInputParameter(string field, SqlDbType type, int size, object paramvalue);
-        //void AddInputParameter(string field, SqlDbType type, object paramvalue);
-        //void AddOutputParameter(string field, SqlDbType type);
-        //void AddOutputParameter(string field, SqlDbType type, int size);
         void DeriveParameters(ref IDbCommand obj);
-        bool Execute();
+        //bool Execute();
         Task<bool> Execute(dlgReaderOpen function);
         Task<DataSet> Execute(string TableName);
-        bool ExecuteScalar(out object ScalarData);
-        object RunScalar(string SQL);
+        Task<Tuple<object, bool>> ExecuteScalar(string SQL);
         string GenerateSQL(string SQL, string objectType, SQLCommandType sQLCommandType);
         string GetCSharpCodeForParameter(IDataParameter parameter, string sParameterFunction, string sValue);
         string GetParmeterSize(DbParameter dbparameter, ref string paramValue);

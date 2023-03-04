@@ -147,13 +147,6 @@ public class DynamicDALSQLite : AbstractDAL, IDynamicDAL
     {
         SetValues(sProcedure, bLogError, type);
     }
-    public void SetValues(string sProcedure, bool bLogError, CommandType type)
-    {
-        sProcedureName = sProcedure;
-        Command.CommandText = sProcedureName;
-        Command.CommandType = type;
-        LogError = bLogError;
-    }
 
     public string GetCSharpCodeForParameter(IDataParameter parameter, string sParameterFunction, string sValue)
     {

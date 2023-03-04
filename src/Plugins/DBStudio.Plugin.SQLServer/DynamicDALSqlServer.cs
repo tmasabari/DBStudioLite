@@ -146,13 +146,7 @@ public class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
     {
         SetValues(sProcedure, bLogError, type);
     }
-    public void SetValues(string sProcedure, bool bLogError, CommandType type)
-    {
-        sProcedureName = sProcedure;
-        Command.CommandText = sProcedureName;
-        Command.CommandType = type;
-        LogError = bLogError;
-    }
+
     public override void DeriveParameters(ref IDbCommand obj)
     {
         //https://learn.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlcommandbuilder.deriveparameters

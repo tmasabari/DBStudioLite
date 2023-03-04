@@ -104,7 +104,7 @@ namespace DBStudioLite
 
             objConnections = new frmConnections();
         }
-        private void MDIParent1_Activated(object sender, EventArgs e)
+        private async void MDIParent1_Activated(object sender, EventArgs e)
         {
             if (bFirstTime)
             {
@@ -126,7 +126,7 @@ namespace DBStudioLite
 
                 bFirstTime = false;
                 //this is  required as setting the connection from the registry is NOT automatically triggers the refresh
-                RefreshDBs();
+                await RefreshDBs();
                 RefreshSnippets();
 
                 RefreshConnectionsMenu();
@@ -577,9 +577,9 @@ namespace DBStudioLite
             //getColumnListToolStripMenuItem_Click(sender, e);
             //LoadStructure();
         }
-        private void viewStructureToolStripMenuItem_Click_1(object sender, EventArgs e)
+        private async void viewStructureToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            LoadStructure();
+            await LoadStructure();
         }
 
 
@@ -675,50 +675,52 @@ namespace DBStudioLite
             }
         }
 
-        private void getColumnListToolStripMenuItem_Click(object sender, EventArgs e)
+        //Event handlers are the only place you are allowed to do async void.
+        //https://stackoverflow.com/questions/25456194/winforms-call-to-async-method-hangs-up-program
+        private async void getColumnListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string sTableName = GetSelectedTableName();
 
             if (sTableName != "")
             {
-                string columnList = GetDynamicDataSourceCode().GetColumnList(sConnectionString, sTableName);
-                GetTableRows(100, false, columnList);
+                string columnList = await GetDynamicDataSourceCode().GetColumnList(sConnectionString, sTableName);
+                await GetTableRows(100, false, columnList);
             }
         }
 
-        private void showTop100ToolStripMenuItem_Click_1(object sender, EventArgs e)
+        private async void showTop100ToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            GetTableRows(100);
+            await GetTableRows(100);
         }
 
-        private void showTop100ReverseToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void showTop100ReverseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string sTableName = GetSelectedTableName();
 
             if (sTableName != "")
             {
-                string columnList = GetDynamicDataSourceCode().GetColumnList(sConnectionString, sTableName);
-                GetTableRows(100, true, columnList);
+                string columnList = await GetDynamicDataSourceCode().GetColumnList(sConnectionString, sTableName);
+                await GetTableRows(100, true, columnList);
             }
         }
 
-        private void showFieldHeadersToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void showFieldHeadersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetTableRows(0);
+            await GetTableRows(0);
         }
 
-        private void showTop1ToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void showTop1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetTableRows(1);
+            await GetTableRows(1);
         }
 
-        private void showTop10ToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void showTop10ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetTableRows(10);
+            await GetTableRows(10);
         }
-        private void showAllToolStripMenuItem_Click_1(object sender, EventArgs e)
+        private async void showAllToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            GetTableRows(-1);
+            await GetTableRows(-1);
         }
 
         private void lstProcedures_MouseUp(object sender, MouseEventArgs e)
@@ -727,12 +729,12 @@ namespace DBStudioLite
                 if (lstProcedures.SelectedItems.Count > 0) contextCode.Show(lstProcedures, e.Location);
         }
 
-        private void TS_Procedure_Code_Click_1(object sender, EventArgs e)
+        private async void TS_Procedure_Code_Click_1(object sender, EventArgs e)
         {
-            getSelectedProcedureCode();
+            await getSelectedProcedureCode();
         }
 
-        private void TS_Procedure_Run_Click_1(object sender, EventArgs e)
+        private async void TS_Procedure_Run_Click_1(object sender, EventArgs e)
         {
             string codeType = GetSelectedCodeRawType();
             if (string.IsNullOrWhiteSpace(codeType)) return;
@@ -748,7 +750,7 @@ namespace DBStudioLite
             }
             else
             {
-                getSelectedProcedureCode();
+                await getSelectedProcedureCode();
             }
         }
 
@@ -817,7 +819,7 @@ namespace DBStudioLite
                 GetEmptyOperatingFormSetProcedureCSharpCode(sSPName, 4);
         }
 
-        private void connectionsToolStripMenuItem_DropDownItemClicked(object sender,
+        private async void connectionsToolStripMenuItem_DropDownItemClicked(object sender,
             ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem.Tag is int)
@@ -835,7 +837,7 @@ namespace DBStudioLite
                 {
                     childmenu1 = (ToolStripMenuItem)e.ClickedItem;
                     childmenu1.Checked = true;
-                    RefreshDBs();
+                    await RefreshDBs();
                 }
                 else
                 {
@@ -845,15 +847,9 @@ namespace DBStudioLite
             }
         }
 
-        //remove context menu not used anymore
-        //private void contextConnections_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        //{
-        //    objConnections.SelectedIndex = (int)e.ClickedItem.Tag;
-        //}
-
-        private void lstProcedures_DoubleClick(object sender, EventArgs e)
+        private async void lstProcedures_DoubleClick(object sender, EventArgs e)
         {
-            getSelectedProcedureCode();
+            await getSelectedProcedureCode();
         }
         private async Task getSelectedProcedureCode()
         {
@@ -862,13 +858,6 @@ namespace DBStudioLite
             {
                 await GetEmptyOperatingFormSetProcedureDefinition(sSPName);
             }
-
-            //do not do this it may create a problem in dynamic query
-            //if (sProcedureBody.Substring(0,6).ToUpper() == "CREATE")
-            //    sProcedureBody = "ALTER" + sProcedureBody.Substring(6);
-            //sProcedureBody = sProcedureBody.Replace("CREATE PROCEDURE", "ALTER PROCEDURE");
-            //sProcedureBody = sProcedureBody.Replace("CREATE FUNCTION", "ALTER FUNCTION");
-            //sProcedureBody = sProcedureBody.Replace("CREATE VIEW", "ALTER VIEW");
         }
 
         private void MDIParent1_FormClosing(object sender, FormClosingEventArgs e)
@@ -876,12 +865,10 @@ namespace DBStudioLite
             try
             {
                 var sb = new StringBuilder();
-                //var sessions = new List<SessionVM>();
                 foreach (TabPage tabPage in tabForms.TabPages)
                 {
                     var operatingForm = tabPage.Tag as IOperatingForm;
                     if (operatingForm != null && operatingForm != snippetsEditor)
-                        //sessions.Add(new SessionVM { FilePath = tabPage.Text, Contents = "" });
                         sb.AppendLine(operatingForm.FileName);
                 }
                 File.WriteAllText(lastSessionFilesPath, sb.ToString());
@@ -910,9 +897,9 @@ namespace DBStudioLite
         }
 
 
-        private void listViewSnippets_DoubleClick(object sender, EventArgs e)
+        private async void listViewSnippets_DoubleClick(object sender, EventArgs e)
         {
-            ExecuteSnippet();
+            await ExecuteSnippet();
         }
 
         private async Task ExecuteSnippet()
@@ -997,9 +984,9 @@ namespace DBStudioLite
             }
         }
 
-        private void toolstripExecuteSnippet_Click(object sender, EventArgs e)
+        private async void toolstripExecuteSnippet_Click(object sender, EventArgs e)
         {
-            ExecuteSnippet();
+            await ExecuteSnippet();
         }
 
         private void btnFilter_Click(object sender, EventArgs e)
@@ -1069,40 +1056,21 @@ namespace DBStudioLite
             }
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        private async void refreshDatabasesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RefreshDBs();
+            await RefreshDBs();
         }
 
-        private void refreshDatabasesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RefreshDBs();
-        }
-
-        private void btnRefresh_Click(object sender, EventArgs e)
+        private async void refreshSchemaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (objConnections.GetConnectionString() == "") return;
-            GetMetaData(); //chkConnection.Checked
-        }
-
-        private void refreshSchemaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (objConnections.GetConnectionString() == "") return;
-            GetMetaData(); //chkConnection.Checked
+            await GetMetaData(); //chkConnection.Checked
         }
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             objAboutMe.ShowDialog(this);
-            //MessageBox.Show("Created by,\nSabarinathan Arthanari\ntmasabari@gmail.com" +
-            //    "\n\nVersion: 3.0.0\nReleased : Sat June 20, 2009" +
-            //    "\n\nVersion: 4.2.0\nReleased : Thu July 20, 2022"
-            //    , "Advanced Query Organizer");
 
-        }
-
-        private void chkShowDB_CheckedChanged(object sender, EventArgs e)
-        {
         }
 
         private void databasesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1111,20 +1079,10 @@ namespace DBStudioLite
             splitContainerDB.Panel1Collapsed = !databasesToolStripMenuItem.Checked;
         }
 
-        private void chkShowTables_CheckedChanged(object sender, EventArgs e)
-        {
-            //splitContainerSchema.Panel1Collapsed = !chkShowTables.Checked;
-        }
-
         private void tablesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             tablesToolStripMenuItem.Checked = !tablesToolStripMenuItem.Checked;
             splitContainerSchema.Panel1Collapsed = !tablesToolStripMenuItem.Checked;
-        }
-
-        private void chkShowCode_CheckedChanged(object sender, EventArgs e)
-        {
-            //splitContainerSchema.Panel2Collapsed = !chkShowCode.Checked;
         }
 
         private void codeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1206,60 +1164,8 @@ namespace DBStudioLite
             if (splitContainerSchema.Height > 0)
             {
                 splitContainerSchema.SplitterDistance = splitContainerSchema.Height / 2;
-                //splitContainerSchema.Panel1.Height = splitContainerSchema.Height / 2;
             }
         }
 
     }
 }
-//this.newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-//            this.sQLEditorToolStripMenuItem,
-//            this.jsonTableEditorToolStripMenuItem1,
-//            this.xMLTableEditorToolStripMenuItem1});
-
-//this.sQLEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-//this.jsonTableEditorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-//this.xMLTableEditorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-//// 
-//// sQLEditorToolStripMenuItem
-//// 
-//this.sQLEditorToolStripMenuItem.Name = "sQLEditorToolStripMenuItem";
-//this.sQLEditorToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-//this.sQLEditorToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-//this.sQLEditorToolStripMenuItem.Text = "SQL Editor";
-//this.sQLEditorToolStripMenuItem.Click += new System.EventHandler(this.sQLEditorToolStripMenuItem_Click);
-//// 
-//// jsonTableEditorToolStripMenuItem1
-//// 
-//this.jsonTableEditorToolStripMenuItem1.Name = "jsonTableEditorToolStripMenuItem1";
-//this.jsonTableEditorToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
-//this.jsonTableEditorToolStripMenuItem1.Text = "Json Table Editor";
-//this.jsonTableEditorToolStripMenuItem1.Click += new System.EventHandler(this.jsonTableEditorToolStripMenuItem1_Click);
-//// 
-//// xMLTableEditorToolStripMenuItem1
-//// 
-//this.xMLTableEditorToolStripMenuItem1.Name = "xMLTableEditorToolStripMenuItem1";
-//this.xMLTableEditorToolStripMenuItem1.Size = new System.Drawing.Size(224, 26);
-//this.xMLTableEditorToolStripMenuItem1.Text = "XML Table Editor";
-//this.xMLTableEditorToolStripMenuItem1.Click += new System.EventHandler(this.xMLTableEditorToolStripMenuItem1_Click);
-
-//private void sQLEditorToolStripMenuItem_Click(object sender, EventArgs e)
-//{
-//}
-
-//private void jsonTableEditorToolStripMenuItem1_Click(object sender, EventArgs e)
-//{
-//    var objJsonReader = new JsonReader();
-//    objJsonReader.MdiParent = this;
-//    objJsonReader.WindowState = FormWindowState.Maximized;
-//    objJsonReader.Show();
-
-//}
-
-//private void xMLTableEditorToolStripMenuItem1_Click(object sender, EventArgs e)
-//{
-//    XMLReader objXML = new XMLReader();
-//    objXML.MdiParent = this;
-//    objXML.WindowState = FormWindowState.Maximized;
-//    objXML.Show();
-//}

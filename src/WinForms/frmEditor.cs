@@ -132,7 +132,7 @@ namespace DBStudioLite
             txtQuery.StyleClearAll();
 
             // Set the SQL Lexer
-            txtQuery.Lexer = Lexer.Sql;
+            txtQuery.LexerName = "sql";
 
             // Show line numbers
             txtQuery.Margins[0].Width = 20;
@@ -202,9 +202,9 @@ namespace DBStudioLite
 
         //Execute Procedure
 
-        private void btnExecuteAll_Click(object sender, EventArgs e)
+        private async void btnExecuteAll_Click(object sender, EventArgs e)
         {
-            if (txtQuery.Text != "") LoadQuery(txtQuery.Text);
+            if (txtQuery.Text != "") await LoadQuery(txtQuery.Text);
         }
         private void butExecuteAllDBs_Click(object sender, EventArgs e)
         {
@@ -212,7 +212,7 @@ namespace DBStudioLite
             frmAllDbs.RefreshDetails(this, mdiParent.listViewDBs, txtQuery.Text.Trim());
         }
 
-        private void butExecute_Click(object sender, EventArgs e)
+        private async void butExecute_Click(object sender, EventArgs e)
         {
             //tabQuery.TabPages[1].Hide();
             string SQuery = "";
@@ -234,7 +234,7 @@ namespace DBStudioLite
             {
                 SQuery = txtQuery.SelectedText;
             }
-            if (SQuery != "") LoadQuery(SQuery, false);
+            if (SQuery != "") await LoadQuery(SQuery, false);
         }
         public void ShowProgress()
         {

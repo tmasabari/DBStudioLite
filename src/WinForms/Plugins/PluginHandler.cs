@@ -46,34 +46,26 @@ namespace DBStudioLite.Plugins
         }
         public static IDynamicDAL GetDynamicDAL(string sDBIdentifier, string sConnectionString)
         {
-            try
+            if (!_isPluginsEnabled)
             {
-                if (!_isPluginsEnabled)
+                switch (sDBIdentifier)
                 {
-                    switch (sDBIdentifier)
-                    {
-                        case "SQLite":
-                            return new DynamicDALSQLite(sConnectionString);
-                        default:
-                            return new DynamicDALSqlServer(sConnectionString);
-                    }
-
+                    case "SQLite":
+                        return new DynamicDALSQLite(sConnectionString);
+                    default:
+                        return new DynamicDALSqlServer(sConnectionString);
                 }
 
-                var pluginType = _plugins.FirstOrDefault(plugin => plugin.Name.Contains(sDBIdentifier));
-                if (pluginType == null)
-                {
-                    throw new Exception($"{sDBIdentifier} type plugin is not available.");
-                }
-                var pluginInstance = (IDynamicDAL)Activator.CreateInstance(pluginType, sConnectionString);
-
-                return pluginInstance;
             }
-            catch (Exception ex)
+
+            var pluginType = _plugins.FirstOrDefault(plugin => plugin.Name.Contains(sDBIdentifier));
+            if (pluginType == null)
             {
-
-                throw;
+                throw new Exception($"{sDBIdentifier} type plugin is not available.");
             }
+            var pluginInstance = (IDynamicDAL)Activator.CreateInstance(pluginType, sConnectionString);
+
+            return pluginInstance;
         }
     }
 }

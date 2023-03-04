@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DBStudioLite
@@ -60,15 +61,15 @@ namespace DBStudioLite
             this.Hide();
         }
 
-        private void butRestart_Click(object sender, EventArgs e)
+        private async void butRestart_Click(object sender, EventArgs e)
         {
             executeAllDbsIndex = 0;
-            Execute();
+            await Execute();
         }
 
-        private void Execute()
+        private async Task Execute()
         {
-            frmEditor.LoadQuery(Query, IsLoadQueryToBox: true, dbNames[executeAllDbsIndex]);
+            await frmEditor.LoadQuery(Query, IsLoadQueryToBox: true, dbNames[executeAllDbsIndex]);
             CalculateNextIndex(executeAllDbsIndex);
             setButtons();
         }
@@ -96,15 +97,15 @@ namespace DBStudioLite
             if (executeAllDbsIndex >= dbNames.Count) executeAllDbsIndex = 0;
         }
 
-        private void butSkip_Click(object sender, EventArgs e)
+        private async void butSkip_Click(object sender, EventArgs e)
         {
             CalculateNextIndex(executeAllDbsIndex);
-            Execute();
+            await Execute();
         }
 
-        private void butExecute_Click(object sender, EventArgs e)
+        private async void butExecute_Click(object sender, EventArgs e)
         {
-            Execute();
+            await Execute();
         }
     }
 }

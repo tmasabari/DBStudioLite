@@ -70,60 +70,47 @@ namespace CoreLogic.PluginBase.PluginBase
                 sSize = "";
             return sSize;
         }
-
-        public object RunScalar(string SQL)
+        public void SetValues(string sProcedure, bool bLogError, CommandType type)
         {
-            object ScalarData = null;
-            try
-            {
-                if (Connection.State != ConnectionState.Open)
-                {
-                    Connection.Open();
-                    ConnectionOpened();
-                }
-                using (var command = Connection.CreateCommand())
-                {
-                    command.CommandText = SQL;
-                    command.CommandType = CommandType.Text;
-                    ScalarData = command.ExecuteScalar();
-                }
-            }
-            catch (Exception ex)
-            {
-                if (this.LogError) ErrorText = ex.Message;
-            }
-            if (Connection != null)
-            {
-                if (Connection.State == ConnectionState.Open) Connection.Close();        //Always close connection
-                Connection.Dispose();
-            }
-            return ScalarData;
+            sProcedureName = sProcedure;
+            Command.CommandText = sProcedureName;
+            Command.CommandType = type;
+            LogError = bLogError;
         }
-        public bool ExecuteScalar(out object ScalarData)
+
+        public async Task<Tuple<object, bool>> ExecuteScalar(string SQL)
         {
-            bool bReturn = false;
-            ScalarData = null;
-            try
+            SetValues(SQL, true, CommandType.Text);
+            return await ExecuteScalar();
+        }
+        private async Task<Tuple<object, bool>> ExecuteScalar()
+        {
+            return await Task.Run(() =>
             {
-                if (Connection.State != ConnectionState.Open)
+                object data = null;
+                bool bReturn = false;
+                try
                 {
-                    Connection.Open();
-                    ConnectionOpened();
+                    if (Connection.State != ConnectionState.Open)
+                    {
+                        Connection.Open();
+                        ConnectionOpened();
+                    }
+                    data = Command.ExecuteScalar();
+                    bReturn = true;
                 }
-                ScalarData = Command.ExecuteScalar();
-                bReturn = true;
-            }
-            catch (Exception ex)
-            {
-                if (this.LogError) ErrorText = ex.Message;
-            }
-            if (Command != null) Command.Dispose();
-            if (Connection != null)
-            {
-                if (Connection.State == ConnectionState.Open) Connection.Close();        //Always close connection
-                Connection.Dispose();
-            }
-            return bReturn;
+                catch (Exception ex)
+                {
+                    if (this.LogError) ErrorText = ex.Message;
+                }
+                if (Command != null) Command.Dispose();
+                if (Connection != null)
+                {
+                    if (Connection.State == ConnectionState.Open) Connection.Close();        //Always close connection
+                    Connection.Dispose();
+                }
+                return new Tuple<object, bool>(data, bReturn);
+            });
         }
 
         public Task<bool> Execute(dlgReaderOpen function)
@@ -184,34 +171,6 @@ namespace CoreLogic.PluginBase.PluginBase
             return factory.CreateDataAdapter();
         }
 
-        public bool Execute()
-        {   //SqlTransaction transaction ==null;
-            bool bReturn = false;
-            try
-            {
-                if (Connection.State != ConnectionState.Open)
-                {
-                    Connection.Open();
-                    ConnectionOpened();
-                }
-                using (var transaction = Connection.BeginTransaction())
-                {
-                    Command.Transaction = transaction; // Assign Transaction to Command
-                    Command.ExecuteNonQuery();
-                    transaction.Commit();
-                    bReturn = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (this.LogError)
-                {
-                    if (this.LogError) ErrorText = ex.Message;
-                }
-            }
-            return bReturn;
-        }
-
         public Task<DataSet> Execute(string TableName)
         {
             try
@@ -262,7 +221,6 @@ namespace CoreLogic.PluginBase.PluginBase
         {
             return dbparameter.DbType.ToString("F");
         }
-
 
         public virtual string GetInputParamValue(IDataParameter dbparameter)
         {
@@ -335,7 +293,6 @@ namespace CoreLogic.PluginBase.PluginBase
 
             return paramValue;
         }
-
         protected static string GetFirstColumn(string columnList)
         {
             string[] separator = { "," };
