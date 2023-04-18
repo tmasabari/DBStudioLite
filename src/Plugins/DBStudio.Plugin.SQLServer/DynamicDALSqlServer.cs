@@ -49,7 +49,7 @@ public class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
             + sTableName + "'";
         return SQL;
     }
-    public string GetIdentityColumnCode(string sTableName)
+    public override string GetIdentityColumnCode(string sTableName)
     {
         //https://raresql.com/2012/10/22/sql-server-multiple-ways-to-find-identity-column/
         //SELECT Name FROM sys.columns WHERE object_id = OBJECT_ID('instrument') and is_identity=1 And Objectproperty(object_id,'IsUserTable')=1
@@ -194,7 +194,9 @@ public class DynamicDALSqlServer : AbstractDAL, IDynamicDAL
             case SqlDbType.SmallDateTime:
             case SqlDbType.DateTime:
             case SqlDbType.Timestamp:
-                paramValue = "'" + DateTime.Today.ToString("dd/MM/yyyy hh:mm") + "'";
+                //https://www.sqlservertutorial.net/sql-server-system-functions/convert-string-to-datetime/
+                //https://code-maze.com/convert-datetime-to-iso-8601-string-csharp/
+                paramValue = "CONVERT(DATETIME, '" + DateTime.Today.ToString("u").Replace(" ", "T") + "')";
                 break;
 
             case SqlDbType.Decimal:

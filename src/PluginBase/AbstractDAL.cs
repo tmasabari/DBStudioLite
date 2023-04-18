@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CoreLogic.PluginBase.PluginBase
 {
@@ -51,23 +52,29 @@ namespace CoreLogic.PluginBase.PluginBase
         }
         public virtual string GetParmeterSize(DbParameter parameter, ref string paramValue)
         {
-            //SqlParameter parameter = dbparameter as SqlParameter;
-            string sSize;
-            if (parameter.Size > 0)
+            string sSize = string.Empty;
+            if (parameter.DbType == DbType.AnsiString || parameter.DbType == DbType.String
+                || parameter.DbType == DbType.VarNumeric || parameter.DbType == DbType.Decimal)
             {
-                sSize = "(" + parameter.Size.ToString() + ") ";
-                paramValue = "''";
+                if (parameter.Size > 0)
+                {
+                    sSize = "(" + parameter.Size.ToString() + ") ";
+                    paramValue = "''";
+                }
+                //The scale must be less than or equal to the precision.
+                else if (parameter.Precision > 0)
+                {
+                    sSize = "(" + parameter.Precision.ToString();
+                    if (parameter.Scale > 0) sSize += "," + parameter.Scale.ToString();
+                    sSize += ") ";
+                    paramValue = "0";
+                }
+                else
+                {
+                    sSize = "(1000) "; //consider 1000 length
+                    paramValue = "''";
+                }
             }
-            //The scale must be less than or equal to the precision.
-            else if (parameter.Precision > 0)
-            {
-                sSize = "(" + parameter.Precision.ToString();
-                if (parameter.Scale > 0) sSize += "," + parameter.Scale.ToString();
-                sSize += ") ";
-                paramValue = "0";
-            }
-            else
-                sSize = "";
             return sSize;
         }
         public void SetValues(string sProcedure, bool bLogError, CommandType type)
@@ -243,8 +250,9 @@ namespace CoreLogic.PluginBase.PluginBase
                 case DbType.DateTimeOffset:
                 //case DbType.SmallDateTime:
                 case DbType.DateTime:
-                    //case DbType.Timestamp:
-                    paramValue = "'" + DateTime.Today.ToString("MM/dd/yyyy hh:mm") + "'";
+                    //https://www.sqlservertutorial.net/sql-server-system-functions/convert-string-to-datetime/
+                    //https://code-maze.com/convert-datetime-to-iso-8601-string-csharp/
+                    paramValue = "CONVERT(DATETIME, '" + DateTime.Today.ToString("u").Replace(" ", "T") + "')";
                     break;
 
                 case DbType.Boolean:
@@ -320,25 +328,50 @@ namespace CoreLogic.PluginBase.PluginBase
                     builder.QuotePrefix = "[";
                     builder.QuoteSuffix = "]";
                     DbCommand generatedCommand = null;
+                    var code = string.Empty;
                     switch (sQLCommandType)
                     {
-
                         case SQLCommandType.Insert:
                             generatedCommand = builder.GetInsertCommand(true);
+                            if (generatedCommand == null) return String.Empty;
+                            code = generatedCommand.CommandText;
                             break;
                         case SQLCommandType.Update:
                             generatedCommand = builder.GetUpdateCommand(true);
+                            if (generatedCommand == null) return String.Empty;
+                            code = generatedCommand.CommandText;
+                            //remove unnecesary where conditions and match only with primary key value
+                            code = code.Remove(code.ToLower().LastIndexOf("where"));
+                            for (int i = 0; i < generatedCommand.Parameters.Count; i++)
+                            {
+                                var paramname = generatedCommand.Parameters[i].ParameterName.ToLower();
+                                if (paramname.StartsWith("@isnull_")
+                                    || paramname.StartsWith("@original_"))
+                                {
+                                    generatedCommand.Parameters.RemoveAt(i);
+                                    i--;
+                                }
+                            }
                             break;
                         case SQLCommandType.Delete:
-                            generatedCommand = builder.GetDeleteCommand(true);
+                            //generatedCommand = builder.GetDeleteCommand(true);
+                            //if (generatedCommand == null) return String.Empty;
+                            //code = generatedCommand.CommandText;
+                            //https://stackoverflow.com/questions/14485115/synchronously-waiting-for-an-async-operation-and-why-does-wait-freeze-the-pro
+                            var idColumnTask = Task.Run(async () => { return await GetIdentityColumn(ObjectName); });
+                            idColumnTask.Wait(); 
+                            var idColumn = idColumnTask.Result;
+                            if (string.IsNullOrWhiteSpace(idColumn)) idColumn = "PrimaryKey";
+                            code = $"DELETE FROM [{ObjectName}] WHERE {idColumn} = ";
                             break;
                     }
-                    if (generatedCommand == null) return String.Empty;
-                    var code = generatedCommand.CommandText;
-                    ProcessParameters(generatedCommand, out var paramStringList, out var paramNameList, out var _);
-                    if (paramStringList.Count > 0)
-                        code = "DECLARE " + string.Join(Environment.NewLine + "DECLARE ", paramStringList.ToArray())
-                            + Environment.NewLine + code;
+                    if (generatedCommand != null)
+                    {
+                        ProcessParameters(generatedCommand, out var paramStringList, out var paramNameList, out var _);
+                        if (paramStringList.Count > 0)
+                            code = "DECLARE " + string.Join(Environment.NewLine + "DECLARE ", paramStringList.ToArray())
+                                + Environment.NewLine + code;
+                    }
                     return code;
                 }
             }
@@ -446,6 +479,25 @@ namespace CoreLogic.PluginBase.PluginBase
             });
 
             return nameValueCollection;
+        }
+        public abstract string GetIdentityColumnCode(string sTableName); 
+
+        public async Task<string> GetIdentityColumn(string sTableName)
+        {
+            string SQL = GetIdentityColumnCode(sTableName);
+            if(string.IsNullOrWhiteSpace(SQL))
+                return string.Empty;
+
+            var result = await ExecuteScalar(SQL);
+            if (result.Item2)
+            {
+                var objreturn = result.Item1;
+                if (objreturn != null && !(objreturn is DBNull))
+                {
+                    return objreturn.ToString();
+                }
+            }
+            return string.Empty;
         }
 
     }

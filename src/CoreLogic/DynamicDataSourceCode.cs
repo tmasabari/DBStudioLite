@@ -147,24 +147,6 @@ namespace CoreLogic.PluginBase
                 return string.Empty;
             }
         }
-
-        public async Task<string> GetIdentityColumn(string sConnectionString, string sTableName)
-        {
-            using (var DataObj = DataAccessFactory.GetDynamicDAL(sConnectionString))
-            {
-                string SQL = DataObj.GetIdentityColumnCode(sTableName);
-                var result = await DataObj.ExecuteScalar(SQL);
-                if (result.Item2)
-                {
-                    var objreturn = result.Item1;
-                    if (objreturn != null && !(objreturn is DBNull))
-                    {
-                        return objreturn.ToString();
-                    }
-                }
-                return string.Empty;
-            }
-        }
         public async Task<DataTable> GetTableDetails(string TableName)
         {
             DataSet ds;
@@ -196,7 +178,7 @@ namespace CoreLogic.PluginBase
                     dt.Columns.Add("DecimalPlaces", Type.GetType("System.Int64"));
                     dt.Columns.Add("Identity", Type.GetType("System.Boolean"));
 
-                    var identityColumn = await GetIdentityColumn(sConnectionString, TableName);
+                    var identityColumn = await DataObj.GetIdentityColumn(TableName);
 
                     foreach (DataRow rw in ds.Tables["RawTableInfo"].Rows)
                     {

@@ -992,6 +992,7 @@ namespace DBStudioLite
         private void btnFilter_Click(object sender, EventArgs e)
         {
             RefreshDBStructure();
+            tabDatabase.SelectedTab = tabDatabases;
         }
 
         #region Tabbed windows

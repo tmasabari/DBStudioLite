@@ -10,8 +10,8 @@
       "Parameters": "TableName"
     },
     {
-      "SnippetName": "Alter Table",
-      "value": "ALTER TABLE [dbo].[<TableName>]\r\n    ADD [<ColumnName1>]     <Type> NULL",
+      "SnippetName": "Alter Table-ADD Column",
+      "value": "ALTER TABLE [dbo].[<TableName>]\r\n    ADD [<ColumnName1>]     <Type> NOT NULL DEFAULT (0)",
       "IsExecutable": "False",
       "DBName": null
     },

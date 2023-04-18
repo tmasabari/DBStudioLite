@@ -27,6 +27,15 @@ namespace DBStudioLite
             splitCode.SplitterDistance = splitCode.Height / 2;
             // Enable Context Menu !
             //txtQuery.EnableContextMenu();
+
+            //Generally turning auto-sizing off and double buffering help to speed up DataGridView population.
+            if (!System.Windows.Forms.SystemInformation.TerminalServerSession)
+            {
+                Type dgvType = dataGrid1.GetType();
+                PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
+                  BindingFlags.Instance | BindingFlags.NonPublic);
+                pi.SetValue(dataGrid1, true, null);
+            }
         }
 
         #region FindReplaceCustomization
@@ -242,7 +251,9 @@ namespace DBStudioLite
             progressBar1.MarqueeAnimationSpeed = 100;
             progressBar1.Left = (this.ClientSize.Width - progressBar1.Width) / 2;
             progressBar1.Top = (this.ClientSize.Height - progressBar1.Height) / 2;
-            progressBar1.Visible = true;
+            progressBar1.Visible = true;// Bring it to the front
+            progressBar1.BringToFront();
+            this.Refresh();
         }
 
         public void StopProgress()
@@ -277,9 +288,33 @@ namespace DBStudioLite
             {
                 var ds = await DataObj.Execute("MyTable");
                 string endMessage = $"@{DateTime.Now.ToString("hh:mm:ss FFF")} The execution was completed.";
-                dataGrid1.DataSource = (ds != null && ds.Tables["MyTable"] != null) ? ds.Tables["MyTable"] : null;
-                dataGrid1.Refresh();
-                GridViewHelpers.EnableManualResize(dataGrid1);
+                if (ds != null && ds.Tables["MyTable"] != null)
+                {
+                    //https://stackoverflow.com/questions/10226992/slow-performance-in-populating-datagridview-with-large-data
+                    //have performance issue for large set of rows and columns
+
+                    dataGrid1.Hide();
+                    var resultTable = ds.Tables["MyTable"];
+                    //Generally turning auto-sizing off and double buffering help to speed up DataGridView population.
+                    dataGrid1.RowHeadersVisible = false; // set it to false if not needed
+                    dataGrid1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+                    // or even better, use .DisableResizing. Most time consuming enum is DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders
+
+                    dataGrid1.DataSource = resultTable;
+                    dataGrid1.Refresh();
+
+                    if (resultTable.Rows.Count <= 1000 && resultTable.Columns.Count <= 20)
+                        GridViewHelpers.EnableManualResize(dataGrid1);
+
+                    dataGrid1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.EnableResizing;
+                    dataGrid1.RowHeadersVisible = true; // reenable
+                    dataGrid1.Show();
+                }
+                else
+                {
+                    dataGrid1.DataSource = null;
+                    dataGrid1.Refresh();
+                }
                 txtOutputText.Font = new System.Drawing.Font("Courier New", 8.25f, System.Drawing.FontStyle.Bold);
                 txtOutputText.ForeColor = Color.Black; txtOutputText.BackColor = txtOutputText.BackColor;
                 txtOutputText.Text = startMessage + Environment.NewLine;
@@ -493,6 +528,16 @@ namespace DBStudioLite
         {
             GridViewHelpers.CopyToClipboardWithHeaders(dataGrid1,
                 DataGridViewClipboardCopyMode.EnableWithoutHeaderText);
+        }
+
+        private void dataGrid1_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            //https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.datagridviewcellstyle.nullvalue?view=windowsdesktop-7.0
+            if (e.Value == null || e.Value.Equals(e.CellStyle.DataSourceNullValue))
+            {
+                e.CellStyle.BackColor = Color.Gray;
+                e.FormattingApplied = true;
+            }
         }
     }
 }

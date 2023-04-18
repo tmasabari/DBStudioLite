@@ -54,5 +54,6 @@ namespace CoreLogic.PluginBase
 
         string GetTableRowsCode(string sTableName, int Rows, bool isReverse = false, string columnList = null);
         string GetModuleCode(string sModuleType, string sModuleName);
+        Task<string> GetIdentityColumn(string sTableName);
     }
 }

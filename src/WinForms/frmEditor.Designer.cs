@@ -104,7 +104,6 @@ namespace DBStudioLite
             // 
             // splitCode.Panel1
             // 
-            splitCode.Panel1.Controls.Add(progressBar1);
             splitCode.Panel1.Controls.Add(incrementalSearcher1);
             splitCode.Panel1.Controls.Add(txtQuery);
             // 
@@ -206,6 +205,7 @@ namespace DBStudioLite
             dataGrid1.RowTemplate.Height = 23;
             dataGrid1.Size = new System.Drawing.Size(1660, 458);
             dataGrid1.TabIndex = 10;
+            dataGrid1.CellFormatting += dataGrid1_CellFormatting;
             dataGrid1.DataError += dataGrid1_DataError_1;
             // 
             // contextDataGrid
@@ -411,6 +411,7 @@ namespace DBStudioLite
             AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(1682, 1050);
+            Controls.Add(progressBar1);
             Controls.Add(tableLayoutPanel1);
             KeyPreview = true;
             Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);

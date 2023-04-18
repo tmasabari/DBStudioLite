@@ -54,7 +54,7 @@ public class DynamicDALSQLite : AbstractDAL, IDynamicDAL
         string SQL = "SELECT group_concat (name, ',') AS csv FROM pragma_table_info('" + sTableName + "')";
         return SQL;
     }
-    public string GetIdentityColumnCode(string sTableName)
+    public override string GetIdentityColumnCode(string sTableName)
     {
         //https://stackoverflow.com/questions/20979239/how-to-tell-if-a-sqlite-column-is-autoincrement
         string SQL = "";
